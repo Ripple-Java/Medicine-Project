@@ -10,6 +10,6 @@ http://www.springframework.org/schema/context/spring-context-3.2.xsd
 	<context:property-placeholder location="classpath:config.properties" />
  
 	<!-- 自动扫描dao和service包(自动注入) -->
-	<context:component-scan base-package="com.rippletec.medicine.dao,com.rippletec.medicine.service" />
+	<context:component-scan base-package="com.rippletec.medicine.dao,com.rippletec.medicine.utils,com.rippletec.medicine.service" />
  
 </beans>

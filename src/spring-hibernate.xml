@@ -51,8 +51,9 @@ http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
 		<!-- 配置详细事务语义 -->
 		<tx:attributes>
 			<!-- get开头的方法设置为read-only -->
-			<tx:method name="get*" read-only="true" />
-			<tx:method name="find*" read-only="true" />
+			<tx:method name="save*" propagation="REQUIRED" />
+			<tx:method name="get*" propagation="REQUIRED" read-only="true" />
+			<tx:method name="find*" propagation="REQUIRED" read-only="true" />
 			<tx:method name="*" />
 		</tx:attributes>
 	</tx:advice>

@@ -52,5 +52,77 @@ public class PlusHibernateSupport<T> extends HibernateDaoSupport{
 	});
 	return items;
     }
+    
+    @SuppressWarnings({ "unchecked", "deprecation" })
+    public List<T> findBySql(final Class<T> enityClass, final String sql,final Object value) {
+	List<T> items = getHibernateTemplate().executeFind(new HibernateCallback<List<T>>() {
+
+	    @Override
+	    public List<T> doInHibernate(Session session)
+		    throws HibernateException, SQLException {
+		Query q = session.createSQLQuery(sql).addEntity(enityClass);
+		q.setParameter(0, value);
+		List<T> result = q.list();
+		return result;
+	    }
+	    
+	});
+	return items;
+      }
+    
+    @SuppressWarnings({ "unchecked", "deprecation" })
+    public List<T> findBySql(final Class<T> enityClass, final String sql, final String[] params,final Object[] values) {
+	List<T> items = getHibernateTemplate().executeFind(new HibernateCallback<List<T>>() {
+
+	    @Override
+	    public List<T> doInHibernate(Session session)
+		    throws HibernateException, SQLException {
+		Query q = session.createSQLQuery(sql).addEntity(enityClass);
+		for (int i = 0; i < params.length; i++) {
+		    q.setParameter(i, values[i]);
+		}
+		List<T> result = q.list();
+		return result;
+	    }
+	    
+	});
+	return items;
+      }
+    
+    @SuppressWarnings({ "unchecked", "deprecation" })
+    public List<T> findBySql(final Class<T> enityClass, final String sql,final Object value, final int offset, final int pageSize) {
+	List<T> items = getHibernateTemplate().executeFind(new HibernateCallback<List<T>>() {
+
+	    @Override
+	    public List<T> doInHibernate(Session session)
+		    throws HibernateException, SQLException {
+		Query q = session.createSQLQuery(sql).addEntity(enityClass);
+		q.setParameter(0, value);
+		List<T> result = q.setFirstResult(offset).setMaxResults(pageSize).list();
+		return result;
+	    }
+	    
+	});
+	return items;
+      }
+    
+    
+    @SuppressWarnings({ "unchecked", "deprecation" })
+    public List<T> findByParam(final String hql,final String param ,final Object value) {
+	List<T> items = getHibernateTemplate().executeFind(new HibernateCallback<List<T>>() {
+
+	    @Override
+	    public List<T> doInHibernate(Session session)
+		    throws HibernateException, SQLException {
+		Query q = session.createQuery(hql);
+		q.setParameter(param, value);
+		List<T> result = q.list();
+		return result;
+	    }
+	    
+	});
+	return items;
+      }
+       
 
 }

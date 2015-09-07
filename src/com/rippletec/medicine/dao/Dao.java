@@ -3,6 +3,9 @@
  */
 package com.rippletec.medicine.dao;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * @author Liuyi
  *
@@ -34,5 +37,11 @@ public interface Dao <T>{
      * @return 
      */
     public T find(Integer id);
+    
+    public List<T> findBySql(String tableName, String param, Object value);
+    
+    public List<T> findBySql(String tableName,Map<String, Object> paramMap);
+    
+    public List<T> findByParam(String param, Object value);
 
 }

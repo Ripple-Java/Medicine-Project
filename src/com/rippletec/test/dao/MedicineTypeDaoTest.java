@@ -34,7 +34,7 @@ public class MedicineTypeDaoTest implements IBaseDaoTest {
     @Override
     @Test
     public void testSave() throws Exception {
-	MedicineType medicineType = new MedicineType("savetest", MedicineType.DEFAULT_PARENT_ID);
+	MedicineType medicineType = new MedicineType("savetest--0907--west", 13, MedicineType.WEST);
 	medicineTypeDao.save(medicineType);
     }
 

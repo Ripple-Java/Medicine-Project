@@ -38,7 +38,7 @@ public class MedicineDocumentDaoTest implements IBaseDaoTest {
     @Test
     public void testSave() throws Exception {
 	Medicine medicine = medicineDao.find(17);
-	MedicineDocument medicineDocument = new MedicineDocument(medicine, 1, "title", "content", "author", new Date());
+	MedicineDocument medicineDocument = new MedicineDocument(medicine, 1, "title2", "content", "author", new Date());
 	medicineDocumentDao.save(medicineDocument);
     }
 
@@ -65,7 +65,7 @@ public class MedicineDocumentDaoTest implements IBaseDaoTest {
     @Override
     @Test
     public void testFindByPage() throws Exception {
-	List<MedicineDocument> medicineDocuments = medicineDocumentDao.findByPage(new PageBean(0, 10));
+	List<MedicineDocument> medicineDocuments = medicineDocumentDao.findByPage(MedicineDocument.MEDICINE_ID,17,new PageBean(0, 10));
 	for (MedicineDocument medicineDocument : medicineDocuments) {
 	    System.out.println(medicineDocument.toString());
 	}

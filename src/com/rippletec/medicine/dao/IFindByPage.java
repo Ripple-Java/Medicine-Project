@@ -35,4 +35,6 @@ public interface IFindByPage<T> {
      * @return
      */
     public List<T> findByPage(Map<String, Object> paramMap, PageBean page);
+    
+    public List<T> findBySql(String tableName,String param, Object value,PageBean page);
 }

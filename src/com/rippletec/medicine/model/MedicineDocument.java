@@ -29,7 +29,13 @@ import org.springframework.stereotype.Repository;
 public class MedicineDocument extends BaseModel {
 
     public static final String CLASS_NAME = "MedicineDocument";
+    public static final String TABLE_NAME = "medicine_document";
     public static final String MEDICINE_ID = "medicine_id";
+    public static final String TYPE = "type";
+    public static final int GUIDEBOOK = 1 ;
+    public static final int LITERATURE = 2 ;
+    public static final int CASES = 3 ;
+    
     private static final long serialVersionUID = 1344487290503116724L;
 
     public MedicineDocument() {
@@ -57,7 +63,7 @@ public class MedicineDocument extends BaseModel {
     @JoinColumn(name = MEDICINE_ID)
     private Medicine medicine;
 
-    // 药品文章类型
+    // 药品文章类型(1-指南，2-文献，3-病例)
     @Column(name = "type", length = 1, nullable = false)
     private Integer type;
 

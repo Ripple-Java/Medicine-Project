@@ -1,5 +1,9 @@
 package com.rippletec.medicine.utils;
 
+/**
+ * @author Liuyi
+ *
+ */
 public class StringUtil {
     
     /**获取hql语句
@@ -26,6 +30,25 @@ public class StringUtil {
     
     public static String getSelectHql(String Name) {
 	return getSelectHql(Name, new String[]{});
+    }
+    
+    
+    
+    public static String getSelectSql(String tableName,String[] params) {
+   	String hql = "select * from "+tableName;
+   	if(params == null || params.length == 0)
+   	    return hql;
+   	hql += " where ";
+   	for (int i = 0; i < params.length; i++) {
+   	    String param = params[i];
+   	    hql += param+"=? and ";
+   	}
+   	hql = hql.substring(0, hql.length()-4);
+   	return hql;
+       }
+    
+    public static String getSelectSql(String tableName,String param){
+	return getSelectSql(tableName, new String[]{param});
     }
    
 

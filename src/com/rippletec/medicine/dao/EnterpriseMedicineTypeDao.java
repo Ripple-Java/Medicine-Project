@@ -7,6 +7,5 @@ import com.rippletec.medicine.model.EnterpriseMedicineType;
  *
  */
 public interface EnterpriseMedicineTypeDao extends FindByPageDao<EnterpriseMedicineType> {
-
     public static final String NAME = "EnterpriseMedicineTypeDao";
 }
