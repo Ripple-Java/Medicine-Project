@@ -38,7 +38,7 @@ public class EnterpriseMedicineTypeDaoTest implements IBaseDaoTest {
     @Test
     public void testSave() throws Exception {
 	Enterprise enterprise = enterpriseDao.find(1);
-	EnterpriseMedicineType enterpriseMedicineType = new EnterpriseMedicineType("saveType", enterprise);
+	EnterpriseMedicineType enterpriseMedicineType = new EnterpriseMedicineType("saveType--0907-west", EnterpriseMedicineType.WEST,enterprise);
 	enterpriseMedicineTypeDao.save(enterpriseMedicineType);
     }
 
@@ -67,6 +67,14 @@ public class EnterpriseMedicineTypeDaoTest implements IBaseDaoTest {
     @Test
     public void testFindByPage() throws Exception {
 	List<EnterpriseMedicineType> enterpriseMedicineTypes = enterpriseMedicineTypeDao.findByPage(new PageBean(0, 10));
+	for (EnterpriseMedicineType enterpriseMedicineType : enterpriseMedicineTypes) {
+	    System.out.println(enterpriseMedicineType.toString());
+	}
+    }
+    
+    @Test
+    public void testFindByName() throws Exception {
+	List<EnterpriseMedicineType> enterpriseMedicineTypes = enterpriseMedicineTypeDao.findBySql(EnterpriseMedicineType.TABLE_NAME,EnterpriseMedicineType.ENTERPRISE_ID, 1);
 	for (EnterpriseMedicineType enterpriseMedicineType : enterpriseMedicineTypes) {
 	    System.out.println(enterpriseMedicineType.toString());
 	}

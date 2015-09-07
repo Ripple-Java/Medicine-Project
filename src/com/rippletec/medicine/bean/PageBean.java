@@ -27,14 +27,13 @@ public class PageBean {
 	this.pageSize = pageSize;
     }
 
-    public PageBean(int currentPage, int nextPage, int lastPage, int offset,
-	    int pageSize) {
+    public PageBean(int currentPage, int offset,int pageSize) {
 	super();
 	this.currentPage = currentPage;
-	this.nextPage = nextPage;
-	this.lastPage = lastPage;
-	this.offset = offset;
+	this.offset = offset + (currentPage-1)*pageSize;
 	this.pageSize = pageSize;
+	this.nextPage = currentPage+1;
+	this.lastPage = currentPage-1;
     }
 
     @Override

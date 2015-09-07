@@ -35,6 +35,7 @@ public class Medicine extends BaseModel {
     private static final long serialVersionUID = 6854826662685735308L;
 
     public static final String CLASS_NAME = "Medicine";
+    public static final String TABLE_NAME = "medicine";
     public static final String MEDICINE_TYPE_ID = "medicine_type_id";
     public static final String ENTER_MEDICINE_TYPE_ID = "enter_medicine_type_id";
     public static final String CHINESE_MEDICINE_ID = "chinese_medicine_id";
@@ -54,12 +55,11 @@ public class Medicine extends BaseModel {
      * @param price
      */
     public Medicine(MedicineType medicineType, Integer gib_type,
-	    EnterpriseMedicineType enterpriseMedicineType, Double price) {
+	    EnterpriseMedicineType enterpriseMedicineType) {
 	super();
 	this.medicineType = medicineType;
 	this.gib_type = gib_type;
 	this.enterpriseMedicineType = enterpriseMedicineType;
-	this.price = price;
     }
     /**
      * 西药构造方法
@@ -72,14 +72,13 @@ public class Medicine extends BaseModel {
      */
     public Medicine(MedicineType medicineType, WestMedicine westMedicine,
 	    Set<MedicineDocument> medicineDocuments, Integer gib_type,
-	    EnterpriseMedicineType enterpriseMedicineType, Double price) {
+	    EnterpriseMedicineType enterpriseMedicineType) {
 	super();
 	this.medicineType = medicineType;
 	this.westMedicine = westMedicine;
 	this.medicineDocuments = medicineDocuments;
 	this.gib_type = gib_type;
 	this.enterpriseMedicineType = enterpriseMedicineType;
-	this.price = price;
     }
     /**
      * 中药构造方法
@@ -92,14 +91,13 @@ public class Medicine extends BaseModel {
      */
     public Medicine(MedicineType medicineType, ChineseMedicine chineseMedicine,
 	    Set<MedicineDocument> medicineDocuments, Integer gib_type,
-	    EnterpriseMedicineType enterpriseMedicineType, Double price) {
+	    EnterpriseMedicineType enterpriseMedicineType) {
 	super();
 	this.medicineType = medicineType;
 	this.chineseMedicine = chineseMedicine;
 	this.medicineDocuments = medicineDocuments;
 	this.gib_type = gib_type;
 	this.enterpriseMedicineType = enterpriseMedicineType;
-	this.price = price;
     }
 
 
@@ -144,11 +142,6 @@ public class Medicine extends BaseModel {
     @Cascade(CascadeType.SAVE_UPDATE)
     @JoinColumn(name = ENTER_MEDICINE_TYPE_ID)
     private EnterpriseMedicineType enterpriseMedicineType;
-
-    // 药品价格
-    @Column(name = "price", length = 10, nullable = false, precision = 2)
-    private Double price;
-
     
 
     @Override
@@ -156,7 +149,7 @@ public class Medicine extends BaseModel {
 	return "Medicine [id=" + id + ", medicineType=" + medicineType
 		+ ", medicineDocuments=" + medicineDocuments + ", gib_type="
 		+ gib_type + ", enterpriseMedicineType="
-		+ enterpriseMedicineType + ", price=" + price + "]";
+		+ enterpriseMedicineType + "]";
     }
     
     public BaseModel getChineseOrWest(){
@@ -175,10 +168,6 @@ public class Medicine extends BaseModel {
 	return gib_type;
     }
 
-    public Double getPrice() {
-	return price;
-    }
-
     public void setId(Integer id) {
 	this.id = id;
     }
@@ -191,9 +180,6 @@ public class Medicine extends BaseModel {
 	this.gib_type = gib_type;
     }
 
-    public void setPrice(Double price) {
-	this.price = price;
-    }
 
     public Set<MedicineDocument> getMedicineDocuments() {
 	return medicineDocuments;

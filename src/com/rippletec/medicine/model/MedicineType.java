@@ -29,7 +29,11 @@ import org.springframework.stereotype.Repository;
 public class MedicineType extends BaseModel {
     
     public static final String CLASS_NAME = "MedicineType";
+    public static final String TABLE_NAME = "medicine_type";
     public static final String PARENT_TYPE_ID = "parent_type_id";
+    public static final String NAME = "name";
+    public static final int CHINESE = 1;
+    public static final int WEST = 2;
 
     // 最顶级分类的父类别id为-1
     public static final int DEFAULT_PARENT_ID = -1;
@@ -38,11 +42,11 @@ public class MedicineType extends BaseModel {
 
     public MedicineType() {
     }
-
-    public MedicineType(String name, Integer parent_type_id) {
+    public MedicineType(String name, Integer parent_type_id, Integer gib_type) {
 	super();
 	this.name = name;
 	this.parent_type_id = parent_type_id;
+	this.gib_type = gib_type;
     }
 
     public MedicineType(String name, MedicineType parent_type) {
@@ -66,11 +70,18 @@ public class MedicineType extends BaseModel {
     // 父类别id
     @Column(name = PARENT_TYPE_ID, nullable = false)
     private Integer parent_type_id;
+    
+    // 药品所属第一级类型：1=中药，2=西药
+    @Column(name = "gib_type", length = 1, nullable = false)
+    private Integer gib_type;
+
+    
 
     @Override
     public String toString() {
 	return "MedicineType [id=" + id + ", name=" + name
-		+ ", parent_type_id=" + parent_type_id + "]";
+		+ ", parent_type_id=" + parent_type_id + ", gib_type="
+		+ gib_type + "]";
     }
 
     public Integer getId() {
@@ -104,5 +115,15 @@ public class MedicineType extends BaseModel {
     public void setMedicines(Set<Medicine> medicines) {
         this.medicines = medicines;
     }
+
+    public Integer getGib_type() {
+        return gib_type;
+    }
+
+    public void setGib_type(Integer gib_type) {
+        this.gib_type = gib_type;
+    }
+    
+    
     
 }

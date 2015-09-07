@@ -37,9 +37,9 @@ public class WestMedicineDaoTest implements IBaseDaoTest {
     @Test
     public void testSave() throws Exception {
 	Medicine medicine = medicineDao.find(11);
-	WestMedicine westMedicine = new WestMedicine(medicine, "west", "west", "west", "west", "west", "west", "west", "west", "west", "west", "west", "west", "west", "west", "west", "west");
-	System.out.println(westMedicine.toString());
-	westMedicineDao.save(westMedicine);
+//	WestMedicine westMedicine = new WestMedicine(medicine, "west", "west", "west", "west", "west", "west", "west", "west", "west", "west", "west", "west", "west", "west", "west", "west");
+//	System.out.println(westMedicine.toString());
+//	westMedicineDao.save(westMedicine);
 	
     }
 

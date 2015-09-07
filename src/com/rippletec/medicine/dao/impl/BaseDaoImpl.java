@@ -59,7 +59,34 @@ public abstract class BaseDaoImpl<T> extends PlusHibernateSupport<T> implements 
     public T find(Integer id) {
 	return getHibernateTemplate().get(getPersistClass(), id);
     }
+   
+    @Override
+    public List<T> findBySql(String tableName, String param, Object value) {
+	String sql = StringUtil.getSelectSql(tableName, param);
+	return findBySql(getPersistClass(),sql,value);
+    }
     
+    @Override
+    public List<T> findBySql(String tableName, Map<String, Object> paramMap) {
+	String[] params = paramMap.keySet().toArray(new String[]{});
+	Object[] values = paramMap.values().toArray();
+	String sql = StringUtil.getSelectSql(tableName, params);
+	return findBySql(getPersistClass(), sql, params, values);
+    }
+
+    @Override
+    public List<T> findBySql(String tableName, String param, Object value,
+	    PageBean page) {
+	String sql = StringUtil.getSelectSql(tableName,param);
+	return findBySql(getPersistClass(), sql, value, page.offset, page.pageSize);
+    }
+
+    @Override
+    public List<T> findByParam(String param, Object value) {
+	String hql = StringUtil.getSelectHql(getClassName(), param);
+	return findByParam(hql, param, value);
+    }
+
     /**
      * 模板方法，子类实现即可具有分页查找功能
      * @return 持久化类类名
@@ -71,7 +98,6 @@ public abstract class BaseDaoImpl<T> extends PlusHibernateSupport<T> implements 
      * @return 持久化类class
      */
     public abstract Class<T> getPersistClass();
-    
    
 
 }
