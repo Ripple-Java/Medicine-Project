@@ -46,23 +46,8 @@ public class ChineseMedicineDaoTest implements IBaseDaoTest {
     
     @Override
     @Test
-    public void testSave() throws Exception {
-	MedicineType medicineType = new MedicineType("testmedicinesave",MedicineType.DEFAULT_PARENT_ID,MedicineType.CHINESE);
-	EnterpriseMedicineType enterpriseMedicineType = enterpriseMedicineTypeDao.find(13);
-	Medicine medicine = new Medicine(medicineType, Medicine.CHINESE, enterpriseMedicineType);
-	//ChineseMedicine chineseMedicine = new ChineseMedicine(medicine, "saveCheinse", "content", "efficacy", "annouce", "usage", "preparations", "store", "category");
-	//chineseMedicineDao.save(chineseMedicine);
-    }
-
-    @Override
-    @Test
     public void testDelete() throws Exception {
 	chineseMedicineDao.delete(3);
-    }
-
-    @Override
-    @Test
-    public void testUpdate() throws Exception {
     }
 
     @Override
@@ -80,6 +65,29 @@ public class ChineseMedicineDaoTest implements IBaseDaoTest {
 	for (ChineseMedicine chineseMedicine : chineseMedicines) {
 	    System.out.println(chineseMedicine.toString());
 	}
+    }
+
+    @Override
+    @Test
+    public void testSave() throws Exception {
+	MedicineType medicineType = new MedicineType("testmedicinesave",MedicineType.DEFAULT_PARENT_ID,MedicineType.CHINESE);
+	EnterpriseMedicineType enterpriseMedicineType = enterpriseMedicineTypeDao.find(13);
+	Medicine medicine = new Medicine(medicineType, Medicine.CHINESE, enterpriseMedicineType);
+	//ChineseMedicine chineseMedicine = new ChineseMedicine(medicine, "saveCheinse", "content", "efficacy", "annouce", "usage", "preparations", "store", "category");
+	//chineseMedicineDao.save(chineseMedicine);
+    }
+
+    @Test
+    public void testSearch() throws Exception {
+	   List<ChineseMedicine> chineseMedicines = chineseMedicineDao.search(ChineseMedicine.NAME, "一");
+	   for (ChineseMedicine chineseMedicine : chineseMedicines) {
+	    System.out.println(chineseMedicine.toString());
+	}
+	}
+    
+    @Override
+    @Test
+    public void testUpdate() throws Exception {
     }
 
 }

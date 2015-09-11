@@ -50,49 +50,77 @@ public class MedicineDaoTest implements IBaseDaoTest{
 
 	@Override
 	@Test
+	public void testDelete() throws Exception {
+		medicineDao.delete(11);
+	    
+	}
+	
+	@Override
+	@Test
+	public void testFind() throws Exception {
+	    medicineDao.find(17);
+	}
+	
+	@Test
+	public void testFind2() throws Exception {
+	    System.out.println(medicineDao.find(1).getMedicineDocuments().toString());
+	}
+
+
+	@Override
+	@Test
+	public void testFindByPage() throws Exception {
+	    List<Medicine> medicines = medicineDao.findByPage(new PageBean(0, 10));
+	    for (Medicine medicine : medicines) {
+	    }
+	}
+
+	@Override
+	@Test
 	public void testSave() throws Exception {
 	    EnterpriseMedicineType enterpriseMedicineType = enterpriseMedicineTypeDao.find(11);
 	    MedicineType medicineType = medicineTypeDao.find(15);
 	    Medicine medicine = new Medicine(medicineType, Medicine.CHINESE, enterpriseMedicineType);
 	    medicineDao.save(medicine);
 	}
-	
+
 	@Test
 	public void testSave2 () throws Exception {
 	    EnterpriseMedicineType enterpriseMedicineType = enterpriseMedicineTypeDao.find(14);
 	    MedicineType medicineType = medicineTypeDao.find(18);
 	    for (int i = 0; i < 10; i++) {
-		ChineseMedicine chineseMedicine = new ChineseMedicine(null,enterpriseMedicineType,medicineType, "saveCheinse", "content", "efficacy", "annouce", "usage", "preparations", "store", "category", 88.0);
+		ChineseMedicine chineseMedicine = new ChineseMedicine(null,enterpriseMedicineType,medicineType, "测一下", "content", "efficacy", "annouce", "usage", "preparations", "store", "category", 88.0);
 		    Medicine medicine = new Medicine(medicineType, Medicine.CHINESE, enterpriseMedicineType);
 		    chineseMedicine.setMedicine(medicine);
-		    medicine.setChineseMedicine(chineseMedicine);
+		    medicine.getChineseMedicines().add(chineseMedicine);
 		    medicineDao.save(medicine);
 	    }
 	    
 	}
+	
 	
 	@Test
 	public void testSave3 () throws Exception {
 	    EnterpriseMedicineType enterpriseMedicineType = enterpriseMedicineTypeDao.find(15);
 	    MedicineType medicineType = medicineTypeDao.find(19);
 	    for (int i = 0; i < 10; i++) {
-		WestMedicine westMedicine = new WestMedicine(null,enterpriseMedicineType,medicineType, "west", "west", "west", "west", "west", "west", "west", "west", "west", "west", "west", "west", "west", "west", "west", "west",888.0);
+		WestMedicine westMedicine = new WestMedicine(null,enterpriseMedicineType,medicineType, "测哈哈", "west", "west", "west", "west", "west", "west", "west", "west", "west", "west", "west", "west", "west", "west", "west",888.0);
 		    Medicine medicine = new Medicine(medicineType, Medicine.CHINESE, enterpriseMedicineType);
 		    westMedicine.setMedicine(medicine);
-		    medicine.setWestMedicine(westMedicine);
+		    medicine.getWestMedicines().add(westMedicine);
 		    medicineDao.save(medicine);
 	    }
 	    
 	}
 
-
-	@Override
 	@Test
-	public void testDelete() throws Exception {
-		medicineDao.delete(11);
-	    
+	public void testSearch() throws Exception {
+	    List<Medicine> medicines = medicineDao.search(Medicine.ENTER_MEDICINE_TYPE_ID, 14);
+	    for (Medicine medicine : medicines) {
+		System.out.println(medicine.toString());
+	    }
 	}
-
+	
 	@Override
 	@Test
 	public void testUpdate() throws Exception {
@@ -101,27 +129,6 @@ public class MedicineDaoTest implements IBaseDaoTest{
 	    Medicine medicine = new Medicine(medicineType, Medicine.CHINESE, null);
 	    medicine.setId(15);
 	    medicineDao.update(medicine);
-	}
-
-	@Override
-	@Test
-	public void testFind() throws Exception {
-	    medicineDao.find(17);
-	}
-	
-	
-	@Test
-	public void testFind2() throws Exception {
-	    System.out.println(medicineDao.find(1).getMedicineDocuments().toString());
-	}
-
-	@Override
-	@Test
-	public void testFindByPage() throws Exception {
-	    List<Medicine> medicines = medicineDao.findByPage(new PageBean(0, 10));
-	    for (Medicine medicine : medicines) {
-		System.out.println(medicine.getChineseOrWest().toString());
-	    }
 	}
 	
 }

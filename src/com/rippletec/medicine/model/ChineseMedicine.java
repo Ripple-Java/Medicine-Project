@@ -3,6 +3,8 @@
  */
 package com.rippletec.medicine.model;
 
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -34,34 +36,8 @@ public class ChineseMedicine extends BaseModel {
     public static final String MEDICINE_ID = "medicine_id";
     public static final String MEDICINE_TYPE_ID = "medicine_type_id";
     public static final String ENTER_MEDICINE_TYPE_ID = "enter_medicine_type_id";
-    
 
-    public ChineseMedicine() {
-    }
-
-   
-
-    public ChineseMedicine(Medicine medicine,
-	    EnterpriseMedicineType enterpriseMedicineType,
-	    MedicineType medicineType, String name, String content,
-	    String efficacy, String annouce, String preparations,
-	    String manual, String store, String category, Double price) {
-	super();
-	this.medicine = medicine;
-	this.enterpriseMedicineType = enterpriseMedicineType;
-	this.medicineType = medicineType;
-	this.name = name;
-	this.content = content;
-	this.efficacy = efficacy;
-	this.annouce = annouce;
-	this.preparations = preparations;
-	this.manual = manual;
-	this.store = store;
-	this.category = category;
-	this.price = price;
-    }
-
-
+    public static final String NAME = "name";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -72,13 +48,13 @@ public class ChineseMedicine extends BaseModel {
     @Cascade(CascadeType.ALL)
     @JoinColumn(name = MEDICINE_ID)
     private Medicine medicine;
-    
+
     // 药品所属企业药品分类id
     @ManyToOne(fetch = FetchType.LAZY)
     @Cascade(CascadeType.SAVE_UPDATE)
     @JoinColumn(name = ENTER_MEDICINE_TYPE_ID)
     private EnterpriseMedicineType enterpriseMedicineType;
-    
+
     // 关联所属类别
     @ManyToOne(fetch = FetchType.LAZY)
     @Cascade(CascadeType.SAVE_UPDATE)
@@ -116,32 +92,40 @@ public class ChineseMedicine extends BaseModel {
     // 管理分类
     @Column(name = "category", columnDefinition = "TEXT", nullable = true)
     private String category;
-    
+
     // 药品价格
     @Column(name = "price", length = 10, nullable = false, precision = 2)
     private Double price;
 
-    @Override
-    public String toString() {
-	return "ChineseMedicine [id=" + id + ", medicine=" + medicine
-		+ ", enterpriseMedicineType=" + enterpriseMedicineType
-		+ ", medicineType=" + medicineType + ", name=" + name
-		+ ", content=" + content + ", efficacy=" + efficacy
-		+ ", annouce=" + annouce + ", preparations=" + preparations
-		+ ", manual=" + manual + ", store=" + store + ", category="
-		+ category + "]";
+    public ChineseMedicine() {
     }
 
-    public Integer getId() {
-	return id;
+    public ChineseMedicine(Medicine medicine,
+	    EnterpriseMedicineType enterpriseMedicineType,
+	    MedicineType medicineType, String name, String content,
+	    String efficacy, String annouce, String preparations,
+	    String manual, String store, String category, Double price) {
+	super();
+	this.medicine = medicine;
+	this.enterpriseMedicineType = enterpriseMedicineType;
+	this.medicineType = medicineType;
+	this.name = name;
+	this.content = content;
+	this.efficacy = efficacy;
+	this.annouce = annouce;
+	this.preparations = preparations;
+	this.manual = manual;
+	this.store = store;
+	this.category = category;
+	this.price = price;
     }
 
-    public Medicine getMedicine() {
-	return medicine;
+    public String getAnnouce() {
+	return annouce;
     }
 
-    public String getName() {
-	return name;
+    public String getCategory() {
+	return category;
     }
 
     public String getContent() {
@@ -152,32 +136,48 @@ public class ChineseMedicine extends BaseModel {
 	return efficacy;
     }
 
-    public String getAnnouce() {
-	return annouce;
+    public EnterpriseMedicineType getEnterpriseMedicineType() {
+	return enterpriseMedicineType;
+    }
+
+    public Integer getId() {
+	return id;
+    }
+
+    public String getManual() {
+	return manual;
+    }
+
+    public Medicine getMedicine() {
+	return medicine;
+    }
+
+    public MedicineType getMedicineType() {
+	return medicineType;
+    }
+
+    public String getName() {
+	return name;
     }
 
     public String getPreparations() {
 	return preparations;
     }
 
+    public Double getPrice() {
+	return price;
+    }
+
     public String getStore() {
 	return store;
     }
 
-    public String getCategory() {
-	return category;
+    public void setAnnouce(String annouce) {
+	this.annouce = annouce;
     }
 
-    public void setId(Integer id) {
-	this.id = id;
-    }
-
-    public void setMedicine(Medicine medicine) {
-	this.medicine = medicine;
-    }
-
-    public void setName(String name) {
-	this.name = name;
+    public void setCategory(String category) {
+	this.category = category;
     }
 
     public void setContent(String content) {
@@ -188,59 +188,50 @@ public class ChineseMedicine extends BaseModel {
 	this.efficacy = efficacy;
     }
 
-    public void setAnnouce(String annouce) {
-	this.annouce = annouce;
+    public void setEnterpriseMedicineType(
+	    EnterpriseMedicineType enterpriseMedicineType) {
+	this.enterpriseMedicineType = enterpriseMedicineType;
     }
 
-    public void setPreparations(String preparations) {
-	this.preparations = preparations;
-    }
-
-    public void setStore(String store) {
-	this.store = store;
-    }
-
-    public void setCategory(String category) {
-	this.category = category;
-    }
-
-    public String getManual() {
-	return manual;
+    public void setId(Integer id) {
+	this.id = id;
     }
 
     public void setManual(String manual) {
 	this.manual = manual;
     }
 
-    public EnterpriseMedicineType getEnterpriseMedicineType() {
-        return enterpriseMedicineType;
-    }
-
-    public MedicineType getMedicineType() {
-        return medicineType;
-    }
-
-    public void setEnterpriseMedicineType(
-    	EnterpriseMedicineType enterpriseMedicineType) {
-        this.enterpriseMedicineType = enterpriseMedicineType;
+    public void setMedicine(Medicine medicine) {
+	this.medicine = medicine;
     }
 
     public void setMedicineType(MedicineType medicineType) {
-        this.medicineType = medicineType;
+	this.medicineType = medicineType;
     }
 
-
-
-    public Double getPrice() {
-        return price;
+    public void setName(String name) {
+	this.name = name;
     }
 
-
+    public void setPreparations(String preparations) {
+	this.preparations = preparations;
+    }
 
     public void setPrice(Double price) {
-        this.price = price;
+	this.price = price;
     }
-    
-    
+
+    public void setStore(String store) {
+	this.store = store;
+    }
+
+    @Override
+    public String toString() {
+	return "ChineseMedicine [id=" + id + ", name=" + name + ", content="
+		+ content + ", efficacy=" + efficacy + ", annouce=" + annouce
+		+ ", preparations=" + preparations + ", manual=" + manual
+		+ ", store=" + store + ", category=" + category + ", price="
+		+ price + "]";
+    }
 
 }

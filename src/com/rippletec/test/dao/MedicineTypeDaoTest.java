@@ -33,23 +33,8 @@ public class MedicineTypeDaoTest implements IBaseDaoTest {
 
     @Override
     @Test
-    public void testSave() throws Exception {
-	MedicineType medicineType = new MedicineType("savetest--0907--west", 13, MedicineType.WEST);
-	medicineTypeDao.save(medicineType);
-    }
-
-    @Override
-    @Test
     public void testDelete() throws Exception {
 	medicineTypeDao.delete(1);
-    }
-
-    @Override
-    @Test
-    public void testUpdate() throws Exception {
-	MedicineType medicineType = medicineTypeDao.find(6);
-	medicineType.setParent_type_id(3);
-	medicineTypeDao.update(medicineType);
     }
 
     @Override
@@ -57,14 +42,13 @@ public class MedicineTypeDaoTest implements IBaseDaoTest {
     public void testFind() throws Exception {
 	System.out.println(medicineTypeDao.find(6).toString());
     }
-    
+
     @Test
     public void testFind2() throws Exception {
 	MedicineType medicineType = medicineTypeDao.find(15);
 	Iterator<Medicine> iterator = medicineType.getMedicines().iterator();
 	while (iterator.hasNext()) {
 	    Medicine medicine = iterator.next();
-	    System.out.println(medicine.getChineseOrWest().toString());
 	}
     }
 
@@ -75,6 +59,21 @@ public class MedicineTypeDaoTest implements IBaseDaoTest {
 	for (MedicineType medicineType : medicineTypes) {
 	    System.out.println(medicineType.toString());
 	}
+    }
+    
+    @Override
+    @Test
+    public void testSave() throws Exception {
+	MedicineType medicineType = new MedicineType("西药一级分类", MedicineType.DEFAULT_PARENT_ID, MedicineType.WEST);
+	medicineTypeDao.save(medicineType);
+    }
+
+    @Override
+    @Test
+    public void testUpdate() throws Exception {
+	MedicineType medicineType = medicineTypeDao.find(6);
+	medicineType.setParent_type_id(3);
+	medicineTypeDao.update(medicineType);
     }
 
 }

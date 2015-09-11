@@ -1,7 +1,5 @@
 package com.rippletec.test.service;
 
-import static org.junit.Assert.*;
-
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -27,15 +25,7 @@ public class MedicineTypeManagerTest implements IBaseDaoTest {
     private MedicineTypeManager medicineTypeManager;
 
     @Override
-    public void testSave() throws Exception {
-    }
-
-    @Override
     public void testDelete() throws Exception {
-    }
-
-    @Override
-    public void testUpdate() throws Exception {
     }
 
     @Override
@@ -45,13 +35,21 @@ public class MedicineTypeManagerTest implements IBaseDaoTest {
     @Override
     public void testFindByPage() throws Exception {
     }
-    
+
     @Test
     public void testFindByParam() throws Exception {
 	List<MedicineType> medicineTypes = medicineTypeManager.getTypeByParentId(13);
 	for (MedicineType medicineType : medicineTypes) {
 	    System.out.println(medicineType.toString());
 	}
+    }
+
+    @Override
+    public void testSave() throws Exception {
+    }
+    
+    @Override
+    public void testUpdate() throws Exception {
     }
 
 }

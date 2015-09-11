@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.rippletec.medicine.bean.PageBean;
 import com.rippletec.medicine.dao.EnterpriseDao;
-import com.rippletec.medicine.dao.FindByPageDao;
+import com.rippletec.medicine.dao.FindAndSearchDao;
 import com.rippletec.medicine.model.Enterprise;
 import com.rippletec.medicine.model.EnterpriseMedicineType;
 import com.rippletec.medicine.service.EnterpriseManager;
@@ -21,13 +21,8 @@ public class EnterpriseManagerImpl extends BaseManager<Enterprise> implements En
     private EnterpriseDao enterpriseDao;
     
     @Override
-    protected FindByPageDao<Enterprise> getDao() {
+    protected FindAndSearchDao<Enterprise> getDao() {
 	return this.enterpriseDao;
-    }
-
-    @Override
-    public List<Enterprise> getEnterprise(int size, int type, int currentPage) {
-	return findByPage(Enterprise.TYPE, type, new PageBean(currentPage, 0, size));
     }
 
     @Override
@@ -36,6 +31,11 @@ public class EnterpriseManagerImpl extends BaseManager<Enterprise> implements En
 	if(enterprise == null)
 	    return new LinkedList<EnterpriseMedicineType>();
 	return new LinkedList<EnterpriseMedicineType>(enterprise.getMedicineTypeEnterprises());
+    }
+
+    @Override
+    public List<Enterprise> getEnterprise(int size, int type, int currentPage) {
+	return findByPage(Enterprise.TYPE, type, new PageBean(currentPage, 0, size));
     }
 
 }

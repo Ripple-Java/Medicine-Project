@@ -11,6 +11,7 @@ import java.util.List;
 
 
 
+
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -54,14 +55,14 @@ public class PlusHibernateSupport<T> extends HibernateDaoSupport{
     }
     
     @SuppressWarnings({ "unchecked", "deprecation" })
-    public List<T> findBySql(final Class<T> enityClass, final String sql,final Object value) {
+    public List<T> findByParam(final String hql,final String param ,final Object value) {
 	List<T> items = getHibernateTemplate().executeFind(new HibernateCallback<List<T>>() {
 
 	    @Override
 	    public List<T> doInHibernate(Session session)
 		    throws HibernateException, SQLException {
-		Query q = session.createSQLQuery(sql).addEntity(enityClass);
-		q.setParameter(0, value);
+		Query q = session.createQuery(hql);
+		q.setParameter(param, value);
 		List<T> result = q.list();
 		return result;
 	    }
@@ -71,16 +72,14 @@ public class PlusHibernateSupport<T> extends HibernateDaoSupport{
       }
     
     @SuppressWarnings({ "unchecked", "deprecation" })
-    public List<T> findBySql(final Class<T> enityClass, final String sql, final String[] params,final Object[] values) {
+    public List<T> findBySql(final Class<T> enityClass, final String sql,final Object value) {
 	List<T> items = getHibernateTemplate().executeFind(new HibernateCallback<List<T>>() {
 
 	    @Override
 	    public List<T> doInHibernate(Session session)
 		    throws HibernateException, SQLException {
 		Query q = session.createSQLQuery(sql).addEntity(enityClass);
-		for (int i = 0; i < params.length; i++) {
-		    q.setParameter(i, values[i]);
-		}
+		q.setParameter(0, value);
 		List<T> result = q.list();
 		return result;
 	    }
@@ -108,14 +107,16 @@ public class PlusHibernateSupport<T> extends HibernateDaoSupport{
     
     
     @SuppressWarnings({ "unchecked", "deprecation" })
-    public List<T> findByParam(final String hql,final String param ,final Object value) {
+    public List<T> findBySql(final Class<T> enityClass, final String sql, final String[] params,final Object[] values) {
 	List<T> items = getHibernateTemplate().executeFind(new HibernateCallback<List<T>>() {
 
 	    @Override
 	    public List<T> doInHibernate(Session session)
 		    throws HibernateException, SQLException {
-		Query q = session.createQuery(hql);
-		q.setParameter(param, value);
+		Query q = session.createSQLQuery(sql).addEntity(enityClass);
+		for (int i = 0; i < params.length; i++) {
+		    q.setParameter(i, values[i]);
+		}
 		List<T> result = q.list();
 		return result;
 	    }
@@ -123,6 +124,29 @@ public class PlusHibernateSupport<T> extends HibernateDaoSupport{
 	});
 	return items;
       }
+    
+    public List<T> Search(final String hql,final String param ,final Object value) {
+	return Search(hql, new String[]{param}, new Object[]{value});
+    }
+    
+    @SuppressWarnings({ "unchecked", "deprecation" })
+    public List<T> Search(final String hql,final String[] params ,final Object[] values) {
+	List<T> items = getHibernateTemplate().executeFind(new HibernateCallback<List<T>>() {
+
+	    @Override
+	    public List<T> doInHibernate(Session session)
+		    throws HibernateException, SQLException {
+		Query q = session.createQuery(hql);
+		for (int i = 0; i < params.length; i++) {
+		    q.setParameter(params[i], "%"+values[i]+"%");
+		}
+		List<T> result = q.list();
+		return result;
+	    }
+	    
+	});
+	return items;
+    }
        
 
 }

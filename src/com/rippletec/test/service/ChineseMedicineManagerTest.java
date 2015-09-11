@@ -25,17 +25,7 @@ public class ChineseMedicineManagerTest implements IBaseDaoTest{
     private ChineseMedicineManager chineseMedicineManager;
 
     @Override
-    @Test
-    public void testSave() throws Exception {
-	chineseMedicineManager.save(null);
-    }
-
-    @Override
     public void testDelete() throws Exception {
-    }
-
-    @Override
-    public void testUpdate() throws Exception {
     }
 
     @Override
@@ -44,6 +34,16 @@ public class ChineseMedicineManagerTest implements IBaseDaoTest{
 
     @Override
     public void testFindByPage() throws Exception {
+    }
+
+    @Override
+    @Test
+    public void testSave() throws Exception {
+	chineseMedicineManager.save(null);
+    }
+
+    @Override
+    public void testUpdate() throws Exception {
     }
     
 

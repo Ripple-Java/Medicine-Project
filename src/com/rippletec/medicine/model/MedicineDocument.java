@@ -14,6 +14,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
@@ -37,22 +39,7 @@ public class MedicineDocument extends BaseModel {
     public static final int CASES = 3 ;
     
     private static final long serialVersionUID = 1344487290503116724L;
-
-    public MedicineDocument() {
-
-    }
-
-    public MedicineDocument(Medicine medicine, Integer type, String title,
-	    String content, String author, Date date) {
-	super();
-	this.medicine = medicine;
-	this.type = type;
-	this.title = title;
-	this.content = content;
-	this.author = author;
-	this.date = date;
-    }
-
+    public static final String TITLE = "title";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -80,16 +67,37 @@ public class MedicineDocument extends BaseModel {
     private String author;
 
     // 药品文章发布日期
-    @Column(name = "date", columnDefinition = "DATE", nullable = false)
+    @Column(name = "date", nullable = false)
+    @Temporal(TemporalType.DATE)
     private Date date;
+
+    public MedicineDocument() {
+
+    }
+
+    public MedicineDocument(Medicine medicine, Integer type, String title,
+	    String content, String author, Date date) {
+	super();
+	this.medicine = medicine;
+	this.type = type;
+	this.title = title;
+	this.content = content;
+	this.author = author;
+	this.date = date;
+    }
 
     
 
-    @Override
-    public String toString() {
-	return "MedicineDocument [id=" + id + ", type=" + type + ", title="
-		+ title + ", content=" + content + ", author=" + author
-		+ ", date=" + date + "]";
+    public String getAuthor() {
+	return author;
+    }
+
+    public String getContent() {
+	return content;
+    }
+
+    public Date getDate() {
+	return date;
     }
 
     public Integer getId() {
@@ -100,24 +108,24 @@ public class MedicineDocument extends BaseModel {
 	return medicine;
     }
 
-    public Integer getType() {
-	return type;
-    }
-
     public String getTitle() {
 	return title;
     }
 
-    public String getContent() {
-	return content;
+    public Integer getType() {
+	return type;
     }
 
-    public String getAuthor() {
-	return author;
+    public void setAuthor(String author) {
+	this.author = author;
     }
 
-    public Date getDate() {
-	return date;
+    public void setContent(String content) {
+	this.content = content;
+    }
+
+    public void setDate(Date date) {
+	this.date = date;
     }
 
     public void setId(Integer id) {
@@ -128,24 +136,19 @@ public class MedicineDocument extends BaseModel {
 	this.medicine = medicine;
     }
 
-    public void setType(Integer type) {
-	this.type = type;
-    }
-
     public void setTitle(String title) {
 	this.title = title;
     }
 
-    public void setContent(String content) {
-	this.content = content;
+    public void setType(Integer type) {
+	this.type = type;
     }
 
-    public void setAuthor(String author) {
-	this.author = author;
-    }
-
-    public void setDate(Date date) {
-	this.date = date;
+    @Override
+    public String toString() {
+	return "MedicineDocument [id=" + id + ", type=" + type + ", title="
+		+ title + ", content=" + content + ", author=" + author
+		+ ", date=" + date + "]";
     }
 
 }

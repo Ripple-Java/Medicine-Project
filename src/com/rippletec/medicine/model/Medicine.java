@@ -3,6 +3,7 @@
  */
 package com.rippletec.medicine.model;
 
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -15,7 +16,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
@@ -43,43 +43,47 @@ public class Medicine extends BaseModel {
     public static final int CHINESE = 1;
     public static final int WEST = 2;
 
+    // 药品Id
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    
+    // 关联所属类别
+    @ManyToOne(fetch = FetchType.LAZY)
+    @Cascade(CascadeType.SAVE_UPDATE)
+    @JoinColumn(name = MEDICINE_TYPE_ID)
+    private MedicineType medicineType;
+    // 中药
+    @OneToMany(fetch=FetchType.LAZY,mappedBy="medicine")
+    @Cascade(CascadeType.ALL)
+    private Set<ChineseMedicine> chineseMedicines = new HashSet<ChineseMedicine>();
+    // 西药
+    @OneToMany(fetch=FetchType.LAZY,mappedBy="medicine")
+    @Cascade(CascadeType.ALL)
+    private Set<WestMedicine> westMedicines = new HashSet<WestMedicine>();
+
+
+
+    // 关联药物文章
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "medicine")
+    @Cascade(CascadeType.ALL)
+    @OrderBy(value="id asc")
+    private Set<MedicineDocument> medicineDocuments = new LinkedHashSet<MedicineDocument>();
+
+    // 药品所属第一级类型：1=中药，2=西药
+    @Column(name = "gib_type", length = 1, nullable = false)
+    private Integer gib_type;
+    
+    // 药品所属企业药品分类id
+    @ManyToOne(fetch = FetchType.LAZY)
+    @Cascade(CascadeType.SAVE_UPDATE)
+    @JoinColumn(name = ENTER_MEDICINE_TYPE_ID)
+    private EnterpriseMedicineType enterpriseMedicineType;
+    
     public Medicine() {
     }
 
-    
-    /**
-     * 基本构造方法
-     * @param medicineType
-     * @param gib_type
-     * @param enterpriseMedicineType
-     * @param price
-     */
-    public Medicine(MedicineType medicineType, Integer gib_type,
-	    EnterpriseMedicineType enterpriseMedicineType) {
-	super();
-	this.medicineType = medicineType;
-	this.gib_type = gib_type;
-	this.enterpriseMedicineType = enterpriseMedicineType;
-    }
-    /**
-     * 西药构造方法
-     * @param medicineType
-     * @param westMedicine
-     * @param medicineDocuments
-     * @param gib_type
-     * @param enterpriseMedicineType
-     * @param price
-     */
-    public Medicine(MedicineType medicineType, WestMedicine westMedicine,
-	    Set<MedicineDocument> medicineDocuments, Integer gib_type,
-	    EnterpriseMedicineType enterpriseMedicineType) {
-	super();
-	this.medicineType = medicineType;
-	this.westMedicine = westMedicine;
-	this.medicineDocuments = medicineDocuments;
-	this.gib_type = gib_type;
-	this.enterpriseMedicineType = enterpriseMedicineType;
-    }
     /**
      * 中药构造方法
      * @param medicineType
@@ -94,55 +98,109 @@ public class Medicine extends BaseModel {
 	    EnterpriseMedicineType enterpriseMedicineType) {
 	super();
 	this.medicineType = medicineType;
-	this.chineseMedicine = chineseMedicine;
+	this.chineseMedicines.add(chineseMedicine);
 	this.medicineDocuments = medicineDocuments;
 	this.gib_type = gib_type;
 	this.enterpriseMedicineType = enterpriseMedicineType;
     }
 
+    /**
+     * 基本构造方法
+     * @param medicineType
+     * @param gib_type
+     * @param enterpriseMedicineType
+     * @param price
+     */
+    public Medicine(MedicineType medicineType, Integer gib_type,
+	    EnterpriseMedicineType enterpriseMedicineType) {
+	super();
+	this.medicineType = medicineType;
+	this.gib_type = gib_type;
+	this.enterpriseMedicineType = enterpriseMedicineType;
+    }
 
-
-    // 药品Id
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
-    // 关联所属类别
-    @ManyToOne(fetch = FetchType.LAZY)
-    @Cascade(CascadeType.SAVE_UPDATE)
-    @JoinColumn(name = MEDICINE_TYPE_ID)
-    private MedicineType medicineType;
+    /**
+     * 西药构造方法
+     * @param medicineType
+     * @param westMedicine
+     * @param medicineDocuments
+     * @param gib_type
+     * @param enterpriseMedicineType
+     * @param price
+     */
+    public Medicine(MedicineType medicineType, WestMedicine westMedicine,
+	    Set<MedicineDocument> medicineDocuments, Integer gib_type,
+	    EnterpriseMedicineType enterpriseMedicineType) {
+	super();
+	this.medicineType = medicineType;
+	this.westMedicines.add(westMedicine);
+	this.medicineDocuments = medicineDocuments;
+	this.gib_type = gib_type;
+	this.enterpriseMedicineType = enterpriseMedicineType;
+    }
     
-    // 中药
-    //！！请getChineseOrWest()方法获取
-    @OneToOne(fetch=FetchType.LAZY)
-    @Cascade(CascadeType.ALL)
-    @JoinColumn(name=CHINESE_MEDICINE_ID)
-    private ChineseMedicine chineseMedicine;
-    
-    // 西药
-    //！！请getChineseOrWest()方法获取
-    @OneToOne(fetch=FetchType.LAZY)
-    @Cascade(CascadeType.ALL)
-    @JoinColumn(name=WEST_MEDICINE_ID)
-    private WestMedicine westMedicine;
 
-    // 关联药物文章
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "medicine")
-    @Cascade(CascadeType.ALL)
-    @OrderBy(value="id asc")
-    private Set<MedicineDocument> medicineDocuments = new LinkedHashSet<MedicineDocument>();
+    public Set<ChineseMedicine> getChineseMedicines() {
+        return chineseMedicines;
+    }
 
-    // 药品所属第一级类型：1=中药，2=西药
-    @Column(name = "gib_type", length = 1, nullable = false)
-    private Integer gib_type;
+    public EnterpriseMedicineType getEnterpriseMedicineType() {
+        return enterpriseMedicineType;
+    }
 
-    // 药品所属企业药品分类id
-    @ManyToOne(fetch = FetchType.LAZY)
-    @Cascade(CascadeType.SAVE_UPDATE)
-    @JoinColumn(name = ENTER_MEDICINE_TYPE_ID)
-    private EnterpriseMedicineType enterpriseMedicineType;
-    
+    public Integer getGib_type() {
+	return gib_type;
+    }
+
+    public Integer getId() {
+	return id;
+    }
+
+    public Set<MedicineDocument> getMedicineDocuments() {
+	return medicineDocuments;
+    }
+
+    public MedicineType getMedicineType() {
+	return medicineType;
+    }
+
+    public Set<WestMedicine> getWestMedicines() {
+        return westMedicines;
+    }
+
+
+    public void setChineseMedicines(Set<ChineseMedicine> chineseMedicines) {
+        this.chineseMedicines = chineseMedicines;
+    }
+
+    public void setEnterpriseMedicineType(
+    	EnterpriseMedicineType enterpriseMedicineType) {
+        this.enterpriseMedicineType = enterpriseMedicineType;
+    }
+
+    public void setGib_type(Integer gib_type) {
+	this.gib_type = gib_type;
+    }
+
+    public void setId(Integer id) {
+	this.id = id;
+    }
+
+
+    public void setMedicineDocuments(Set<MedicineDocument> medicineDocuments) {
+	this.medicineDocuments = medicineDocuments;
+    }
+
+
+    public void setMedicineType(MedicineType medicineType) {
+	this.medicineType = medicineType;
+    }
+
+
+    public void setWestMedicines(Set<WestMedicine> westMedicines) {
+        this.westMedicines = westMedicines;
+    }
+
 
     @Override
     public String toString() {
@@ -151,68 +209,8 @@ public class Medicine extends BaseModel {
 		+ gib_type + ", enterpriseMedicineType="
 		+ enterpriseMedicineType + "]";
     }
-    
-    public BaseModel getChineseOrWest(){
-	return gib_type == 1 ? getChineseMedicine() : getWestMedicine();
-    }
-
-    public Integer getId() {
-	return id;
-    }
-
-    public MedicineType getMedicineType() {
-	return medicineType;
-    }
-
-    public Integer getGib_type() {
-	return gib_type;
-    }
-
-    public void setId(Integer id) {
-	this.id = id;
-    }
-
-    public void setMedicineType(MedicineType medicineType) {
-	this.medicineType = medicineType;
-    }
-
-    public void setGib_type(Integer gib_type) {
-	this.gib_type = gib_type;
-    }
 
 
-    public Set<MedicineDocument> getMedicineDocuments() {
-	return medicineDocuments;
-    }
-
-    public void setMedicineDocuments(Set<MedicineDocument> medicineDocuments) {
-	this.medicineDocuments = medicineDocuments;
-    }
-
-    public EnterpriseMedicineType getEnterpriseMedicineType() {
-        return enterpriseMedicineType;
-    }
-
-    public void setEnterpriseMedicineType(
-    	EnterpriseMedicineType enterpriseMedicineType) {
-        this.enterpriseMedicineType = enterpriseMedicineType;
-    }
-
-    public ChineseMedicine getChineseMedicine() {
-        return chineseMedicine;
-    }
-
-    public WestMedicine getWestMedicine() {
-        return westMedicine;
-    }
-
-    public void setChineseMedicine(ChineseMedicine chineseMedicine) {
-        this.chineseMedicine = chineseMedicine;
-    }
-
-    public void setWestMedicine(WestMedicine westMedicine) {
-        this.westMedicine = westMedicine;
-    }
 
  
     

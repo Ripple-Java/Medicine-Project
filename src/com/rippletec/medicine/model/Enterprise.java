@@ -52,19 +52,6 @@ public class Enterprise extends BaseModel {
      */
     public static final int DOMESTIC = 3;
 
-    public Enterprise() {
-    }
-
-    public Enterprise(Integer type, String name, String logo, String phone,
-	    String email) {
-	super();
-	this.type = type;
-	this.name = name;
-	this.logo = logo;
-	this.phone = phone;
-	this.email = email;
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -95,68 +82,81 @@ public class Enterprise extends BaseModel {
     @Column(name = "email", length = 100, nullable = true)
     private String email;
 
-    @Override
-    public String toString() {
-	return "Enterprise [id=" + id + ", type=" + type + ", name=" + name
-		+ ", logo=" + logo + ", phone=" + phone + ", email=" + email
-		+ "]";
+    public Enterprise() {
     }
 
-    public Integer getId() {
-	return id;
-    }
-
-    public Integer getType() {
-	return type;
-    }
-
-    public String getName() {
-	return name;
-    }
-
-    public String getLogo() {
-	return logo;
-    }
-
-    public String getPhone() {
-	return phone;
+    public Enterprise(Integer type, String name, String logo, String phone,
+	    String email) {
+	super();
+	this.type = type;
+	this.name = name;
+	this.logo = logo;
+	this.phone = phone;
+	this.email = email;
     }
 
     public String getEmail() {
 	return email;
     }
 
-    public void setId(Integer id) {
-	this.id = id;
+    public Integer getId() {
+	return id;
     }
 
-    public void setType(Integer type) {
-	this.type = type;
-    }
-
-    public void setName(String name) {
-	this.name = name;
-    }
-
-    public void setLogo(String logo) {
-	this.logo = logo;
-    }
-
-    public void setPhone(String phone) {
-	this.phone = phone;
-    }
-
-    public void setEmail(String email) {
-	this.email = email;
+    public String getLogo() {
+	return logo;
     }
 
     public Set<EnterpriseMedicineType> getMedicineTypeEnterprises() {
 	return medicineTypeEnterprises;
     }
 
+    public String getName() {
+	return name;
+    }
+
+    public String getPhone() {
+	return phone;
+    }
+
+    public Integer getType() {
+	return type;
+    }
+
+    public void setEmail(String email) {
+	this.email = email;
+    }
+
+    public void setId(Integer id) {
+	this.id = id;
+    }
+
+    public void setLogo(String logo) {
+	this.logo = logo;
+    }
+
     public void setMedicineTypeEnterprises(
 	    Set<EnterpriseMedicineType> medicineTypeEnterprises) {
 	this.medicineTypeEnterprises = medicineTypeEnterprises;
+    }
+
+    public void setName(String name) {
+	this.name = name;
+    }
+
+    public void setPhone(String phone) {
+	this.phone = phone;
+    }
+
+    public void setType(Integer type) {
+	this.type = type;
+    }
+
+    @Override
+    public String toString() {
+	return "Enterprise [id=" + id + ", type=" + type + ", name=" + name
+		+ ", logo=" + logo + ", phone=" + phone + ", email=" + email
+		+ "]";
     }
 
 }

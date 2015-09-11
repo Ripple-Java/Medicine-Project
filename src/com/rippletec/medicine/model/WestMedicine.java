@@ -34,43 +34,7 @@ public class WestMedicine extends BaseModel {
     public static final String ENTER_MEDICINE_TYPE_ID = "enter_medicine_type_id";
     
     private static final long serialVersionUID = 5451907990648871088L;
-
-    public WestMedicine() {
-    }
-
-    public WestMedicine(Medicine medicine,
-	    EnterpriseMedicineType enterpriseMedicineType,
-	    MedicineType medicineType, String name, String other_name,
-	    String content, String current_application, String pharmacolo,
-	    String pk_pd, String pharmacokinetics, String warn, String aDRS,
-	    String interaction, String dose_explain, String manual,
-	    String adult_dose, String foreign_dose, String preparations,
-	    String store, Double price) {
-	super();
-	this.medicine = medicine;
-	this.enterpriseMedicineType = enterpriseMedicineType;
-	this.medicineType = medicineType;
-	this.name = name;
-	this.other_name = other_name;
-	this.content = content;
-	this.current_application = current_application;
-	this.pharmacolo = pharmacolo;
-	this.pk_pd = pk_pd;
-	this.pharmacokinetics = pharmacokinetics;
-	this.warn = warn;
-	ADRS = aDRS;
-	this.interaction = interaction;
-	this.dose_explain = dose_explain;
-	this.manual = manual;
-	this.adult_dose = adult_dose;
-	this.foreign_dose = foreign_dose;
-	this.preparations = preparations;
-	this.store = store;
-	this.price = price;
-    }
-
-
-
+    public static final String NAME = "name";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -81,23 +45,26 @@ public class WestMedicine extends BaseModel {
     @Cascade(CascadeType.ALL)
     @JoinColumn(name = MEDICINE_ID)
     private Medicine medicine;
-    
+
+
+
+
     // 药品所属企业药品分类id
     @ManyToOne(fetch = FetchType.LAZY)
     @Cascade(CascadeType.SAVE_UPDATE)
     @JoinColumn(name = ENTER_MEDICINE_TYPE_ID)
     private EnterpriseMedicineType enterpriseMedicineType;
-    
+
     // 关联所属类别
     @ManyToOne(fetch = FetchType.LAZY)
     @Cascade(CascadeType.SAVE_UPDATE)
     @JoinColumn(name = MEDICINE_TYPE_ID)
     private MedicineType medicineType;
-
+    
     // 西药药品名称
     @Column(name = "name", length = 255, nullable = false)
     private String name;
-
+    
     // 别名
     @Column(name = "other_name", columnDefinition = "TEXT", nullable = false)
     private String other_name;
@@ -157,10 +124,213 @@ public class WestMedicine extends BaseModel {
     // 贮法
     @Column(name = "store", columnDefinition = "TEXT", nullable = true)
     private String store;
-    
+
     // 药品价格
     @Column(name = "price", length = 10, nullable = false, precision = 2)
     private Double price;
+
+    public WestMedicine() {
+    }
+    
+    public WestMedicine(Medicine medicine,
+	    EnterpriseMedicineType enterpriseMedicineType,
+	    MedicineType medicineType, String name, String other_name,
+	    String content, String current_application, String pharmacolo,
+	    String pk_pd, String pharmacokinetics, String warn, String aDRS,
+	    String interaction, String dose_explain, String manual,
+	    String adult_dose, String foreign_dose, String preparations,
+	    String store, Double price) {
+	super();
+	this.medicine = medicine;
+	this.enterpriseMedicineType = enterpriseMedicineType;
+	this.medicineType = medicineType;
+	this.name = name;
+	this.other_name = other_name;
+	this.content = content;
+	this.current_application = current_application;
+	this.pharmacolo = pharmacolo;
+	this.pk_pd = pk_pd;
+	this.pharmacokinetics = pharmacokinetics;
+	this.warn = warn;
+	ADRS = aDRS;
+	this.interaction = interaction;
+	this.dose_explain = dose_explain;
+	this.manual = manual;
+	this.adult_dose = adult_dose;
+	this.foreign_dose = foreign_dose;
+	this.preparations = preparations;
+	this.store = store;
+	this.price = price;
+    }
+
+    public String getADRS() {
+	return ADRS;
+    }
+
+    public String getAdult_dose() {
+	return adult_dose;
+    }
+
+    public String getContent() {
+	return content;
+    }
+
+    public String getCurrent_application() {
+	return current_application;
+    }
+
+    public String getDose_explain() {
+	return dose_explain;
+    }
+
+    public EnterpriseMedicineType getEnterpriseMedicineType() {
+        return enterpriseMedicineType;
+    }
+
+    public String getForeign_dose() {
+	return foreign_dose;
+    }
+
+    public Integer getId() {
+	return id;
+    }
+
+    public String getInteraction() {
+	return interaction;
+    }
+
+    public String getManual() {
+        return manual;
+    }
+
+    public Medicine getMedicine() {
+	return medicine;
+    }
+
+    public MedicineType getMedicineType() {
+        return medicineType;
+    }
+
+    public String getName() {
+	return name;
+    }
+
+    public String getOther_name() {
+	return other_name;
+    }
+
+    public String getPharmacokinetics() {
+	return pharmacokinetics;
+    }
+
+    public String getPharmacolo() {
+	return pharmacolo;
+    }
+
+    public String getPk_pd() {
+	return pk_pd;
+    }
+
+    public String getPreparations() {
+	return preparations;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public String getStore() {
+	return store;
+    }
+
+    public String getWarn() {
+	return warn;
+    }
+
+    public void setADRS(String aDRS) {
+	ADRS = aDRS;
+    }
+
+    public void setAdult_dose(String adult_dose) {
+	this.adult_dose = adult_dose;
+    }
+
+    public void setContent(String content) {
+	this.content = content;
+    }
+
+    public void setCurrent_application(String current_application) {
+	this.current_application = current_application;
+    }
+
+    public void setDose_explain(String dose_explain) {
+	this.dose_explain = dose_explain;
+    }
+
+    public void setEnterpriseMedicineType(
+    	EnterpriseMedicineType enterpriseMedicineType) {
+        this.enterpriseMedicineType = enterpriseMedicineType;
+    }
+
+    public void setForeign_dose(String foreign_dose) {
+	this.foreign_dose = foreign_dose;
+    }
+
+    public void setId(Integer id) {
+	this.id = id;
+    }
+
+    public void setInteraction(String interaction) {
+	this.interaction = interaction;
+    }
+
+    public void setManual(String manual) {
+        this.manual = manual;
+    }
+
+    public void setMedicine(Medicine medicine) {
+	this.medicine = medicine;
+    }
+
+    public void setMedicineType(MedicineType medicineType) {
+        this.medicineType = medicineType;
+    }
+
+    public void setName(String name) {
+	this.name = name;
+    }
+
+    public void setOther_name(String other_name) {
+	this.other_name = other_name;
+    }
+
+    public void setPharmacokinetics(String pharmacokinetics) {
+	this.pharmacokinetics = pharmacokinetics;
+    }
+
+    public void setPharmacolo(String pharmacolo) {
+	this.pharmacolo = pharmacolo;
+    }
+
+    public void setPk_pd(String pk_pd) {
+	this.pk_pd = pk_pd;
+    }
+
+    public void setPreparations(String preparations) {
+	this.preparations = preparations;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
+    public void setStore(String store) {
+	this.store = store;
+    }
+
+    public void setWarn(String warn) {
+	this.warn = warn;
+    }
 
     @Override
     public String toString() {
@@ -176,175 +346,6 @@ public class WestMedicine extends BaseModel {
 		+ ", adult_dose=" + adult_dose + ", foreign_dose="
 		+ foreign_dose + ", preparations=" + preparations + ", store="
 		+ store + "]";
-    }
-
-    public Integer getId() {
-	return id;
-    }
-
-    public Medicine getMedicine() {
-	return medicine;
-    }
-
-    public String getName() {
-	return name;
-    }
-
-    public String getOther_name() {
-	return other_name;
-    }
-
-    public String getContent() {
-	return content;
-    }
-
-    public String getCurrent_application() {
-	return current_application;
-    }
-
-    public String getPharmacolo() {
-	return pharmacolo;
-    }
-
-    public String getPk_pd() {
-	return pk_pd;
-    }
-
-    public String getPharmacokinetics() {
-	return pharmacokinetics;
-    }
-
-    public String getWarn() {
-	return warn;
-    }
-
-    public String getADRS() {
-	return ADRS;
-    }
-
-    public String getInteraction() {
-	return interaction;
-    }
-
-    public String getDose_explain() {
-	return dose_explain;
-    }
-
-    public String getAdult_dose() {
-	return adult_dose;
-    }
-
-    public String getForeign_dose() {
-	return foreign_dose;
-    }
-
-    public String getPreparations() {
-	return preparations;
-    }
-
-    public String getStore() {
-	return store;
-    }
-
-    public void setId(Integer id) {
-	this.id = id;
-    }
-
-    public void setMedicine(Medicine medicine) {
-	this.medicine = medicine;
-    }
-
-    public void setName(String name) {
-	this.name = name;
-    }
-
-    public void setOther_name(String other_name) {
-	this.other_name = other_name;
-    }
-
-    public void setContent(String content) {
-	this.content = content;
-    }
-
-    public void setCurrent_application(String current_application) {
-	this.current_application = current_application;
-    }
-
-    public void setPharmacolo(String pharmacolo) {
-	this.pharmacolo = pharmacolo;
-    }
-
-    public void setPk_pd(String pk_pd) {
-	this.pk_pd = pk_pd;
-    }
-
-    public void setPharmacokinetics(String pharmacokinetics) {
-	this.pharmacokinetics = pharmacokinetics;
-    }
-
-    public void setWarn(String warn) {
-	this.warn = warn;
-    }
-
-    public void setADRS(String aDRS) {
-	ADRS = aDRS;
-    }
-
-    public void setInteraction(String interaction) {
-	this.interaction = interaction;
-    }
-
-    public void setDose_explain(String dose_explain) {
-	this.dose_explain = dose_explain;
-    }
-
-    public void setAdult_dose(String adult_dose) {
-	this.adult_dose = adult_dose;
-    }
-
-    public void setForeign_dose(String foreign_dose) {
-	this.foreign_dose = foreign_dose;
-    }
-
-    public void setPreparations(String preparations) {
-	this.preparations = preparations;
-    }
-
-    public void setStore(String store) {
-	this.store = store;
-    }
-
-    public String getManual() {
-        return manual;
-    }
-
-    public void setManual(String manual) {
-        this.manual = manual;
-    }
-
-    public EnterpriseMedicineType getEnterpriseMedicineType() {
-        return enterpriseMedicineType;
-    }
-
-    public MedicineType getMedicineType() {
-        return medicineType;
-    }
-
-    public void setEnterpriseMedicineType(
-    	EnterpriseMedicineType enterpriseMedicineType) {
-        this.enterpriseMedicineType = enterpriseMedicineType;
-    }
-
-    public void setMedicineType(MedicineType medicineType) {
-        this.medicineType = medicineType;
-    }
-
-    public Double getPrice() {
-        return price;
-    }
-
-    public void setPrice(Double price) {
-        this.price = price;
     }
     
     

@@ -6,6 +6,6 @@ import com.rippletec.medicine.model.EnterpriseMedicineType;
  * @author Liuyi
  *
  */
-public interface EnterpriseMedicineTypeDao extends FindByPageDao<EnterpriseMedicineType> {
+public interface EnterpriseMedicineTypeDao extends FindAndSearchDao<EnterpriseMedicineType> {
     public static final String NAME = "EnterpriseMedicineTypeDao";
 }

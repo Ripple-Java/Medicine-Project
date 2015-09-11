@@ -9,7 +9,7 @@ import com.rippletec.medicine.model.MedicineType;
  * @author Liuyi
  *
  */
-public interface MedicineTypeDao extends FindByPageDao<MedicineType>{
+public interface MedicineTypeDao extends FindAndSearchDao<MedicineType>{
 
     public static final String NAME = "MedicineTypeDao";
 }
