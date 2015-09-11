@@ -36,20 +36,8 @@ public class EnterpriseMedicineTypeDaoTest implements IBaseDaoTest {
 
     @Override
     @Test
-    public void testSave() throws Exception {
-	Enterprise enterprise = enterpriseDao.find(1);
-	EnterpriseMedicineType enterpriseMedicineType = new EnterpriseMedicineType("saveType--0907-west", EnterpriseMedicineType.WEST,enterprise);
-	enterpriseMedicineTypeDao.save(enterpriseMedicineType);
-    }
-
-    @Override
-    @Test
     public void testDelete() throws Exception {
-    }
-
-    @Override
-    @Test
-    public void testUpdate() throws Exception {
+	enterpriseMedicineTypeDao.delete(1);
     }
 
     @Override
@@ -59,8 +47,15 @@ public class EnterpriseMedicineTypeDaoTest implements IBaseDaoTest {
 //	System.out.println(enterpriseMedicineType.toString());
 //	System.out.println(enterpriseMedicineType.getEnterprise().toString());
 	Medicine medicine = enterpriseMedicineType.getMedicines().iterator().next();
-	System.out.println(medicine.getChineseOrWest().toString());
 	
+    }
+
+    @Test
+    public void testFindByName() throws Exception {
+	List<EnterpriseMedicineType> enterpriseMedicineTypes = enterpriseMedicineTypeDao.findBySql(EnterpriseMedicineType.TABLE_NAME,EnterpriseMedicineType.ENTERPRISE_ID, 1);
+	for (EnterpriseMedicineType enterpriseMedicineType : enterpriseMedicineTypes) {
+	    System.out.println(enterpriseMedicineType.toString());
+	}
     }
 
     @Override
@@ -71,13 +66,18 @@ public class EnterpriseMedicineTypeDaoTest implements IBaseDaoTest {
 	    System.out.println(enterpriseMedicineType.toString());
 	}
     }
-    
+
+    @Override
     @Test
-    public void testFindByName() throws Exception {
-	List<EnterpriseMedicineType> enterpriseMedicineTypes = enterpriseMedicineTypeDao.findBySql(EnterpriseMedicineType.TABLE_NAME,EnterpriseMedicineType.ENTERPRISE_ID, 1);
-	for (EnterpriseMedicineType enterpriseMedicineType : enterpriseMedicineTypes) {
-	    System.out.println(enterpriseMedicineType.toString());
-	}
+    public void testSave() throws Exception {
+	Enterprise enterprise = enterpriseDao.find(15);
+	EnterpriseMedicineType enterpriseMedicineType = new EnterpriseMedicineType("企业药品分类", EnterpriseMedicineType.WEST,enterprise);
+	enterpriseMedicineTypeDao.save(enterpriseMedicineType);
+    }
+    
+    @Override
+    @Test
+    public void testUpdate() throws Exception {
     }
 
 }

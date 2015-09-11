@@ -13,6 +13,14 @@ import com.rippletec.medicine.bean.PageBean;
 public interface IFindByPage<T> {
     
     /**
+     * 多参数分页查找
+     * @param paramMap 格式为：<参数名，参数值>
+     * @param page offset,pageSize字段不能为空
+     * @return
+     */
+    public List<T> findByPage(Map<String, Object> paramMap, PageBean page);
+    
+    /**
      * 基本分页查找方法
      * @param page offset,pageSize字段不能为空
      * @return
@@ -27,14 +35,6 @@ public interface IFindByPage<T> {
      * @return
      */
     public List<T> findByPage(String param, Object value, PageBean page);
-    
-    /**
-     * 多参数分页查找
-     * @param paramMap 格式为：<参数名，参数值>
-     * @param page offset,pageSize字段不能为空
-     * @return
-     */
-    public List<T> findByPage(Map<String, Object> paramMap, PageBean page);
     
     public List<T> findBySql(String tableName,String param, Object value,PageBean page);
 }

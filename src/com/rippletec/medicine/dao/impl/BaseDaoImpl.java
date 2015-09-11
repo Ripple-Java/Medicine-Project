@@ -10,14 +10,34 @@ import org.hibernate.SessionFactory;
 import com.rippletec.medicine.bean.PageBean;
 import com.rippletec.medicine.dao.Dao;
 import com.rippletec.medicine.dao.IFindByPage;
+import com.rippletec.medicine.dao.ISearchDao;
 import com.rippletec.medicine.support.PlusHibernateSupport;
 import com.rippletec.medicine.utils.StringUtil;
 
-public abstract class BaseDaoImpl<T> extends PlusHibernateSupport<T> implements IFindByPage<T>, Dao<T>{
+public abstract class BaseDaoImpl<T> extends PlusHibernateSupport<T> implements IFindByPage<T>, Dao<T> ,ISearchDao<T>{
     
     @Resource
     public void _setSessionFactory(SessionFactory sessionFactory) {
 	super.setSessionFactory(sessionFactory);
+    }
+    
+    @Override
+    public void delete(Integer id) {
+	getHibernateTemplate().delete(find(id));
+    }
+    
+    @Override
+    public T find(Integer id) {
+	return getHibernateTemplate().get(getPersistClass(), id);
+    }
+
+    @Override
+    public List<T> findByPage(Map<String, Object> paramMap,
+	    PageBean page) {
+	String[] params = paramMap.keySet().toArray(new String[]{});
+	Object[] values = paramMap.values().toArray();
+	String hql = StringUtil.getSelectHql(getClassName(), params);
+	return findByPage(hql, params, values, page.offset, page.pageSize);
     }
     
     @Override
@@ -32,40 +52,11 @@ public abstract class BaseDaoImpl<T> extends PlusHibernateSupport<T> implements 
     }
 
     @Override
-    public List<T> findByPage(Map<String, Object> paramMap,
-	    PageBean page) {
-	String[] params = paramMap.keySet().toArray(new String[]{});
-	Object[] values = paramMap.values().toArray();
-	String hql = StringUtil.getSelectHql(getClassName(), params);
-	return findByPage(hql, params, values, page.offset, page.pageSize);
+    public List<T> findByParam(String param, Object value) {
+	String hql = StringUtil.getSelectHql(getClassName(), param);
+	return findByParam(hql, param, value);
     }
 
-    @Override
-    public Integer save(T model) {
-	return (Integer) getHibernateTemplate().save(model);
-    }
-
-    @Override
-    public void delete(Integer id) {
-	getHibernateTemplate().delete(find(id));
-    }
-
-    @Override
-    public void update(T model) {
-	getHibernateTemplate().update(model);
-    }
-
-    @Override
-    public T find(Integer id) {
-	return getHibernateTemplate().get(getPersistClass(), id);
-    }
-   
-    @Override
-    public List<T> findBySql(String tableName, String param, Object value) {
-	String sql = StringUtil.getSelectSql(tableName, param);
-	return findBySql(getPersistClass(),sql,value);
-    }
-    
     @Override
     public List<T> findBySql(String tableName, Map<String, Object> paramMap) {
 	String[] params = paramMap.keySet().toArray(new String[]{});
@@ -75,18 +66,18 @@ public abstract class BaseDaoImpl<T> extends PlusHibernateSupport<T> implements 
     }
 
     @Override
+    public List<T> findBySql(String tableName, String param, Object value) {
+	String sql = StringUtil.getSelectSql(tableName, param);
+	return findBySql(getPersistClass(),sql,value);
+    }
+
+    @Override
     public List<T> findBySql(String tableName, String param, Object value,
 	    PageBean page) {
 	String sql = StringUtil.getSelectSql(tableName,param);
 	return findBySql(getPersistClass(), sql, value, page.offset, page.pageSize);
     }
-
-    @Override
-    public List<T> findByParam(String param, Object value) {
-	String hql = StringUtil.getSelectHql(getClassName(), param);
-	return findByParam(hql, param, value);
-    }
-
+   
     /**
      * 模板方法，子类实现即可具有分页查找功能
      * @return 持久化类类名
@@ -98,6 +89,30 @@ public abstract class BaseDaoImpl<T> extends PlusHibernateSupport<T> implements 
      * @return 持久化类class
      */
     public abstract Class<T> getPersistClass();
+
+    @Override
+    public Integer save(T model) {
+	return (Integer) getHibernateTemplate().save(model);
+    }
+
+    @Override
+    public List<T> search(Map<String, Object> paramMap) {
+	String[] params = paramMap.keySet().toArray(new String[]{});
+	Object[] values = paramMap.values().toArray();
+	String hql = StringUtil.getSearchHql(getClassName(), params);
+	return Search(hql, params, values);
+    }
+
+    @Override
+    public List<T> search(String param, Object value) {
+	String hql = StringUtil.getSearchHql(getClassName(), param);
+	return Search(hql, param, value);
+    }
+    
+    @Override
+    public void update(T model) {
+	getHibernateTemplate().update(model);
+    }
    
 
 }

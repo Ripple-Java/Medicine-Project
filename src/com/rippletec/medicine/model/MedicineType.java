@@ -40,25 +40,9 @@ public class MedicineType extends BaseModel {
 
     private static final long serialVersionUID = -521600701786316983L;
 
-    public MedicineType() {
-    }
-    public MedicineType(String name, Integer parent_type_id, Integer gib_type) {
-	super();
-	this.name = name;
-	this.parent_type_id = parent_type_id;
-	this.gib_type = gib_type;
-    }
-
-    public MedicineType(String name, MedicineType parent_type) {
-	super();
-	this.name = name;
-	this.parent_type_id = parent_type.getId();
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    
     @OneToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY,mappedBy="medicineType")
     @OrderBy(value="id asc")
     private Set<Medicine> medicines = new LinkedHashSet<Medicine>();
@@ -75,17 +59,34 @@ public class MedicineType extends BaseModel {
     @Column(name = "gib_type", length = 1, nullable = false)
     private Integer gib_type;
 
+    public MedicineType() {
+    }
+
+    public MedicineType(String name, Integer parent_type_id, Integer gib_type) {
+	super();
+	this.name = name;
+	this.parent_type_id = parent_type_id;
+	this.gib_type = gib_type;
+    }
+    
+    public MedicineType(String name, MedicineType parent_type) {
+	super();
+	this.name = name;
+	this.parent_type_id = parent_type.getId();
+    }
+
     
 
-    @Override
-    public String toString() {
-	return "MedicineType [id=" + id + ", name=" + name
-		+ ", parent_type_id=" + parent_type_id + ", gib_type="
-		+ gib_type + "]";
+    public Integer getGib_type() {
+        return gib_type;
     }
 
     public Integer getId() {
 	return id;
+    }
+
+    public Set<Medicine> getMedicines() {
+        return medicines;
     }
 
     public String getName() {
@@ -96,8 +97,16 @@ public class MedicineType extends BaseModel {
 	return parent_type_id;
     }
 
+    public void setGib_type(Integer gib_type) {
+        this.gib_type = gib_type;
+    }
+
     public void setId(Integer id) {
 	this.id = id;
+    }
+
+    public void setMedicines(Set<Medicine> medicines) {
+        this.medicines = medicines;
     }
 
     public void setName(String name) {
@@ -108,20 +117,11 @@ public class MedicineType extends BaseModel {
 	this.parent_type_id = parent_type_id;
     }
 
-    public Set<Medicine> getMedicines() {
-        return medicines;
-    }
-
-    public void setMedicines(Set<Medicine> medicines) {
-        this.medicines = medicines;
-    }
-
-    public Integer getGib_type() {
-        return gib_type;
-    }
-
-    public void setGib_type(Integer gib_type) {
-        this.gib_type = gib_type;
+    @Override
+    public String toString() {
+	return "MedicineType [id=" + id + ", name=" + name
+		+ ", parent_type_id=" + parent_type_id + ", gib_type="
+		+ gib_type + "]";
     }
     
     

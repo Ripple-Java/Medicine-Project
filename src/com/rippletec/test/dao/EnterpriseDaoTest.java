@@ -32,25 +32,9 @@ public class EnterpriseDaoTest implements IBaseDaoTest {
 
     @Override
     @Test
-    public void testSave() throws Exception {
-	Enterprise enterprise = new Enterprise(2, "testSave4", "logo", "123456", "@com");
-	System.out.println(enterprise);
-	enterpriseDao.save(enterprise);
-    }
-
-    @Override
-    @Test
     public void testDelete() throws Exception {
 	enterpriseDao.delete(3);
 	
-    }
-
-    @Override
-    @Test
-    public void testUpdate() throws Exception {
-	Enterprise enterprise = enterpriseDao.find(1);
-	enterprise.setName("updateName2");
-	enterpriseDao.update(enterprise);
     }
 
     @Override
@@ -59,7 +43,7 @@ public class EnterpriseDaoTest implements IBaseDaoTest {
 	System.out.println(enterpriseDao.find(10).getName());
 	System.out.println(enterpriseDao.find(1).getMedicineTypeEnterprises().size());
     }
-    
+
     @Override
     @Test
     public void testFindByPage() throws Exception {
@@ -68,7 +52,7 @@ public class EnterpriseDaoTest implements IBaseDaoTest {
 	    System.out.println(enterprise.toString());
 	}
     }
-    
+
     @Test
     public void testFindByPage2() throws Exception {
 	Map<String, Object> map = new HashMap<String, Object>();
@@ -78,6 +62,24 @@ public class EnterpriseDaoTest implements IBaseDaoTest {
 	for (Enterprise enterprise : enterprises) {
 	    System.out.println(enterprise.toString());
 	}
+    }
+    
+    @Override
+    @Test
+    public void testSave() throws Exception {
+	for (int i = 0; i < 5; i++) {
+	    Enterprise enterprise = new Enterprise(Enterprise.DOMESTIC, "企业:"+i, "logo", "123456", "@com");
+	    enterpriseDao.save(enterprise);
+	}
+	
+    }
+    
+    @Override
+    @Test
+    public void testUpdate() throws Exception {
+	Enterprise enterprise = enterpriseDao.find(1);
+	enterprise.setName("updateName2");
+	enterpriseDao.update(enterprise);
     }
 
 }

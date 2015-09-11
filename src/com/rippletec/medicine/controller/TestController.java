@@ -17,14 +17,14 @@ public class TestController {
 	@Resource
 	private EnterpriseManager enterpriseManager;
 	
-	@RequestMapping("/simple")
-	public @ResponseBody String simple() {
-		return "hello world";
-	}
-	
 	@RequestMapping(value="/json", method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Enterprise byProducesJson() {
 	    return null;
+	}
+	
+	@RequestMapping("/simple")
+	public @ResponseBody String simple() {
+		return "hello world";
 	}
 
 }

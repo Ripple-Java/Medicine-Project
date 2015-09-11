@@ -6,7 +6,7 @@ import com.rippletec.medicine.model.MedicineDocument;
  * @author Liuyi
  *
  */
-public interface MedicineDocumentDao extends FindByPageDao<MedicineDocument> {
+public interface MedicineDocumentDao extends FindAndSearchDao<MedicineDocument> {
 
     public static final String NAME = "MedicineDocumentDao";
     

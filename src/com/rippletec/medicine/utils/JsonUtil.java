@@ -3,7 +3,6 @@ package com.rippletec.medicine.utils;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Repository;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.JSONSerializer;
 import com.alibaba.fastjson.serializer.PropertyPreFilter;
-import com.sun.xml.internal.bind.v2.runtime.Name;
 
 /**
  * @author Liuyi
@@ -43,68 +41,24 @@ public class JsonUtil {
 	}
     }
     
-    public String toJsonString(final String url, Object jsonObject){
-	if (!jsonMap.containsKey(url))
-	    return "[]";
-	String jsonString = JSON.toJSONString(jsonObject, new PropertyPreFilter() {
-	    
-	    @Override
-	    public boolean apply(JSONSerializer arg0, Object object, String name) {
-		if(isConllection(object))
-		    return true;
-		if (isModel(object))
-		    return jsonMap.get(url).contains(name);
-		else
-		    return true;
-	    }
-	});
-	clear();
-	return jsonString;
+    public void clear() {
+	jsonObjectMap = new HashMap<String, Object>();
+	nameNumber  = 0;
     }
     
-    public String toJsonString(final String url){
-	return toJsonString(url, jsonObjectMap);
-    }
-    
-    public String toJsonString() {
-	return JSON.toJSONString(jsonObjectMap);
-    }
-    
-    public JsonUtil setModelList(List objects) {
-	if(objects != null && objects.size() >0)
-	{
-	    String name = getModelName(objects.get(0));
-	    if (name != null) {
-		jsonObjectMap.put(name+"s", objects);
-	    }
-	    else{
-		jsonObjectMap.put(LISTNAME_PREFIX+nameNumber, objects);
-		nameNumber++;
+    public String getModelName(Object object) {
+	String name = null;
+	if(isModel(object)){
+	    try {
+		  Class objectClass = object.getClass();
+		  Field modelClassName = objectClass.getDeclaredField("CLASS_NAME");
+		  name = (String) modelClassName.get(object);
+	    } catch (Exception e) {
+		return name;
 	    }
 	}
-	return this;
+	return name;
     }
-    
-    public JsonUtil setJsonObject(String name, Object object) {
-	jsonObjectMap.put(name, object);
-	return this;
-    }
-    
-    public JsonUtil setResultSuccess() {
-	jsonObjectMap.put("result", "success");
-	return this;
-    }
-    
-    public JsonUtil setResultFail() {
-	jsonObjectMap.put("result", "fail");
-	return this;
-    }
-    
-    public JsonUtil setResult(String res) {
-	jsonObjectMap.put("result", res);
-	return this;
-    }
-   
     
     public boolean isConllection(Object object){
 	return (object instanceof List || object instanceof Map) ? true : false;
@@ -122,23 +76,74 @@ public class JsonUtil {
 	return flag;
     }
     
-    public String getModelName(Object object) {
-	String name = null;
-	if(isModel(object)){
-	    try {
-		  Class objectClass = object.getClass();
-		  Field modelClassName = objectClass.getDeclaredField("CLASS_NAME");
-		  name = (String) modelClassName.get(object);
-	    } catch (Exception e) {
-		return name;
-	    }
-	}
-	return name;
+    public JsonUtil setJsonObject(String name, Object object) {
+	jsonObjectMap.put(name, object);
+	return this;
     }
     
-    public void clear() {
-	jsonObjectMap = new HashMap<String, Object>();
-	nameNumber  = 0;
+    public JsonUtil setModelList(List objects) {
+	if(objects != null && objects.size() >0)
+	{
+	    String name = getModelName(objects.get(0));
+	    if (name != null) {
+		jsonObjectMap.put(name+"s", objects);
+	    }
+	    else{
+		jsonObjectMap.put(LISTNAME_PREFIX+nameNumber, objects);
+		nameNumber++;
+	    }
+	}
+	return this;
+    }
+    
+    public JsonUtil setResult(String res) {
+	jsonObjectMap.put("result", res);
+	return this;
+    }
+    
+    public JsonUtil setResultFail() {
+	jsonObjectMap.put("result", "fail");
+	return this;
+    }
+    
+    public JsonUtil setResultSuccess() {
+	jsonObjectMap.put("result", "success");
+	return this;
+    }
+   
+    
+    public JsonUtil setTip(String tip) {
+	jsonObjectMap.put("tip", tip);
+	return this;
+    }
+    
+    public String toJsonString() {
+	String jssonString =  JSON.toJSONString(jsonObjectMap);
+	clear();
+	return jssonString;
+    }
+    
+    public String toJsonString(final String url){
+	return toJsonString(url, jsonObjectMap);
+    }
+    
+    public String toJsonString(final String url, Object jsonObject){
+	if (!jsonMap.containsKey(url))
+	    return "[]";
+	String jsonString = JSON.toJSONString(jsonObject, new PropertyPreFilter() {
+	    
+	    @Override
+	    public boolean apply(JSONSerializer arg0, Object object, String name) {
+		if(isConllection(object))
+		    return true;
+		if (isModel(object))
+		    return jsonMap.get(url).contains(name);
+		else
+		    return true;
+	    }
+	});
+	clear();
+	return jsonString;
     }
 
 }

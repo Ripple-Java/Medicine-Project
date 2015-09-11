@@ -8,7 +8,7 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
-import com.rippletec.medicine.dao.FindByPageDao;
+import com.rippletec.medicine.dao.FindAndSearchDao;
 import com.rippletec.medicine.dao.MedicineDocumentDao;
 import com.rippletec.medicine.model.MedicineDocument;
 import com.rippletec.medicine.service.MedicineDocumentManager;
@@ -20,7 +20,7 @@ public class MedicineDocumentManagerImpl extends BaseManager<MedicineDocument> i
     private MedicineDocumentDao medicineDocumentDao; 
     
     @Override
-    protected FindByPageDao<MedicineDocument> getDao() {
+    protected FindAndSearchDao<MedicineDocument> getDao() {
 	return this.medicineDocumentDao;
     }
 

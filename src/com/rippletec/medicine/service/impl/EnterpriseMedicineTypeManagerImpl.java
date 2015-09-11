@@ -1,21 +1,18 @@
 package com.rippletec.medicine.service.impl;
 
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
-import org.w3c.dom.ls.LSInput;
 
 import com.rippletec.medicine.bean.PageBean;
 import com.rippletec.medicine.dao.ChineseMedicineDao;
 import com.rippletec.medicine.dao.EnterpriseMedicineTypeDao;
-import com.rippletec.medicine.dao.FindByPageDao;
+import com.rippletec.medicine.dao.FindAndSearchDao;
 import com.rippletec.medicine.dao.WestMedicineDao;
-import com.rippletec.medicine.model.BaseModel;
 import com.rippletec.medicine.model.ChineseMedicine;
 import com.rippletec.medicine.model.EnterpriseMedicineType;
 import com.rippletec.medicine.model.WestMedicine;
@@ -32,13 +29,8 @@ public class EnterpriseMedicineTypeManagerImpl extends BaseManager<EnterpriseMed
     private WestMedicineDao westMedicineDao;
 
     @Override
-    protected FindByPageDao<EnterpriseMedicineType> getDao() {
+    protected FindAndSearchDao<EnterpriseMedicineType> getDao() {
 	return this.enterpriseMedicineTypeDao;
-    }
-
-    @Override
-    public List<EnterpriseMedicineType> getTypesByEnterpriseId(int id) {
-	return enterpriseMedicineTypeDao.findBySql(EnterpriseMedicineType.TABLE_NAME, EnterpriseMedicineType.ENTERPRISE_ID, id);
     }
 
     @Override
@@ -58,6 +50,11 @@ public class EnterpriseMedicineTypeManagerImpl extends BaseManager<EnterpriseMed
 	}
 	res.put("type", type);
 	return res;
+    }
+
+    @Override
+    public List<EnterpriseMedicineType> getTypesByEnterpriseId(int id) {
+	return enterpriseMedicineTypeDao.findBySql(EnterpriseMedicineType.TABLE_NAME, EnterpriseMedicineType.ENTERPRISE_ID, id);
     }
     
 }

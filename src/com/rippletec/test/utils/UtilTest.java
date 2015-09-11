@@ -1,13 +1,11 @@
 package com.rippletec.test.utils;
 
-import static org.junit.Assert.*;
-
 import java.lang.reflect.Field;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.junit.Test;
-
+import com.rippletec.medicine.SMS.SMS;
 import com.rippletec.medicine.model.BaseModel;
 import com.rippletec.medicine.model.Enterprise;
 import com.rippletec.medicine.utils.JsonUtil;
@@ -16,11 +14,11 @@ import com.rippletec.medicine.utils.StringUtil;
 public class UtilTest {
     
     @Test
-    public void testStringUttil() throws Exception {
-	System.out.println(StringUtil.getSelectHql(Enterprise.CLASS_NAME));
-	System.out.println(StringUtil.getSelectHql(Enterprise.CLASS_NAME, new String[]{}));
-	System.out.println(StringUtil.getSelectHql(Enterprise.CLASS_NAME, new String[]{Enterprise.TYPE}));
-	System.out.println(StringUtil.getSelectHql(Enterprise.CLASS_NAME, new String[]{Enterprise.TYPE,Enterprise.PHONE}));
+    public void testGetNumber() throws Exception {
+	for (int i = 0; i < 20; i++) {
+	    System.out.println(StringUtil.generateCode(6));
+	    System.out.println(StringUtil.getAccount());
+	}
     }
     
     @Test
@@ -46,6 +44,20 @@ public class UtilTest {
 	Field field = class1.getDeclaredField("DJFLSKD");
 	if(field != null)
 	    System.out.println(field.get(model));
+    }
+    
+    @Test
+    public void testSMS() throws Exception {
+	SMS sms = new SMS();
+	sms.send("15622739759", "123456","1");
+    }
+    
+    @Test
+    public void testStringUttil() throws Exception {
+	System.out.println(StringUtil.getSelectHql(Enterprise.CLASS_NAME));
+	System.out.println(StringUtil.getSelectHql(Enterprise.CLASS_NAME, new String[]{}));
+	System.out.println(StringUtil.getSelectHql(Enterprise.CLASS_NAME, new String[]{Enterprise.TYPE}));
+	System.out.println(StringUtil.getSelectHql(Enterprise.CLASS_NAME, new String[]{Enterprise.TYPE,Enterprise.PHONE}));
     }
 
 }

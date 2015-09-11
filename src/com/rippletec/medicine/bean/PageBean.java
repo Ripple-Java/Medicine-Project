@@ -36,51 +36,51 @@ public class PageBean {
 	this.lastPage = currentPage-1;
     }
 
-    @Override
-    public String toString() {
-	return "PageBean [currentPage=" + currentPage + ", nextPage="
-		+ nextPage + ", lastPage=" + lastPage + ", offset=" + offset
-		+ ", maxSize=" + pageSize + "]";
-    }
-
     public int getCurrentPage() {
 	return currentPage;
-    }
-
-    public int getNextPage() {
-	return nextPage;
     }
 
     public int getLastPage() {
 	return lastPage;
     }
 
-    public int getOffset() {
-	return offset;
-    }
-
     public int getMaxSize() {
 	return pageSize;
+    }
+
+    public int getNextPage() {
+	return nextPage;
+    }
+
+    public int getOffset() {
+	return offset;
     }
 
     public void setCurrentPage(int currentPage) {
 	this.currentPage = currentPage;
     }
 
-    public void setNextPage(int nextPage) {
-	this.nextPage = nextPage;
-    }
-
     public void setLastPage(int lastPage) {
 	this.lastPage = lastPage;
+    }
+
+    public void setMaxSize(int pageSize) {
+	this.pageSize = pageSize;
+    }
+
+    public void setNextPage(int nextPage) {
+	this.nextPage = nextPage;
     }
 
     public void setOffset(int offset) {
 	this.offset = offset;
     }
 
-    public void setMaxSize(int pageSize) {
-	this.pageSize = pageSize;
+    @Override
+    public String toString() {
+	return "PageBean [currentPage=" + currentPage + ", nextPage="
+		+ nextPage + ", lastPage=" + lastPage + ", offset=" + offset
+		+ ", maxSize=" + pageSize + "]";
     }
 
 }

@@ -4,7 +4,7 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
-import com.rippletec.medicine.dao.FindByPageDao;
+import com.rippletec.medicine.dao.FindAndSearchDao;
 import com.rippletec.medicine.dao.MedicineDao;
 import com.rippletec.medicine.model.Medicine;
 import com.rippletec.medicine.service.MedicineManager;
@@ -16,7 +16,7 @@ public class MedicineManagerImpl extends BaseManager<Medicine> implements Medici
     private MedicineDao medicineDao;
 
     @Override
-    protected FindByPageDao<Medicine> getDao() {
+    protected FindAndSearchDao<Medicine> getDao() {
 	return this.medicineDao;
     }
     

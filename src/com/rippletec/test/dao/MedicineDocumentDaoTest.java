@@ -36,24 +36,8 @@ public class MedicineDocumentDaoTest implements IBaseDaoTest {
 
     @Override
     @Test
-    public void testSave() throws Exception {
-	Medicine medicine = medicineDao.find(17);
-	MedicineDocument medicineDocument = new MedicineDocument(medicine, 1, "title2", "content", "author", new Date());
-	medicineDocumentDao.save(medicineDocument);
-    }
-
-    @Override
-    @Test
     public void testDelete() throws Exception {
 	medicineDocumentDao.delete(1);
-    }
-
-    @Override
-    @Test
-    public void testUpdate() throws Exception {
-	MedicineDocument medicineDocument = medicineDocumentDao.find(2);
-	medicineDocument.setTitle("updatetitie");
-	medicineDocumentDao.update(medicineDocument);
     }
 
     @Override
@@ -69,6 +53,22 @@ public class MedicineDocumentDaoTest implements IBaseDaoTest {
 	for (MedicineDocument medicineDocument : medicineDocuments) {
 	    System.out.println(medicineDocument.toString());
 	}
+    }
+
+    @Override
+    @Test
+    public void testSave() throws Exception {
+	Medicine medicine = medicineDao.find(17);
+	MedicineDocument medicineDocument = new MedicineDocument(medicine, 1, "title2", "content", "author", new Date());
+	medicineDocumentDao.save(medicineDocument);
+    }
+
+    @Override
+    @Test
+    public void testUpdate() throws Exception {
+	MedicineDocument medicineDocument = medicineDocumentDao.find(2);
+	medicineDocument.setTitle("updatetitie");
+	medicineDocumentDao.update(medicineDocument);
     }
     
 

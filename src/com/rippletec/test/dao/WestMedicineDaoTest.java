@@ -35,23 +35,8 @@ public class WestMedicineDaoTest implements IBaseDaoTest {
 
     @Override
     @Test
-    public void testSave() throws Exception {
-	Medicine medicine = medicineDao.find(11);
-//	WestMedicine westMedicine = new WestMedicine(medicine, "west", "west", "west", "west", "west", "west", "west", "west", "west", "west", "west", "west", "west", "west", "west", "west");
-//	System.out.println(westMedicine.toString());
-//	westMedicineDao.save(westMedicine);
-	
-    }
-
-    @Override
-    @Test
     public void testDelete() throws Exception {
 	westMedicineDao.delete(2);
-    }
-
-    @Override
-    @Test
-    public void testUpdate() throws Exception {
     }
 
     @Override
@@ -69,6 +54,21 @@ public class WestMedicineDaoTest implements IBaseDaoTest {
 	for (WestMedicine westMedicine : westMedicines) {
 	    System.out.println(westMedicine.toString());
 	}
+    }
+
+    @Override
+    @Test
+    public void testSave() throws Exception {
+	Medicine medicine = medicineDao.find(11);
+//	WestMedicine westMedicine = new WestMedicine(medicine, "west", "west", "west", "west", "west", "west", "west", "west", "west", "west", "west", "west", "west", "west", "west", "west");
+//	System.out.println(westMedicine.toString());
+//	westMedicineDao.save(westMedicine);
+	
+    }
+
+    @Override
+    @Test
+    public void testUpdate() throws Exception {
     }
 
 }
