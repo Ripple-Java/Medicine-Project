@@ -84,6 +84,8 @@ public class Enterprise extends BaseModel {
 
     public Enterprise() {
     }
+    
+ 
 
     public Enterprise(Integer type, String name, String logo, String phone,
 	    String email) {
@@ -94,6 +96,8 @@ public class Enterprise extends BaseModel {
 	this.phone = phone;
 	this.email = email;
     }
+
+
 
     public String getEmail() {
 	return email;

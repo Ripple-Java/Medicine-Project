@@ -80,7 +80,7 @@ public class MedicineDaoTest implements IBaseDaoTest{
 	public void testSave() throws Exception {
 	    EnterpriseMedicineType enterpriseMedicineType = enterpriseMedicineTypeDao.find(11);
 	    MedicineType medicineType = medicineTypeDao.find(15);
-	    Medicine medicine = new Medicine(medicineType, Medicine.CHINESE, enterpriseMedicineType);
+	    Medicine medicine = new Medicine();
 	    medicineDao.save(medicine);
 	}
 
@@ -89,10 +89,10 @@ public class MedicineDaoTest implements IBaseDaoTest{
 	    EnterpriseMedicineType enterpriseMedicineType = enterpriseMedicineTypeDao.find(14);
 	    MedicineType medicineType = medicineTypeDao.find(18);
 	    for (int i = 0; i < 10; i++) {
-		ChineseMedicine chineseMedicine = new ChineseMedicine(null,enterpriseMedicineType,medicineType, "测一下", "content", "efficacy", "annouce", "usage", "preparations", "store", "category", 88.0);
-		    Medicine medicine = new Medicine(medicineType, Medicine.CHINESE, enterpriseMedicineType);
+		ChineseMedicine chineseMedicine = new ChineseMedicine();
+		    Medicine medicine = new Medicine();
 		    chineseMedicine.setMedicine(medicine);
-		    medicine.getChineseMedicines().add(chineseMedicine);
+//		    medicine.getChineseMedicine().add(chineseMedicine);
 		    medicineDao.save(medicine);
 	    }
 	    
@@ -104,10 +104,10 @@ public class MedicineDaoTest implements IBaseDaoTest{
 	    EnterpriseMedicineType enterpriseMedicineType = enterpriseMedicineTypeDao.find(15);
 	    MedicineType medicineType = medicineTypeDao.find(19);
 	    for (int i = 0; i < 10; i++) {
-		WestMedicine westMedicine = new WestMedicine(null,enterpriseMedicineType,medicineType, "测哈哈", "west", "west", "west", "west", "west", "west", "west", "west", "west", "west", "west", "west", "west", "west", "west",888.0);
-		    Medicine medicine = new Medicine(medicineType, Medicine.CHINESE, enterpriseMedicineType);
+		WestMedicine westMedicine = new WestMedicine(null,medicineType, "测哈哈", "west", "west", "west", "west", "west", "west", "west", "west", "west", "west", "west", "west", "west", "west", "west",888.0);
+		    Medicine medicine = new Medicine();
 		    westMedicine.setMedicine(medicine);
-		    medicine.getWestMedicines().add(westMedicine);
+//		    medicine.getWestMedicine().add(westMedicine);
 		    medicineDao.save(medicine);
 	    }
 	    
@@ -126,7 +126,7 @@ public class MedicineDaoTest implements IBaseDaoTest{
 	public void testUpdate() throws Exception {
 	    MedicineType medicineType = new MedicineType("testMedicineType",1,MedicineType.CHINESE);
 	    medicineType.setId(6);
-	    Medicine medicine = new Medicine(medicineType, Medicine.CHINESE, null);
+	    Medicine medicine = new Medicine();
 	    medicine.setId(15);
 	    medicineDao.update(medicine);
 	}

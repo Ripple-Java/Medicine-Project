@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.rippletec.medicine.model;
 
 import javax.persistence.Column;
@@ -18,23 +15,18 @@ import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.springframework.stereotype.Repository;
 
-/**
- * @author Liuyi
- *
- */
 @Repository
 @Entity
-@Table(name = "chinese_medicine")
-public class ChineseMedicine extends BaseModel {
+@Table(name="enter_chinese_medicine")
+public class EnterChineseMedicine extends BaseModel{
 
     private static final long serialVersionUID = -7463751072679829110L;
 
-    public static final String CLASS_NAME = "ChineseMedicine";
-    public static final String TABLE_NAME = "chinese_medicine";
-    public static final String MEDICINE_ID = "medicine_id";
-    public static final String MEDICINE_TYPE_ID = "medicine_type_id";
+    public static final String CLASS_NAME = "EnterChineseMedicine";
+    public static final String TABLE_NAME = "enter_chinese_medicine";
     public static final String ENTER_MEDICINE_TYPE_ID = "enter_medicine_type_id";
-
+    public static final String MEDICINE_ID = "medicine_id";
+    
     public static final int ON_PUBLISTH = 1;
     public static final int ON_CHECKING = 2;
     public static final int ON_RECHECKING = 3;
@@ -45,18 +37,22 @@ public class ChineseMedicine extends BaseModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
+    
     // 关联药品表
     @OneToOne(fetch = FetchType.LAZY)
     @Cascade(CascadeType.ALL)
     @JoinColumn(name = MEDICINE_ID)
     private Medicine medicine;
 
-    // 关联所属类别
+    // 药品所属企业药品分类id
     @ManyToOne(fetch = FetchType.LAZY)
     @Cascade(CascadeType.SAVE_UPDATE)
-    @JoinColumn(name = MEDICINE_TYPE_ID)
-    private MedicineType medicineType;
+    @JoinColumn(name = ENTER_MEDICINE_TYPE_ID)
+    private EnterpriseMedicineType enterpriseMedicineType;
+    
+    // 企业名称
+    @Column(name="enterprise_name",length=50,nullable=false)
+    private String enterprise_name;
 
     // 中药药品名称
     @Column(name = "name", length = 50, nullable = false)
@@ -93,21 +89,23 @@ public class ChineseMedicine extends BaseModel {
     // 药品价格
     @Column(name = "price", length = 10, nullable = false, precision = 2)
     private Double price;
-
+    
     // 药品发布状态
-    @Column(name = "status", length = 1, nullable = false)
+    @Column(name= "status", length=1, nullable=false)
     private Integer status;
-
-    public ChineseMedicine() {
+    
+    public EnterChineseMedicine() {
     }
-
-    public ChineseMedicine(Medicine medicine, MedicineType medicineType,
-	    String name, String content, String efficacy, String annouce,
-	    String preparations, String manual, String store, String category,
-	    Double price, Integer status) {
+    public EnterChineseMedicine(Medicine medicine,
+	    EnterpriseMedicineType enterpriseMedicineType,
+	    String enterprise_name, String name, String content,
+	    String efficacy, String annouce, String preparations,
+	    String manual, String store, String category, Double price,
+	    Integer status) {
 	super();
 	this.medicine = medicine;
-	this.medicineType = medicineType;
+	this.enterpriseMedicineType = enterpriseMedicineType;
+	this.enterprise_name = enterprise_name;
 	this.name = name;
 	this.content = content;
 	this.efficacy = efficacy;
@@ -119,16 +117,18 @@ public class ChineseMedicine extends BaseModel {
 	this.price = price;
 	this.status = status;
     }
+    
+    
 
     @Override
     public String toString() {
-	return "ChineseMedicine [id=" + id + ", name=" + name + ", content="
-		+ content + ", efficacy=" + efficacy + ", annouce=" + annouce
+	return "EnterChineseMedicine [id=" + id + ", enterprise_name="
+		+ enterprise_name + ", name=" + name + ", content=" + content
+		+ ", efficacy=" + efficacy + ", annouce=" + annouce
 		+ ", preparations=" + preparations + ", manual=" + manual
 		+ ", store=" + store + ", category=" + category + ", price="
 		+ price + ", status=" + status + "]";
     }
-
     public String getAnnouce() {
 	return annouce;
     }
@@ -145,6 +145,10 @@ public class ChineseMedicine extends BaseModel {
 	return efficacy;
     }
 
+    public EnterpriseMedicineType getEnterpriseMedicineType() {
+	return enterpriseMedicineType;
+    }
+
     public Integer getId() {
 	return id;
     }
@@ -152,15 +156,6 @@ public class ChineseMedicine extends BaseModel {
     public String getManual() {
 	return manual;
     }
-
-    public Medicine getMedicine() {
-	return medicine;
-    }
-
-    public MedicineType getMedicineType() {
-	return medicineType;
-    }
-
     public String getName() {
 	return name;
     }
@@ -193,20 +188,17 @@ public class ChineseMedicine extends BaseModel {
 	this.efficacy = efficacy;
     }
 
+    public void setEnterpriseMedicineType(
+	    EnterpriseMedicineType enterpriseMedicineType) {
+	this.enterpriseMedicineType = enterpriseMedicineType;
+    }
+
     public void setId(Integer id) {
 	this.id = id;
     }
 
     public void setManual(String manual) {
 	this.manual = manual;
-    }
-
-    public void setMedicine(Medicine medicine) {
-	this.medicine = medicine;
-    }
-
-    public void setMedicineType(MedicineType medicineType) {
-	this.medicineType = medicineType;
     }
 
     public void setName(String name) {
@@ -225,4 +217,33 @@ public class ChineseMedicine extends BaseModel {
 	this.store = store;
     }
 
+    public String getEnterprise_name() {
+        return enterprise_name;
+    }
+
+    public void setEnterprise_name(String enterprise_name) {
+        this.enterprise_name = enterprise_name;
+    }
+    
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+    
+    
+
+    public Medicine getMedicine() {
+        return medicine;
+    }
+
+    public void setMedicine(Medicine medicine) {
+        this.medicine = medicine;
+    }
+
+
+  
+   
 }

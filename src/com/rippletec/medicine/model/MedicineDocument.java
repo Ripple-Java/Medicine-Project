@@ -34,12 +34,14 @@ public class MedicineDocument extends BaseModel {
     public static final String TABLE_NAME = "medicine_document";
     public static final String MEDICINE_ID = "medicine_id";
     public static final String TYPE = "type";
+    
     public static final int GUIDEBOOK = 1 ;
     public static final int LITERATURE = 2 ;
     public static final int CASES = 3 ;
     
     private static final long serialVersionUID = 1344487290503116724L;
     public static final String TITLE = "title";
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

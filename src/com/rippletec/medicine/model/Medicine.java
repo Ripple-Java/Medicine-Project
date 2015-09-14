@@ -3,7 +3,6 @@
  */
 package com.rippletec.medicine.model;
 
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -13,9 +12,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
@@ -40,6 +38,7 @@ public class Medicine extends BaseModel {
     public static final String ENTER_MEDICINE_TYPE_ID = "enter_medicine_type_id";
     public static final String CHINESE_MEDICINE_ID = "chinese_medicine_id";
     public static final String WEST_MEDICINE_ID = "west_medicine_id";
+    
     public static final int CHINESE = 1;
     public static final int WEST = 2;
 
@@ -48,23 +47,6 @@ public class Medicine extends BaseModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    
-    // 关联所属类别
-    @ManyToOne(fetch = FetchType.LAZY)
-    @Cascade(CascadeType.SAVE_UPDATE)
-    @JoinColumn(name = MEDICINE_TYPE_ID)
-    private MedicineType medicineType;
-    // 中药
-    @OneToMany(fetch=FetchType.LAZY,mappedBy="medicine")
-    @Cascade(CascadeType.ALL)
-    private Set<ChineseMedicine> chineseMedicines = new HashSet<ChineseMedicine>();
-    // 西药
-    @OneToMany(fetch=FetchType.LAZY,mappedBy="medicine")
-    @Cascade(CascadeType.ALL)
-    private Set<WestMedicine> westMedicines = new HashSet<WestMedicine>();
-
-
-
     // 关联药物文章
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "medicine")
     @Cascade(CascadeType.ALL)
@@ -72,149 +54,45 @@ public class Medicine extends BaseModel {
     private Set<MedicineDocument> medicineDocuments = new LinkedHashSet<MedicineDocument>();
 
     // 药品所属第一级类型：1=中药，2=西药
-    @Column(name = "gib_type", length = 1, nullable = false)
-    private Integer gib_type;
+    @Column(name = "parentType", length = 1, nullable = false)
+    private Integer parentType;
     
-    // 药品所属企业药品分类id
-    @ManyToOne(fetch = FetchType.LAZY)
-    @Cascade(CascadeType.SAVE_UPDATE)
-    @JoinColumn(name = ENTER_MEDICINE_TYPE_ID)
-    private EnterpriseMedicineType enterpriseMedicineType;
     
     public Medicine() {
     }
 
-    /**
-     * 中药构造方法
-     * @param medicineType
-     * @param chineseMedicine
-     * @param medicineDocuments
-     * @param gib_type
-     * @param enterpriseMedicineType
-     * @param price
-     */
-    public Medicine(MedicineType medicineType, ChineseMedicine chineseMedicine,
-	    Set<MedicineDocument> medicineDocuments, Integer gib_type,
-	    EnterpriseMedicineType enterpriseMedicineType) {
+
+    public Medicine(Integer parentType) {
 	super();
-	this.medicineType = medicineType;
-	this.chineseMedicines.add(chineseMedicine);
-	this.medicineDocuments = medicineDocuments;
-	this.gib_type = gib_type;
-	this.enterpriseMedicineType = enterpriseMedicineType;
+	this.parentType = parentType;
     }
 
-    /**
-     * 基本构造方法
-     * @param medicineType
-     * @param gib_type
-     * @param enterpriseMedicineType
-     * @param price
-     */
-    public Medicine(MedicineType medicineType, Integer gib_type,
-	    EnterpriseMedicineType enterpriseMedicineType) {
-	super();
-	this.medicineType = medicineType;
-	this.gib_type = gib_type;
-	this.enterpriseMedicineType = enterpriseMedicineType;
-    }
-
-    /**
-     * 西药构造方法
-     * @param medicineType
-     * @param westMedicine
-     * @param medicineDocuments
-     * @param gib_type
-     * @param enterpriseMedicineType
-     * @param price
-     */
-    public Medicine(MedicineType medicineType, WestMedicine westMedicine,
-	    Set<MedicineDocument> medicineDocuments, Integer gib_type,
-	    EnterpriseMedicineType enterpriseMedicineType) {
-	super();
-	this.medicineType = medicineType;
-	this.westMedicines.add(westMedicine);
-	this.medicineDocuments = medicineDocuments;
-	this.gib_type = gib_type;
-	this.enterpriseMedicineType = enterpriseMedicineType;
-    }
-    
-
-    public Set<ChineseMedicine> getChineseMedicines() {
-        return chineseMedicines;
-    }
-
-    public EnterpriseMedicineType getEnterpriseMedicineType() {
-        return enterpriseMedicineType;
-    }
-
-    public Integer getGib_type() {
-	return gib_type;
-    }
 
     public Integer getId() {
-	return id;
+        return id;
     }
 
     public Set<MedicineDocument> getMedicineDocuments() {
-	return medicineDocuments;
-    }
-
-    public MedicineType getMedicineType() {
-	return medicineType;
-    }
-
-    public Set<WestMedicine> getWestMedicines() {
-        return westMedicines;
+        return medicineDocuments;
     }
 
 
-    public void setChineseMedicines(Set<ChineseMedicine> chineseMedicines) {
-        this.chineseMedicines = chineseMedicines;
+    public Integer getParentType() {
+        return parentType;
     }
 
-    public void setEnterpriseMedicineType(
-    	EnterpriseMedicineType enterpriseMedicineType) {
-        this.enterpriseMedicineType = enterpriseMedicineType;
-    }
-
-    public void setGib_type(Integer gib_type) {
-	this.gib_type = gib_type;
-    }
 
     public void setId(Integer id) {
-	this.id = id;
+        this.id = id;
     }
-
 
     public void setMedicineDocuments(Set<MedicineDocument> medicineDocuments) {
-	this.medicineDocuments = medicineDocuments;
+        this.medicineDocuments = medicineDocuments;
     }
 
 
-    public void setMedicineType(MedicineType medicineType) {
-	this.medicineType = medicineType;
+    public void setParentType(Integer parentType) {
+        this.parentType = parentType;
     }
-
-
-    public void setWestMedicines(Set<WestMedicine> westMedicines) {
-        this.westMedicines = westMedicines;
-    }
-
-
-    @Override
-    public String toString() {
-	return "Medicine [id=" + id + ", medicineType=" + medicineType
-		+ ", medicineDocuments=" + medicineDocuments + ", gib_type="
-		+ gib_type + ", enterpriseMedicineType="
-		+ enterpriseMedicineType + "]";
-    }
-
-
-
- 
-    
-    
-    
 
 }

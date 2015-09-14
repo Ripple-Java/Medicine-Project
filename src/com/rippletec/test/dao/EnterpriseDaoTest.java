@@ -33,7 +33,7 @@ public class EnterpriseDaoTest implements IBaseDaoTest {
     @Override
     @Test
     public void testDelete() throws Exception {
-	enterpriseDao.delete(3);
+	enterpriseDao.delete(1);
 	
     }
 
@@ -68,7 +68,7 @@ public class EnterpriseDaoTest implements IBaseDaoTest {
     @Test
     public void testSave() throws Exception {
 	for (int i = 0; i < 5; i++) {
-	    Enterprise enterprise = new Enterprise(Enterprise.DOMESTIC, "企业:"+i, "logo", "123456", "@com");
+	    Enterprise enterprise = new Enterprise(Enterprise.DOMESTIC, "测试企业+"+i, "logo", "phone", "email");
 	    enterpriseDao.save(enterprise);
 	}
 	
