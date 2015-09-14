@@ -24,6 +24,10 @@ public interface UserManager extends IManager<User> {
     void updateUserInfo(String account, int sex, Date birthday, int degree,
 	    String email);
 
-    boolean userLogin(String account, String password, HttpSession httpSession);
+
+    boolean userLogin(String account, String password, Integer device,
+	    HttpSession httpSession);
+
+    boolean loginOut(String account, HttpSession httpSession);
 
 }

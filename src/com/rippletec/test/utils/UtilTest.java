@@ -5,10 +5,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.junit.Test;
+
 import com.rippletec.medicine.SMS.SMS;
 import com.rippletec.medicine.model.BaseModel;
 import com.rippletec.medicine.model.Enterprise;
 import com.rippletec.medicine.utils.JsonUtil;
+import com.rippletec.medicine.utils.MD5Util;
 import com.rippletec.medicine.utils.StringUtil;
 
 public class UtilTest {
@@ -58,6 +60,11 @@ public class UtilTest {
 	System.out.println(StringUtil.getSelectHql(Enterprise.CLASS_NAME, new String[]{}));
 	System.out.println(StringUtil.getSelectHql(Enterprise.CLASS_NAME, new String[]{Enterprise.TYPE}));
 	System.out.println(StringUtil.getSelectHql(Enterprise.CLASS_NAME, new String[]{Enterprise.TYPE,Enterprise.PHONE}));
+    }
+    
+    @Test
+    public void testMD5() throws Exception {
+	System.out.println(MD5Util.validPasswd("aabbcc12345", "AE484EF236FB6B6F904E11AB91C0932C65C1C678282CC8FFF0DD477D"));
     }
 
 }

@@ -36,7 +36,7 @@ public class EnterpriseMedicineTypeDaoTest implements IBaseDaoTest {
     @Override
     @Test
     public void testDelete() throws Exception {
-	enterpriseMedicineTypeDao.delete(3);
+	enterpriseMedicineTypeDao.delete(2);
     }
 
     @Override
@@ -70,7 +70,7 @@ public class EnterpriseMedicineTypeDaoTest implements IBaseDaoTest {
     @Test
     public void testSave() throws Exception {
 	Enterprise enterprise = enterpriseDao.find(2);
-	EnterpriseMedicineType enterpriseMedicineType = new EnterpriseMedicineType("企业药品分类", EnterpriseMedicineType.WEST,enterprise);
+	EnterpriseMedicineType enterpriseMedicineType = new EnterpriseMedicineType("企业药品分类", EnterpriseMedicineType.WEST,1, enterprise);
 	enterpriseMedicineTypeDao.save(enterpriseMedicineType);
     }
     
