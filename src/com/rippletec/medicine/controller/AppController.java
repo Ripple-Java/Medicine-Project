@@ -211,6 +211,7 @@ public class AppController extends BaseController {
 			.setMaxInactiveInterval((new Integer(timeLimit)) * 60);
 		jsonUtil.setJsonObject("result", "success")
 			.setJsonObject("time", timeLimit)
+			.setJsonObject("code", VerificationCode)
 			.setJsonObject("sessionid", httpSession.getId());
 	    } else
 		jsonUtil.setResultFail().setJsonObject("tip", res);
@@ -245,30 +246,50 @@ public class AppController extends BaseController {
 	return jsonUtil.setResultFail().setTip("参数错误").toJsonString();
     }
 
-    @RequestMapping(value = "/user/login", method = RequestMethod.GET)
+    @RequestMapping(value = "/user/login", method = RequestMethod.POST)
     @ResponseBody
     public String user_setLogin(
 	    HttpSession httpSession,
 	    @RequestParam(value = "account", required = false, defaultValue = "") String account,
-	    @RequestParam(value = "password", required = false, defaultValue = "") String password) {
-	if (StringUtil.isMobile(account) && StringUtil.isPassword(password)) {
-	    if (userManager.userLogin(account, password, httpSession))
-		jsonUtil.setResultSuccess();
+	    @RequestParam(value = "password", required = false, defaultValue = "") String password,
+	    @RequestParam(value = "device", required=false, defaultValue="-1") int device) {
+	if (StringUtil.isMobile(account) && StringUtil.hasText(password) && device>-1) {
+	    if (userManager.isLogined(account, httpSession))
+		return jsonUtil.setResultFail().setTip("账号已登录，请勿重复登陆").toJsonString();
+	    if (userManager.userLogin(account, password, device ,httpSession))
+		jsonUtil.setResultSuccess().setJsonObject("sessionid", httpSession.getId());
 	    else
 		jsonUtil.setResultFail().setTip("用户名或密码错误");
 	} else
 	    jsonUtil.setResultFail().setTip("参数错误");
 	return jsonUtil.toJsonString();
     }
+    
+    @RequestMapping(value = "/user/loginOut", method = RequestMethod.GET)
+    @ResponseBody
+    public String user_setLoginOut(
+	    HttpSession httpSession,
+	    @RequestParam(value = "account", required = false, defaultValue = "") String account) {
+	if (StringUtil.isMobile(account)) {
+	    if (userManager.isLogined(account, httpSession)){
+		if(userManager.loginOut(account,httpSession))
+		    return jsonUtil.setResultSuccess().toJsonString();
+		else return jsonUtil.setResultFail().toJsonString();
+	    }
+		
+	} else
+	    jsonUtil.setResultFail().setTip("参数错误");
+	return jsonUtil.toJsonString();
+    }
 
-    @RequestMapping(value = "/user/register", method = RequestMethod.GET)
+    @RequestMapping(value = "/user/register", method = RequestMethod.POST)
     @ResponseBody
     public String user_setRegister(
 	    HttpSession httpSession,
 	    @RequestParam(value = "phoneNumber", required = false, defaultValue = "") String phoneNumber,
 	    @RequestParam(value = "password", required = false, defaultValue = "") String password,
 	    @RequestParam(value = "code", required = false, defaultValue = "") String code) {
-	if (StringUtil.isMobile(phoneNumber) && StringUtil.isPassword(password)) {
+	if (StringUtil.isMobile(phoneNumber) && StringUtil.hasText(password)) {
 	    String tempPhone = (String) httpSession.getAttribute("phoneNumber");
 	    String tempCode = (String) httpSession.getAttribute("code");
 	    if (phoneNumber.equals(tempPhone) && code.equals(tempCode)) {
@@ -309,13 +330,13 @@ public class AppController extends BaseController {
 	return jsonUtil.setResultFail().setTip("参数错误").toJsonString();
     }
 
-    @RequestMapping(value = "/user/updatePassword", method = RequestMethod.GET)
+    @RequestMapping(value = "/user/updatePassword", method = RequestMethod.POST)
     @ResponseBody
     public String user_updatePassword(
 	    HttpSession httpSession,
 	    @RequestParam(value = "account", required = false, defaultValue = "") String account,
 	    @RequestParam(value = "password", required = false, defaultValue = "") String password) {
-	if (StringUtil.isMobile(account) && StringUtil.isPassword(password)) {
+	if (StringUtil.isMobile(account) && StringUtil.hasText(password)) {
 	    if (userManager.isLogined(account, httpSession)) {
 		if (userManager.updatePassword(account, password))
 		    jsonUtil.setResultSuccess();
@@ -328,16 +349,16 @@ public class AppController extends BaseController {
 	return jsonUtil.setResultFail().setTip("参数错误").toJsonString();
     }
 
-    @RequestMapping(value = "/user/updateUserInfo", method = RequestMethod.GET)
+    @RequestMapping(value = "/user/updateUserInfo", method = RequestMethod.POST)
     @ResponseBody
     public String user_updateUserInfo(
 	    HttpSession httpSession,
 	    @RequestParam(value = "account", required = false, defaultValue = "") String account,
-	    @RequestParam(value = "sex", required = false, defaultValue = "-1") int sex,
+	    @RequestParam(value = "sex", required = false, defaultValue = "0") int sex,
 	    @RequestParam(value = "birthday", required = false, defaultValue = "") Date birthday,
-	    @RequestParam(value = "degree", required = false, defaultValue = "-1") int degree,
-	    @RequestParam(value = "email", required = false, defaultValue = "") String email) {
-	if (StringUtil.hasText(email) && StringUtil.hasText(account)
+	    @RequestParam(value = "degree", required = false, defaultValue = "0") int degree,
+	    @RequestParam(value = "email", required = false, defaultValue = "null") String email) {
+	if (StringUtil.isMobile(account) && StringUtil.hasText(email)
 		&& degree > -1 && sex > -1) {
 	    if (userManager.isLogined(account, httpSession)) {
 		userManager.updateUserInfo(account, sex, birthday, degree,

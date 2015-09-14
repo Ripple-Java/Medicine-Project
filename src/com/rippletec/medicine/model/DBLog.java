@@ -47,7 +47,7 @@ public class DBLog extends BaseModel{
     private String action;
     
     @Column(name="date",nullable=false)
-    @Temporal(TemporalType.TIME)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date date;
     
     

@@ -92,7 +92,7 @@ public class User extends BaseModel {
     @Column(name = "email", length = 255, nullable = true)
     private String email;
 
-    // 学历（0代表小学，1代表初中，2代表高中，3代表专科，4代表本科，5代表硕士，6代表博士）
+    // 学历（0空，1小学，2初中，3高中，4专科，5本科，6硕士，7博士）
     @Column(name = "degree", length = 1, nullable = true)
     private int degree;
 
@@ -110,12 +110,12 @@ public class User extends BaseModel {
     private Date regeditTime;
 
     // 最后一次登录设备
-    @Column(name = "device", length = 1, nullable = false)
+    @Column(name = "device", length = 1, nullable = true)
     private Integer device;
 
     // 最后一次登录时间
-    @Column(name = "lastLogin", nullable = false)
-    @Temporal(TemporalType.TIME)
+    @Column(name = "lastLogin", nullable = true)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date lastLogin;
 
     public User() {

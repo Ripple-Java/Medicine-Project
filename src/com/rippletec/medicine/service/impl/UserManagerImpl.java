@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.jws.soap.SOAPBinding.Use;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Service;
@@ -64,6 +65,10 @@ public class UserManagerImpl extends BaseManager<User> implements UserManager{
 	    return false;
 	}
 	User user = new User(securityPassword,phoneNumber,phoneNumber, User.TYPE_USER, phoneNumber, User.DEFAULT_CERTIFICATEIMG, new Date());
+	user.setBirthday(null);
+	user.setDegree(0);
+	user.setEmail(null);
+	user.setSex(0);
 	userDao.save(user);
 	return true;
     }
@@ -99,13 +104,21 @@ public class UserManagerImpl extends BaseManager<User> implements UserManager{
     }
 
     @Override
-    public boolean userLogin(String account, String password,
+    public boolean userLogin(String account, String password, Integer device,
 	    HttpSession httpSession) {
 	User user = findByAccount(account);
 	if(user != null){
 	    String securityPassword = user.getPassword();
 	    try {
 		if(MD5Util.validPasswd(password, securityPassword)){
+		    user.setLastLogin(new Date());
+		    switch (device) {
+		    case User.DRVICE_ANDROID: user.setDevice(User.DRVICE_ANDROID);break;
+		    case User.DRVICE_IPHONE:  user.setDevice(User.DRVICE_IPHONE);break;
+		    default: user.setDevice(User.DRVICE_OTHER);
+			break;
+		    }
+		    update(user);
 		    httpSession.setAttribute(User.ACCOUNT, account);
 		    httpSession.setAttribute(User.TYPE, User.TYPE_USER);
 		    return true;
@@ -119,4 +132,11 @@ public class UserManagerImpl extends BaseManager<User> implements UserManager{
 	return false;
     }
 
+    @Override
+    public boolean loginOut(String account, HttpSession httpSession) {
+	httpSession.removeAttribute(User.ACCOUNT);
+	httpSession.removeAttribute(User.TYPE);
+	return true;
+    }
+    
 }

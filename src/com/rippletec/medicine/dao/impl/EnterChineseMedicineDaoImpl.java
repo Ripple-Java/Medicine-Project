@@ -1,8 +1,11 @@
 package com.rippletec.medicine.dao.impl;
 
+import org.springframework.stereotype.Repository;
+
 import com.rippletec.medicine.dao.EnterChineseMedicineDao;
 import com.rippletec.medicine.model.EnterChineseMedicine;
 
+@Repository(EnterChineseMedicineDao.NAME)
 public class EnterChineseMedicineDaoImpl extends BaseDaoImpl<EnterChineseMedicine> implements EnterChineseMedicineDao{
 
     @Override

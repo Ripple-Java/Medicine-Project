@@ -51,14 +51,14 @@ public class MedicineDaoTest implements IBaseDaoTest{
 	@Override
 	@Test
 	public void testDelete() throws Exception {
-		medicineDao.delete(11);
+		medicineDao.delete(1);
 	    
 	}
 	
 	@Override
 	@Test
 	public void testFind() throws Exception {
-	    medicineDao.find(17);
+	    medicineDao.find(1);
 	}
 	
 	@Test
