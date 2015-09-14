@@ -41,15 +41,17 @@ public class EnterpriseMedicineType extends BaseModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    
+    // 关联药物
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "enterpriseMedicineType")
+    @Cascade(CascadeType.ALL)
+    @OrderBy(value = "id asc")
+    private Set<EnterChineseMedicine> enterChineseMedicines = new LinkedHashSet<EnterChineseMedicine>();
 
     // 关联药物
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "enterpriseMedicineType")
     @Cascade(CascadeType.ALL)
-    @OrderBy(value="id asc")
-    private Set<Medicine> medicines = new LinkedHashSet<Medicine>();
-
-
+    @OrderBy(value = "id asc")
+    private Set<EnterWestMedicine> enterWestMedicines = new LinkedHashSet<EnterWestMedicine>();
 
     // 企业药品类别名称
     @Column(name = "name", length = 255, nullable = false)
@@ -64,10 +66,10 @@ public class EnterpriseMedicineType extends BaseModel {
     @Cascade(CascadeType.SAVE_UPDATE)
     @JoinColumn(name = ENTERPRISE_ID)
     private Enterprise enterprise;
-    
+
     public EnterpriseMedicineType() {
     }
-    
+
     public EnterpriseMedicineType(String name, Integer gib_type,
 	    Enterprise enterprise) {
 	super();
@@ -76,22 +78,24 @@ public class EnterpriseMedicineType extends BaseModel {
 	this.enterprise = enterprise;
     }
 
-    
+
+
+    @Override
+    public String toString() {
+	return "EnterpriseMedicineType [id=" + id + ", name=" + name
+		+ ", gib_type=" + gib_type + ", enterprise=" + enterprise + "]";
+    }
 
     public Enterprise getEnterprise() {
 	return enterprise;
     }
 
     public Integer getGib_type() {
-        return gib_type;
+	return gib_type;
     }
 
     public Integer getId() {
 	return id;
-    }
-
-    public Set<Medicine> getMedicines() {
-	return medicines;
     }
 
     public String getName() {
@@ -103,27 +107,32 @@ public class EnterpriseMedicineType extends BaseModel {
     }
 
     public void setGib_type(Integer gib_type) {
-        this.gib_type = gib_type;
+	this.gib_type = gib_type;
     }
 
     public void setId(Integer id) {
 	this.id = id;
     }
 
-    public void setMedicines(Set<Medicine> medicines) {
-	this.medicines = medicines;
-    }
-
     public void setName(String name) {
 	this.name = name;
     }
 
-    @Override
-    public String toString() {
-	return "EnterpriseMedicineType [id=" + id + ", name=" + name
-		+ ", gib_type=" + gib_type + ", enterprise=" + enterprise + "]";
+    public Set<EnterChineseMedicine> getEnterChineseMedicines() {
+	return enterChineseMedicines;
     }
-    
-    
+
+    public Set<EnterWestMedicine> getEnterWestMedicines() {
+	return enterWestMedicines;
+    }
+
+    public void setEnterChineseMedicines(
+	    Set<EnterChineseMedicine> enterChineseMedicines) {
+	this.enterChineseMedicines = enterChineseMedicines;
+    }
+
+    public void setEnterWestMedicines(Set<EnterWestMedicine> enterWestMedicines) {
+	this.enterWestMedicines = enterWestMedicines;
+    }
 
 }

@@ -25,7 +25,7 @@ public class UtilTest {
     public void testJsonUtil() throws Exception {
 	String url = "/enterprise";
 	String tip = "success";
-	Enterprise enterprise = new Enterprise(Enterprise.FOREIGN, "jsonUtiltest", "logo", "prhont", "email");
+	Enterprise enterprise = new Enterprise();
 	JsonUtil jsonUtil = new JsonUtil();
 	List<Object> list = new LinkedList<Object>();
 	list.add(enterprise);

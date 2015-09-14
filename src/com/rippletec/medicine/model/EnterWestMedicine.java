@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.rippletec.medicine.model;
 
 import javax.persistence.Column;
@@ -18,50 +15,50 @@ import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.springframework.stereotype.Repository;
 
-/**
- * @author Liuyi
- *
- */
 @Repository
 @Entity
-@Table(name = "west_medicine")
-public class WestMedicine extends BaseModel {
+@Table(name = "enter_west_medicine")
+public class EnterWestMedicine extends BaseModel {
 
-    public static final String CLASS_NAME = "WestMedicine";
-    public static final String TABLE_NAME = "west_medicine";
-    public static final String MEDICINE_ID = "medicine_id";
-    public static final String MEDICINE_TYPE_ID = "medicine_type_id";
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 7475276297003606075L;
+    public static final String CLASS_NAME = "EnterWestMedicine";
+    public static final String TABLE_NAME = "enter_west_medicine";
     public static final String ENTER_MEDICINE_TYPE_ID = "enter_medicine_type_id";
-    
+    public static final String MEDICINE_ID = "medicine_id";
+    public static final String NAME = "name";
+
     public static final int ON_PUBLISTH = 1;
     public static final int ON_CHECKING = 2;
     public static final int ON_RECHECKING = 3;
     public static final int ON_CLOSE = 4;
-    
-    private static final long serialVersionUID = 5451907990648871088L;
-    public static final String NAME = "name";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     // 关联药品表
-    @OneToOne(fetch=FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @Cascade(CascadeType.ALL)
     @JoinColumn(name = MEDICINE_ID)
     private Medicine medicine;
 
-
-    // 关联所属类别
+    // 药品所属企业药品分类id
     @ManyToOne(fetch = FetchType.LAZY)
     @Cascade(CascadeType.SAVE_UPDATE)
-    @JoinColumn(name = MEDICINE_TYPE_ID)
-    private MedicineType medicineType;
-    
+    @JoinColumn(name = ENTER_MEDICINE_TYPE_ID)
+    private EnterpriseMedicineType enterpriseMedicineType;
+
+    // 企业名称
+    @Column(name = "enterprise_name", length = 50, nullable = false)
+    private String enterprise_name;
+
     // 西药药品名称
     @Column(name = "name", length = 255, nullable = false)
     private String name;
-    
+
     // 别名
     @Column(name = "other_name", columnDefinition = "TEXT", nullable = false)
     private String other_name;
@@ -104,7 +101,7 @@ public class WestMedicine extends BaseModel {
 
     // 用法用量
     @Column(name = "manual", columnDefinition = "TEXT", nullable = true)
-    private String  manual;
+    private String manual;
 
     // 成人用量
     @Column(name = "adult_dose", columnDefinition = "TEXT", nullable = true)
@@ -125,24 +122,26 @@ public class WestMedicine extends BaseModel {
     // 药品价格
     @Column(name = "price", length = 10, nullable = false, precision = 2)
     private Double price;
-    
+
     // 药品发布状态
-    @Column(name= "status", length=1, nullable=false)
+    @Column(name = "status", length = 1, nullable = false)
     private Integer status;
 
-    public WestMedicine() {
+    public EnterWestMedicine() {
     }
-    
-    public WestMedicine(Medicine medicine,
-	    MedicineType medicineType, String name, String other_name,
+
+    public EnterWestMedicine(Medicine medicine,
+	    EnterpriseMedicineType enterpriseMedicineType,
+	    String enterprise_name, String name, String other_name,
 	    String content, String current_application, String pharmacolo,
 	    String pk_pd, String pharmacokinetics, String warn, String aDRS,
 	    String interaction, String dose_explain, String manual,
 	    String adult_dose, String foreign_dose, String preparations,
-	    String store, Double price) {
+	    String store, Double price, Integer status) {
 	super();
 	this.medicine = medicine;
-	this.medicineType = medicineType;
+	this.enterpriseMedicineType = enterpriseMedicineType;
+	this.enterprise_name = enterprise_name;
 	this.name = name;
 	this.other_name = other_name;
 	this.content = content;
@@ -160,6 +159,24 @@ public class WestMedicine extends BaseModel {
 	this.preparations = preparations;
 	this.store = store;
 	this.price = price;
+	this.status = status;
+    }
+    
+    
+
+    @Override
+    public String toString() {
+	return "EnterWestMedicine [id=" + id + ", enterprise_name="
+		+ enterprise_name + ", name=" + name + ", other_name="
+		+ other_name + ", content=" + content
+		+ ", current_application=" + current_application
+		+ ", pharmacolo=" + pharmacolo + ", pk_pd=" + pk_pd
+		+ ", pharmacokinetics=" + pharmacokinetics + ", warn=" + warn
+		+ ", ADRS=" + ADRS + ", interaction=" + interaction
+		+ ", dose_explain=" + dose_explain + ", manual=" + manual
+		+ ", adult_dose=" + adult_dose + ", foreign_dose="
+		+ foreign_dose + ", preparations=" + preparations + ", store="
+		+ store + ", price=" + price + ", status=" + status + "]";
     }
 
     public String getADRS() {
@@ -182,6 +199,9 @@ public class WestMedicine extends BaseModel {
 	return dose_explain;
     }
 
+    public EnterpriseMedicineType getEnterpriseMedicineType() {
+	return enterpriseMedicineType;
+    }
 
     public String getForeign_dose() {
 	return foreign_dose;
@@ -196,15 +216,7 @@ public class WestMedicine extends BaseModel {
     }
 
     public String getManual() {
-        return manual;
-    }
-
-    public Medicine getMedicine() {
-	return medicine;
-    }
-
-    public MedicineType getMedicineType() {
-        return medicineType;
+	return manual;
     }
 
     public String getName() {
@@ -232,7 +244,7 @@ public class WestMedicine extends BaseModel {
     }
 
     public Double getPrice() {
-        return price;
+	return price;
     }
 
     public String getStore() {
@@ -263,6 +275,11 @@ public class WestMedicine extends BaseModel {
 	this.dose_explain = dose_explain;
     }
 
+    public void setEnterpriseMedicineType(
+	    EnterpriseMedicineType enterpriseMedicineType) {
+	this.enterpriseMedicineType = enterpriseMedicineType;
+    }
+
     public void setForeign_dose(String foreign_dose) {
 	this.foreign_dose = foreign_dose;
     }
@@ -276,15 +293,7 @@ public class WestMedicine extends BaseModel {
     }
 
     public void setManual(String manual) {
-        this.manual = manual;
-    }
-
-    public void setMedicine(Medicine medicine) {
-	this.medicine = medicine;
-    }
-
-    public void setMedicineType(MedicineType medicineType) {
-        this.medicineType = medicineType;
+	this.manual = manual;
     }
 
     public void setName(String name) {
@@ -312,7 +321,7 @@ public class WestMedicine extends BaseModel {
     }
 
     public void setPrice(Double price) {
-        this.price = price;
+	this.price = price;
     }
 
     public void setStore(String store) {
@@ -323,21 +332,28 @@ public class WestMedicine extends BaseModel {
 	this.warn = warn;
     }
 
-    @Override
-    public String toString() {
-	return "WestMedicine [id=" + id + ", name=" + name + ", other_name="
-		+ other_name + ", content=" + content
-		+ ", current_application=" + current_application
-		+ ", pharmacolo=" + pharmacolo + ", pk_pd=" + pk_pd
-		+ ", pharmacokinetics=" + pharmacokinetics + ", warn=" + warn
-		+ ", ADRS=" + ADRS + ", interaction=" + interaction
-		+ ", dose_explain=" + dose_explain + ", manual=" + manual
-		+ ", adult_dose=" + adult_dose + ", foreign_dose="
-		+ foreign_dose + ", preparations=" + preparations + ", store="
-		+ store + ", price=" + price + ", status=" + status + "]";
+    public String getEnterprise_name() {
+	return enterprise_name;
     }
 
-    
-    
+    public Integer getStatus() {
+	return status;
+    }
+
+    public void setEnterprise_name(String enterprise_name) {
+	this.enterprise_name = enterprise_name;
+    }
+
+    public void setStatus(Integer status) {
+	this.status = status;
+    }
+
+    public Medicine getMedicine() {
+	return medicine;
+    }
+
+    public void setMedicine(Medicine medicine) {
+	this.medicine = medicine;
+    }
 
 }

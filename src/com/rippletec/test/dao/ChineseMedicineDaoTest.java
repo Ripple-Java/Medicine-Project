@@ -19,7 +19,6 @@ import com.rippletec.medicine.dao.MedicineDao;
 import com.rippletec.medicine.dao.MedicineTypeDao;
 import com.rippletec.medicine.model.ChineseMedicine;
 import com.rippletec.medicine.model.EnterpriseMedicineType;
-import com.rippletec.medicine.model.Medicine;
 import com.rippletec.medicine.model.MedicineType;
 
 
@@ -72,7 +71,7 @@ public class ChineseMedicineDaoTest implements IBaseDaoTest {
     public void testSave() throws Exception {
 	MedicineType medicineType = new MedicineType("testmedicinesave",MedicineType.DEFAULT_PARENT_ID,MedicineType.CHINESE);
 	EnterpriseMedicineType enterpriseMedicineType = enterpriseMedicineTypeDao.find(13);
-	Medicine medicine = new Medicine(medicineType, Medicine.CHINESE, enterpriseMedicineType);
+//	Medicine medicine = new Medicine(medicineType, Medicine.CHINESE, enterpriseMedicineType);
 	//ChineseMedicine chineseMedicine = new ChineseMedicine(medicine, "saveCheinse", "content", "efficacy", "annouce", "usage", "preparations", "store", "category");
 	//chineseMedicineDao.save(chineseMedicine);
     }

@@ -1,6 +1,5 @@
 package com.rippletec.test.dao;
 
-import java.util.Iterator;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -14,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.rippletec.medicine.bean.PageBean;
 import com.rippletec.medicine.dao.MedicineTypeDao;
-import com.rippletec.medicine.model.Medicine;
 import com.rippletec.medicine.model.MedicineType;
 
 
@@ -43,14 +41,13 @@ public class MedicineTypeDaoTest implements IBaseDaoTest {
 	System.out.println(medicineTypeDao.find(6).toString());
     }
 
-    @Test
-    public void testFind2() throws Exception {
-	MedicineType medicineType = medicineTypeDao.find(15);
-	Iterator<Medicine> iterator = medicineType.getMedicines().iterator();
-	while (iterator.hasNext()) {
-	    Medicine medicine = iterator.next();
-	}
-    }
+//    @Test
+//    public void testFind2() throws Exception {
+//	MedicineType medicineType = medicineTypeDao.find(15);
+//	while (iterator.hasNext()) {
+//	    Medicine medicine = iterator.next();
+//	}
+//    }
 
     @Override
     @Test

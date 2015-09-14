@@ -43,9 +43,14 @@ public class MedicineType extends BaseModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    
     @OneToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY,mappedBy="medicineType")
     @OrderBy(value="id asc")
-    private Set<Medicine> medicines = new LinkedHashSet<Medicine>();
+    private Set<ChineseMedicine> chineseMedicines = new LinkedHashSet<ChineseMedicine>();
+    
+    @OneToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY,mappedBy="medicineType")
+    @OrderBy(value="id asc")
+    private Set<WestMedicine> westMedicines = new LinkedHashSet<WestMedicine>();
 
     // 分类名称
     @Column(name = "name", length = 255, nullable = false)
@@ -85,10 +90,6 @@ public class MedicineType extends BaseModel {
 	return id;
     }
 
-    public Set<Medicine> getMedicines() {
-        return medicines;
-    }
-
     public String getName() {
 	return name;
     }
@@ -105,16 +106,28 @@ public class MedicineType extends BaseModel {
 	this.id = id;
     }
 
-    public void setMedicines(Set<Medicine> medicines) {
-        this.medicines = medicines;
-    }
-
     public void setName(String name) {
 	this.name = name;
     }
 
     public void setParent_type_id(Integer parent_type_id) {
 	this.parent_type_id = parent_type_id;
+    }
+
+    public Set<ChineseMedicine> getChineseMedicines() {
+        return chineseMedicines;
+    }
+
+    public Set<WestMedicine> getWestMedicines() {
+        return westMedicines;
+    }
+
+    public void setChineseMedicines(Set<ChineseMedicine> chineseMedicines) {
+        this.chineseMedicines = chineseMedicines;
+    }
+
+    public void setWestMedicines(Set<WestMedicine> westMedicines) {
+        this.westMedicines = westMedicines;
     }
 
     @Override

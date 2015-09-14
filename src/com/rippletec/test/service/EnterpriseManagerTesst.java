@@ -48,10 +48,10 @@ public class EnterpriseManagerTesst implements IBaseDaoTest {
     @Override
     @Test
     public void testSave() throws Exception {
-	for (int i = 0; i < 10; i++) {
-	    Enterprise enterprise = new Enterprise(Enterprise.FOREIGN, "ServiceName--"+i, "logo", "phone", "email");
-	    enterpriseManager.save(enterprise);
-	}
+//	for (int i = 0; i < 10; i++) {
+//	    Enterprise enterprise = new Enterprise(Enterprise.FOREIGN, "ServiceName--"+i, "logo", "phone", "email");
+//	    enterpriseManager.save(enterprise);
+//	}
 	
     }
 

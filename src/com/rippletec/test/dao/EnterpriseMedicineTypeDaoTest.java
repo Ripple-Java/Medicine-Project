@@ -16,7 +16,6 @@ import com.rippletec.medicine.dao.EnterpriseDao;
 import com.rippletec.medicine.dao.EnterpriseMedicineTypeDao;
 import com.rippletec.medicine.model.Enterprise;
 import com.rippletec.medicine.model.EnterpriseMedicineType;
-import com.rippletec.medicine.model.Medicine;
 
 /**
  * @author Liuyi
@@ -37,7 +36,7 @@ public class EnterpriseMedicineTypeDaoTest implements IBaseDaoTest {
     @Override
     @Test
     public void testDelete() throws Exception {
-	enterpriseMedicineTypeDao.delete(1);
+	enterpriseMedicineTypeDao.delete(3);
     }
 
     @Override
@@ -46,7 +45,7 @@ public class EnterpriseMedicineTypeDaoTest implements IBaseDaoTest {
 	EnterpriseMedicineType enterpriseMedicineType = enterpriseMedicineTypeDao.find(13);
 //	System.out.println(enterpriseMedicineType.toString());
 //	System.out.println(enterpriseMedicineType.getEnterprise().toString());
-	Medicine medicine = enterpriseMedicineType.getMedicines().iterator().next();
+//	Medicine medicine = enterpriseMedicineType.getMedicines().iterator().next();
 	
     }
 
@@ -70,7 +69,7 @@ public class EnterpriseMedicineTypeDaoTest implements IBaseDaoTest {
     @Override
     @Test
     public void testSave() throws Exception {
-	Enterprise enterprise = enterpriseDao.find(15);
+	Enterprise enterprise = enterpriseDao.find(2);
 	EnterpriseMedicineType enterpriseMedicineType = new EnterpriseMedicineType("企业药品分类", EnterpriseMedicineType.WEST,enterprise);
 	enterpriseMedicineTypeDao.save(enterpriseMedicineType);
     }
