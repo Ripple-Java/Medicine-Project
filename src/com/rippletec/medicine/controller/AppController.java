@@ -185,7 +185,7 @@ public class AppController extends BaseController {
 	    @RequestParam(value = "phoneNumber", required = false, defaultValue = "") String phoneNumber,
 	    @RequestParam(value = "type", required = false, defaultValue = "0") int type) {
 	if (StringUtil.isMobile(phoneNumber)) {
-	    if (type > 0 || userManager.isExist(phoneNumber))
+	    if (userManager.isExist(phoneNumber))
 		return jsonUtil.setResultFail().setJsonObject("tip", "此账号以存在")
 			.toJsonString();
 	    String VerificationCode = StringUtil.generateCode(6);
