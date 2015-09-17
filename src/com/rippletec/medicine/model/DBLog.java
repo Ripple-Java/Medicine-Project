@@ -25,16 +25,27 @@ public class DBLog extends BaseModel{
     public static final String VERSION = "version";
     public static final String ACTION = "action";
     
+    public static final int TYPE_UPDATE = 2;
+    public static final int TYPE_DELETE = 3;
+    public static final int TYPE_SAVE = 1;
+    
+    
     public DBLog() {
     }
     
     
-    public DBLog(Integer version, String action, Date date) {
+    
+
+    public DBLog(Integer version, Integer type, String action, Date date) {
 	super();
 	this.version = version;
+	this.type = type;
 	this.action = action;
 	this.date = date;
     }
+
+
+
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -42,6 +53,9 @@ public class DBLog extends BaseModel{
     
     @Column(name=VERSION, length=255, nullable=false)
     private Integer version;
+    
+    @Column(name = "type", length = 1, nullable = false)
+    private Integer type;
     
     @Column(name=ACTION,columnDefinition="TEXT",nullable=false)
     private String action;
@@ -52,11 +66,14 @@ public class DBLog extends BaseModel{
     
     
 
+    
+
     @Override
     public String toString() {
-	return "DBLog [id=" + id + ", version=" + version + ", action="
-		+ action + ", date=" + date + "]";
+	return "DBLog [id=" + id + ", version=" + version + ", type=" + type
+		+ ", action=" + action + ", date=" + date + "]";
     }
+
 
     public Integer getId() {
         return id;
@@ -89,7 +106,18 @@ public class DBLog extends BaseModel{
     public void setDate(Date date) {
         this.date = date;
     }
+
+
+    public Integer getType() {
+        return type;
+    }
+
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
     
+    	
     
 
 }

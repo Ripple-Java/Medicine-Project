@@ -28,6 +28,7 @@ public class EnterWestMedicine extends BaseModel {
     public static final String TABLE_NAME = "enter_west_medicine";
     public static final String ENTER_MEDICINE_TYPE_ID = "enter_medicine_type_id";
     public static final String MEDICINE_ID = "medicine_id";
+    public static final String WEST_MEDICINE_ID = "west_medicine_id";
     public static final String NAME = "name";
 
     public static final int ON_PUBLISTH = 1;
@@ -50,6 +51,11 @@ public class EnterWestMedicine extends BaseModel {
     @Cascade(CascadeType.SAVE_UPDATE)
     @JoinColumn(name = ENTER_MEDICINE_TYPE_ID)
     private EnterpriseMedicineType enterpriseMedicineType;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @Cascade(CascadeType.SAVE_UPDATE)
+    @JoinColumn(name = WEST_MEDICINE_ID)
+    private WestMedicine westMedicine;
 
     // 企业名称
     @Column(name = "enterprise_name", length = 50, nullable = false)
@@ -126,6 +132,9 @@ public class EnterWestMedicine extends BaseModel {
     // 药品发布状态
     @Column(name = "status", length = 1, nullable = false)
     private Integer status;
+    
+    @Column(name="sortKey", length = 255, nullable=false)
+    private String sortKey;
 
     public EnterWestMedicine() {
     }
@@ -355,5 +364,25 @@ public class EnterWestMedicine extends BaseModel {
     public void setMedicine(Medicine medicine) {
 	this.medicine = medicine;
     }
+
+    public String getSortKey() {
+        return sortKey;
+    }
+
+    public void setSortKey(String sortKey) {
+        this.sortKey = sortKey;
+    }
+
+    public WestMedicine getWestMedicine() {
+        return westMedicine;
+    }
+
+    public void setWestMedicine(WestMedicine westMedicine) {
+        this.westMedicine = westMedicine;
+    }
+    
+    
+    
+    
 
 }

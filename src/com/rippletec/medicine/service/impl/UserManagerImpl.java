@@ -64,7 +64,7 @@ public class UserManagerImpl extends BaseManager<User> implements UserManager{
 	} catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
 	    return false;
 	}
-	User user = new User(securityPassword,phoneNumber,phoneNumber, User.TYPE_USER, phoneNumber, User.DEFAULT_CERTIFICATEIMG, new Date());
+	User user = new User(securityPassword,phoneNumber, User.TYPE_USER, phoneNumber, User.DEFAULT_CERTIFICATEIMG, new Date());
 	user.setBirthday(null);
 	user.setDegree(0);
 	user.setEmail(null);

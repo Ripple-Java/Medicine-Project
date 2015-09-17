@@ -3,6 +3,9 @@
  */
 package com.rippletec.medicine.model;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -57,6 +61,10 @@ public class WestMedicine extends BaseModel {
     @Cascade(CascadeType.SAVE_UPDATE)
     @JoinColumn(name = MEDICINE_TYPE_ID)
     private MedicineType medicineType;
+    
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "westMedicine")
+    @Cascade(CascadeType.ALL)
+    private Set<EnterWestMedicine> enterWestMedicines = new LinkedHashSet<EnterWestMedicine>();
     
     // 西药药品名称
     @Column(name = "name", length = 255, nullable = false)
@@ -129,6 +137,9 @@ public class WestMedicine extends BaseModel {
     // 药品发布状态
     @Column(name= "status", length=1, nullable=false)
     private Integer status;
+    
+    @Column(name="sortKey", length=255, nullable=false)
+    private String sortKey;
 
     public WestMedicine() {
     }
@@ -321,6 +332,34 @@ public class WestMedicine extends BaseModel {
 
     public void setWarn(String warn) {
 	this.warn = warn;
+    }
+    
+    
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public String getSortKey() {
+        return sortKey;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public void setSortKey(String sortKey) {
+        this.sortKey = sortKey;
+    }
+    
+    
+
+    public Set<EnterWestMedicine> getEnterWestMedicines() {
+        return enterWestMedicines;
+    }
+
+    public void setEnterWestMedicines(Set<EnterWestMedicine> enterWestMedicines) {
+        this.enterWestMedicines = enterWestMedicines;
     }
 
     @Override
