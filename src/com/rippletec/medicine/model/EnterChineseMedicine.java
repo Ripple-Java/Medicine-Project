@@ -26,6 +26,7 @@ public class EnterChineseMedicine extends BaseModel{
     public static final String TABLE_NAME = "enter_chinese_medicine";
     public static final String ENTER_MEDICINE_TYPE_ID = "enter_medicine_type_id";
     public static final String MEDICINE_ID = "medicine_id";
+    public static final String CHIN_MEDICINE_ID = "chin_medicine_id";
     
     public static final int ON_PUBLISTH = 1;
     public static final int ON_CHECKING = 2;
@@ -49,6 +50,12 @@ public class EnterChineseMedicine extends BaseModel{
     @Cascade(CascadeType.SAVE_UPDATE)
     @JoinColumn(name = ENTER_MEDICINE_TYPE_ID)
     private EnterpriseMedicineType enterpriseMedicineType;
+    
+    // 关联通用中药
+    @ManyToOne(fetch = FetchType.LAZY)
+    @Cascade(CascadeType.SAVE_UPDATE)
+    @JoinColumn(name = CHIN_MEDICINE_ID)
+    private ChineseMedicine chineseMedicine;
     
     // 企业名称
     @Column(name="enterprise_name",length=50,nullable=false)
@@ -93,6 +100,9 @@ public class EnterChineseMedicine extends BaseModel{
     // 药品发布状态
     @Column(name= "status", length=1, nullable=false)
     private Integer status;
+    
+    @Column(name = "sortKey", length=255, nullable=false)
+    private String sortkey;
     
     public EnterChineseMedicine() {
     }
@@ -242,6 +252,22 @@ public class EnterChineseMedicine extends BaseModel{
     public void setMedicine(Medicine medicine) {
         this.medicine = medicine;
     }
+    public String getSortkey() {
+        return sortkey;
+    }
+    public void setSortkey(String sortkey) {
+        this.sortkey = sortkey;
+    }
+    public ChineseMedicine getChineseMedicine() {
+        return chineseMedicine;
+    }
+    public void setChineseMedicine(ChineseMedicine chineseMedicine) {
+        this.chineseMedicine = chineseMedicine;
+    }
+    
+    
+    
+    
 
 
   

@@ -61,6 +61,12 @@ public class Enterprise extends BaseModel {
     @Cascade(CascadeType.ALL)
     @OrderBy(value="id asc")
     private Set<EnterpriseMedicineType> medicineTypeEnterprises = new LinkedHashSet<EnterpriseMedicineType>();
+    
+    // 关联企业视频
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "enterprise")
+    @Cascade(CascadeType.ALL)
+    @OrderBy(value="id asc")
+    private Set<Video> videos = new LinkedHashSet<Video>();
 
     // 企业类型type：1表示外资，2表示合资，3表示内资
     @Column(name = "type", length = 1, nullable = false)
@@ -155,6 +161,19 @@ public class Enterprise extends BaseModel {
     public void setType(Integer type) {
 	this.type = type;
     }
+    
+
+    public Set<Video> getVideos() {
+        return videos;
+    }
+
+
+
+    public void setVideos(Set<Video> videos) {
+        this.videos = videos;
+    }
+
+
 
     @Override
     public String toString() {

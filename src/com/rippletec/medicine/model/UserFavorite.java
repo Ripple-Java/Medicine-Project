@@ -15,21 +15,24 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @Entity
-@Table(name=MedicineFavorite.TABLE_NAME)
-public class MedicineFavorite extends BaseModel{
+@Table(name=UserFavorite.TABLE_NAME)
+public class UserFavorite extends BaseModel{
     
     private static final long serialVersionUID = -4947333524040803889L;
     public static final String CLASS_NAME = "MedicineFavorite";
     public static final String TABLE_NAME = "medicine_favorite";
     
     public static final String USER_ID = "user_id";
-    public static final String MEDICINE_ID = "medicine_id";
+    public static final String OBJECT_ID = "object_Id";
     public static final String TYPE = "type";
     
     public static final int MEDICINE_CHINESE = 1;
     public static final int MEDICINE_WEST = 2;
     public static final int ENTER_CHINESE = 3;
     public static final int ENTER_WEST = 4;
+    public static final int GUIDEBOOK = 5 ;
+    public static final int LITERATURE = 6 ;
+    public static final int CASES = 7 ;
     
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -39,25 +42,28 @@ public class MedicineFavorite extends BaseModel{
     @JoinColumn(name=USER_ID)
     private User user;
     
-    @ManyToOne(cascade = CascadeType.ALL, fetch=FetchType.LAZY)
-    @JoinColumn(name=MEDICINE_ID)
-    private Medicine medicine;
+    @Column(name=OBJECT_ID,length=1,nullable=false)
+    private Integer objectId;
     
     @Column(name=TYPE,length = 1, nullable=false)
     private Integer type;
     
-    public MedicineFavorite() {
+    public UserFavorite() {
     }
-    public MedicineFavorite(User user, Medicine medicine, Integer type) {
+   
+    public UserFavorite(User user, Integer objectId, Integer type) {
 	super();
 	this.user = user;
-	this.medicine = medicine;
+	this.objectId = objectId;
 	this.type = type;
     }
 
+   
+
     @Override
     public String toString() {
-	return "MedicineFavorite [id=" + id + ", type=" + type + "]";
+	return "UserFavorite [id=" + id + ", objectId=" + objectId + ", type="
+		+ type + "]";
     }
 
     public Integer getId() {
@@ -68,9 +74,6 @@ public class MedicineFavorite extends BaseModel{
         return user;
     }
 
-    public Medicine getMedicine() {
-        return medicine;
-    }
 
     public Integer getType() {
         return type;
@@ -83,14 +86,19 @@ public class MedicineFavorite extends BaseModel{
     public void setUser(User user) {
         this.user = user;
     }
-
-    public void setMedicine(Medicine medicine) {
-        this.medicine = medicine;
-    }
-
     public void setType(Integer type) {
         this.type = type;
     }
+
+    public Integer getObjectId() {
+        return objectId;
+    }
+
+    public void setObjectId(Integer objectId) {
+        this.objectId = objectId;
+    }
+    
+    
 
   
 

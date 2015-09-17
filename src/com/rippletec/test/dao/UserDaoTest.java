@@ -49,7 +49,7 @@ public class UserDaoTest implements IBaseDaoTest {
     @Test
     public void testSave() throws Exception {
 	System.out.println((System.currentTimeMillis()+"").substring(3));
-	User user = new User("password","username__2","account", User.TYPE_STU, "phone", "certificateImg", new Date());
+	User user = new User("password","account", User.TYPE_STU, "phone", "certificateImg", new Date());
 	userDao.save(user);
     }
     

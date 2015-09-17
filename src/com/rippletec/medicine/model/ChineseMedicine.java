@@ -3,6 +3,10 @@
  */
 package com.rippletec.medicine.model;
 
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,6 +15,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -57,6 +62,10 @@ public class ChineseMedicine extends BaseModel {
     @Cascade(CascadeType.SAVE_UPDATE)
     @JoinColumn(name = MEDICINE_TYPE_ID)
     private MedicineType medicineType;
+    
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "chineseMedicine")
+    @Cascade(CascadeType.ALL)
+    private Set<EnterChineseMedicine> enterChineseMedicines = new LinkedHashSet<EnterChineseMedicine>();
 
     // 中药药品名称
     @Column(name = "name", length = 50, nullable = false)
@@ -97,6 +106,10 @@ public class ChineseMedicine extends BaseModel {
     // 药品发布状态
     @Column(name = "status", length = 1, nullable = false)
     private Integer status;
+    
+    //排序关键字
+    @Column(name = "sortKey", length = 255, nullable =false)
+    private String sortKey;
 
     public ChineseMedicine() {
     }
@@ -224,5 +237,34 @@ public class ChineseMedicine extends BaseModel {
     public void setStore(String store) {
 	this.store = store;
     }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public String getSortKey() {
+        return sortKey;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public void setSortKey(String sortKey) {
+        this.sortKey = sortKey;
+    }
+
+    public Set<EnterChineseMedicine> getEnterChineseMedicines() {
+        return enterChineseMedicines;
+    }
+
+    public void setEnterChineseMedicines(
+    	Set<EnterChineseMedicine> enterChineseMedicines) {
+        this.enterChineseMedicines = enterChineseMedicines;
+    }
+    
+    
+    
+    
 
 }

@@ -33,7 +33,7 @@ public class EnterpriseDaoTest implements IBaseDaoTest {
     @Override
     @Test
     public void testDelete() throws Exception {
-	enterpriseDao.delete(1);
+	enterpriseDao.delete(2);
 	
     }
 

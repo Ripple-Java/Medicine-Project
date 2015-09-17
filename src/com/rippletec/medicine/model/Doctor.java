@@ -30,7 +30,7 @@ public class Doctor  extends BaseModel{
 	private Integer id;
 	
 	@OneToOne(fetch = FetchType.LAZY)
-	@Cascade(CascadeType.SAVE_UPDATE)
+	@Cascade(CascadeType.ALL)
 	@JoinColumn(name = USER_ID)
 	private User user;
 	

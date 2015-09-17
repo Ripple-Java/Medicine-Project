@@ -46,7 +46,7 @@ public class User extends BaseModel {
     public static final int DRVICE_IPHONE = 2;
     public static final int DRVICE_OTHER = 0;
 
-    public static final String DEFAULT_CERTIFICATEIMG = "/certificateImg/default.png";
+    public static final String DEFAULT_CERTIFICATEIMG = "image/certificateImg/default.png";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -59,18 +59,23 @@ public class User extends BaseModel {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     @Cascade(CascadeType.ALL)
     private Set<Doctor> doctors = new HashSet<Doctor>();
+    
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    @Cascade(CascadeType.ALL)
+    private Set<Liveness> livenesses = new HashSet<Liveness>();
+    
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    @Cascade(CascadeType.ALL)
+    private Set<FeedBackMass> feedBackMasses = new HashSet<FeedBackMass>();
 
     // 用户密码
-    @Column(name = "password", length = 60, nullable = false)
+    @Column(name = "password", length = 65, nullable = false)
     private String password;
 
     // 用户账号
     @Column(name = "account", length = 11, nullable = false)
     private String account;
 
-    // 用户名
-    @Column(name = "username", length = 255, nullable = false)
-    private String username;
 
     // 用户类型（0代表普通用户，1代表学生，2代表医师，3代表企业，4代表管理员）
     @Column(name = "type", length = 10, nullable = false)
@@ -82,10 +87,11 @@ public class User extends BaseModel {
 
     // 生日
     @Column(name = "birthday", nullable = true)
+    @Temporal(TemporalType.DATE)
     private Date birthday;
 
     // 电话
-    @Column(name = "cellphone", length = 50, nullable = false)
+    @Column(name = "phone", length = 50, nullable = false)
     private String cellphone;
 
     // 邮箱
@@ -96,9 +102,6 @@ public class User extends BaseModel {
     @Column(name = "degree", length = 1, nullable = true)
     private int degree;
 
-    //
-    @Column(name = "avatar", length = 255, nullable = true)
-    private String avatar;
 
     // 用户头像
     @Column(name = "certificateImg", length = 255, nullable = true)
@@ -122,11 +125,10 @@ public class User extends BaseModel {
 	super();
     }
 
-    public User(String password, String username, String account, int type,
+    public User(String password, String account, int type,
 	    String cellphone, String certificateImg, Date regeditTime) {
 	super();
 	this.password = password;
-	this.username = username;
 	this.account = account;
 	this.type = type;
 	this.cellphone = cellphone;
@@ -138,9 +140,6 @@ public class User extends BaseModel {
 	return account;
     }
 
-    public String getAvatar() {
-	return avatar;
-    }
 
     public Date getBirthday() {
 	return birthday;
@@ -190,16 +189,8 @@ public class User extends BaseModel {
 	return type;
     }
 
-    public String getUsername() {
-	return username;
-    }
-
     public void setAccount(String account) {
 	this.account = account;
-    }
-
-    public void setAvatar(String avatar) {
-	this.avatar = avatar;
     }
 
     public void setBirthday(Date birthday) {
@@ -250,9 +241,6 @@ public class User extends BaseModel {
 	this.type = type;
     }
 
-    public void setUsername(String username) {
-	this.username = username;
-    }
 
 
     public Integer getDevice() {
@@ -270,14 +258,29 @@ public class User extends BaseModel {
     public void setLastLogin(Date lastLogin) {
         this.lastLogin = lastLogin;
     }
+    
+
+    public Set<Liveness> getLivenesses() {
+        return livenesses;
+    }
+
+    public Set<FeedBackMass> getFeedBackMasses() {
+        return feedBackMasses;
+    }
+
+    public void setLivenesses(Set<Liveness> livenesses) {
+        this.livenesses = livenesses;
+    }
+
+    public void setFeedBackMasses(Set<FeedBackMass> feedBackMasses) {
+        this.feedBackMasses = feedBackMasses;
+    }
 
     @Override
     public String toString() {
-	return "User [id=" + id + ", password=" + password + ", username="
-		+ username + ", type=" + type + ", sex=" + sex + ", birthday="
+	return "User [id=" + id + ", password=" + password + ", type=" + type + ", sex=" + sex + ", birthday="
 		+ birthday + ", cellphone=" + cellphone + ", email=" + email
-		+ ", degree=" + degree + ", avatar=" + avatar
-		+ ", certificateImg=" + certificateImg + ", regeditTime="
+		+ ", degree=" + degree +", certificateImg=" + certificateImg + ", regeditTime="
 		+ regeditTime + "]";
     }
 
