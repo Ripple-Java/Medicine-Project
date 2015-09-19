@@ -39,6 +39,11 @@ public abstract class BaseManager<T> implements IManager<T> {
 	return getDao().findByParam(param, value);
     }
     
+    @Override
+    public List<T> findByParam(Map<String, Object> paramMap) {
+	return getDao().findByParam(paramMap);
+    }
+    
 
     @Override
     public List<T> findBySql(String tableName, Map<String, Object> paramMap) {

@@ -22,12 +22,13 @@ public class DBLog extends BaseModel{
     public static final String TABLE_NAME = "db_log";
     public static final String CLASS_NAME = "DBLog";
     
-    public static final String VERSION = "version";
+    public static final String DB_VERSION = "db_version";
     public static final String ACTION = "action";
+    public static final String OBJCET_ID = "object_id";
     
-    public static final int TYPE_UPDATE = 2;
-    public static final int TYPE_DELETE = 3;
-    public static final int TYPE_SAVE = 1;
+    public static final int ACTION_DELETE = 3;
+    public static final int ACTION_UPDATE = 2;
+    public static final int ACTION_SAVE = 1;
     
     
     public DBLog() {
@@ -36,10 +37,12 @@ public class DBLog extends BaseModel{
     
     
 
-    public DBLog(Integer version, Integer type, String action, Date date) {
+    public DBLog(Integer object_id, Integer dbVersion, String dbTable,
+	    Integer action, Date date) {
 	super();
-	this.version = version;
-	this.type = type;
+	this.object_id = object_id;
+	this.dbVersion = dbVersion;
+	this.dbTable = dbTable;
 	this.action = action;
 	this.date = date;
     }
@@ -51,27 +54,37 @@ public class DBLog extends BaseModel{
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Integer id;
     
-    @Column(name=VERSION, length=255, nullable=false)
-    private Integer version;
+    //对象id
+    @Column(name=OBJCET_ID, nullable = false)
+    private Integer object_id;
     
-    @Column(name = "type", length = 1, nullable = false)
-    private Integer type;
+    //版本号
+    @Column(name=DB_VERSION, nullable=false)
+    private Integer dbVersion;
     
-    @Column(name=ACTION,columnDefinition="TEXT",nullable=false)
-    private String action;
+    //对象表
+    @Column(name = "DB_table", length = 50, nullable = false)
+    private String dbTable;
     
+    //对象操作
+    @Column(name=ACTION,nullable=false)
+    private Integer action;
+    
+    //最后修改日期
     @Column(name="date",nullable=false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date date;
     
     
 
-    
+
+
 
     @Override
     public String toString() {
-	return "DBLog [id=" + id + ", version=" + version + ", type=" + type
-		+ ", action=" + action + ", date=" + date + "]";
+	return "DBLog [id=" + id + ", object_id=" + object_id + ", dbVersion="
+		+ dbVersion + ", dbTable=" + dbTable + ", action=" + action
+		+ ", date=" + date + "]";
     }
 
 
@@ -79,45 +92,69 @@ public class DBLog extends BaseModel{
         return id;
     }
 
-    public Integer getVersion() {
-        return version;
+
+    public Integer getObject_id() {
+        return object_id;
     }
 
-    public String getAction() {
+
+
+    public Integer getAction() {
         return action;
     }
+
 
     public Date getDate() {
         return date;
     }
 
+
     public void setId(Integer id) {
         this.id = id;
     }
 
-    public void setVersion(Integer version) {
-        this.version = version;
+
+    public void setObject_id(Integer object_id) {
+        this.object_id = object_id;
     }
 
-    public void setAction(String action) {
+
+
+
+    public void setAction(Integer action) {
         this.action = action;
     }
+
 
     public void setDate(Date date) {
         this.date = date;
     }
 
 
-    public Integer getType() {
-        return type;
+    public Integer getDbVersion() {
+        return dbVersion;
     }
 
 
-    public void setType(Integer type) {
-        this.type = type;
+    public void setDbVersion(Integer dbVersion) {
+        this.dbVersion = dbVersion;
+    }
+
+
+    public String getDbTable() {
+        return dbTable;
+    }
+
+
+    public void setDbTable(String dbTable) {
+        this.dbTable = dbTable;
     }
     
-    	
+    
+   
+    
+
+   
     
 
 }

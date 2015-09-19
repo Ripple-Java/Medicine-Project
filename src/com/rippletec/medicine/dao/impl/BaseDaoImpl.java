@@ -1,5 +1,6 @@
 package com.rippletec.medicine.dao.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +31,16 @@ public abstract class BaseDaoImpl<T> extends PlusHibernateSupport<T> implements 
     public T find(Integer id) {
 	return getHibernateTemplate().get(getPersistClass(), id);
     }
+    
+    @Override
+    public void update(T model) {
+	getHibernateTemplate().update(model);
+    }
+    
+    @Override
+    public Integer save(T model) {
+	return (Integer) getHibernateTemplate().save(model);
+    }
 
     @Override
     public List<T> findByPage(Map<String, Object> paramMap,
@@ -53,8 +64,17 @@ public abstract class BaseDaoImpl<T> extends PlusHibernateSupport<T> implements 
 
     @Override
     public List<T> findByParam(String param, Object value) {
-	String hql = StringUtil.getSelectHql(getClassName(), param);
-	return findByParam(hql, param, value);
+	Map<String, Object> paramMap = new HashMap<String, Object>();
+	paramMap.put(param, value);
+	return findByParam(paramMap);
+    }
+    
+    @Override
+    public List<T> findByParam(Map<String, Object> paramMap) {
+	String[] params = paramMap.keySet().toArray(new String[]{});
+	Object[] values = paramMap.values().toArray();
+	String hql = StringUtil.getSelectHql(getClassName(), params);
+	return findByParam(hql, params, values);
     }
 
     @Override
@@ -90,10 +110,7 @@ public abstract class BaseDaoImpl<T> extends PlusHibernateSupport<T> implements 
      */
     public abstract Class<T> getPersistClass();
 
-    @Override
-    public Integer save(T model) {
-	return (Integer) getHibernateTemplate().save(model);
-    }
+  
 
     @Override
     public List<T> search(Map<String, Object> paramMap) {
@@ -109,10 +126,7 @@ public abstract class BaseDaoImpl<T> extends PlusHibernateSupport<T> implements 
 	return Search(hql, param, value);
     }
     
-    @Override
-    public void update(T model) {
-	getHibernateTemplate().update(model);
-    }
+    
    
 
 }

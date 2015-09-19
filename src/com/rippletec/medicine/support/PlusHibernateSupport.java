@@ -55,14 +55,16 @@ public class PlusHibernateSupport<T> extends HibernateDaoSupport{
     }
     
     @SuppressWarnings({ "unchecked", "deprecation" })
-    public List<T> findByParam(final String hql,final String param ,final Object value) {
+    public List<T> findByParam(final String hql,final String[] params ,final Object[] values) {
 	List<T> items = getHibernateTemplate().executeFind(new HibernateCallback<List<T>>() {
 
 	    @Override
 	    public List<T> doInHibernate(Session session)
 		    throws HibernateException, SQLException {
 		Query q = session.createQuery(hql);
-		q.setParameter(param, value);
+		for (int i = 0; i < params.length; i++) {
+		    q.setParameter(params[i], values[i]);
+		}
 		List<T> result = q.list();
 		return result;
 	    }

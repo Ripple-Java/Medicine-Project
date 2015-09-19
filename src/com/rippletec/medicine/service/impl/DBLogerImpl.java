@@ -10,7 +10,7 @@ import com.rippletec.medicine.model.DBLog;
 import com.rippletec.medicine.service.DBLoger;
 
 @Repository(DBLoger.NAME)
-public class DBLogerImpl extends BaseManager<DBLog>{
+public class DBLogerImpl extends BaseManager<DBLog> implements DBLoger{
     
     @Resource(name = DBLogDao.NAME)
     private DBLogDao dbLogDao;
@@ -18,6 +18,11 @@ public class DBLogerImpl extends BaseManager<DBLog>{
     @Override
     protected FindAndSearchDao<DBLog> getDao() {
 	return this.dbLogDao;
+    }
+
+    @Override
+    public Integer getVersion() {
+	return dbLogDao.getCount()+DEFAULT_VERSION;
     }
 
 }

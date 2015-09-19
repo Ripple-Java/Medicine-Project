@@ -4,6 +4,7 @@ import org.springframework.stereotype.Repository;
 
 import com.rippletec.medicine.dao.DBLogDao;
 import com.rippletec.medicine.model.DBLog;
+import com.rippletec.medicine.utils.StringUtil;
 
 @Repository(DBLogDao.NAME)
 public class DBLogDaoImpl extends BaseDaoImpl<DBLog> implements DBLogDao{
@@ -17,6 +18,11 @@ public class DBLogDaoImpl extends BaseDaoImpl<DBLog> implements DBLogDao{
     public Class<DBLog> getPersistClass() {
 	return DBLog.class;
     }
-   
+
+    @Override
+    public int getCount() {
+	return (Integer)getHibernateTemplate().find(StringUtil.getCountSql(DBLog.CLASS_NAME)).listIterator().next();
+    }
+      
 
 }

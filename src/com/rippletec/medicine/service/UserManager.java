@@ -19,7 +19,7 @@ public interface UserManager extends IManager<User> {
 
     boolean register(String phoneNumber, String password);
 
-    boolean updatePassword(String account, String password);
+    boolean updatePassword(String account, String oldpassword, String newPassword);
 
     void updateUserInfo(String account, int sex, Date birthday, int degree,
 	    String email);

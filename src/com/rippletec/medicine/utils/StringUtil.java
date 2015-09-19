@@ -131,11 +131,15 @@ public class StringUtil {
 		
 	}
 
-    public static boolean hasText(String str) {
+    public static boolean hasText(String str, String ...strs) {
 	if(str == null || str.length()==0)
 	    return false;
+	if(strs != null && strs.length > 0)
+	    return hasText(strs);
 	return true;
     }
+    
+    
 
     public static boolean hasText(String[] strs) {
 	if(strs == null || strs.length == 0)
