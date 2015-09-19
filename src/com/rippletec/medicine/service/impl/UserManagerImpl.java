@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.ejb.EJB;
 import javax.jws.soap.SOAPBinding.Use;
 import javax.servlet.http.HttpSession;
 
@@ -14,8 +15,11 @@ import org.springframework.stereotype.Service;
 import com.rippletec.medicine.bean.PageBean;
 import com.rippletec.medicine.dao.FindAndSearchDao;
 import com.rippletec.medicine.dao.UserDao;
+import com.rippletec.medicine.model.Liveness;
 import com.rippletec.medicine.model.User;
+import com.rippletec.medicine.service.LivenessManager;
 import com.rippletec.medicine.service.UserManager;
+import com.rippletec.medicine.utils.DateUtil;
 import com.rippletec.medicine.utils.MD5Util;
 
 @Service(UserManager.NAME)
@@ -23,6 +27,8 @@ public class UserManagerImpl extends BaseManager<User> implements UserManager{
 
     @Resource(name=UserDao.NAME)
     private UserDao userDao;
+    @Resource(name = LivenessManager.NAME)
+    private LivenessManager livenessManager;
     
     @Override
     public User findByAccount(String account) {
@@ -69,18 +75,19 @@ public class UserManagerImpl extends BaseManager<User> implements UserManager{
 	user.setDegree(0);
 	user.setEmail(null);
 	user.setSex(0);
-	userDao.save(user);
+	int userid = userDao.save(user);
+	livenessManager.save(find(userid));
 	return true;
     }
 
     @Override
-    public boolean updatePassword(String account, String password) {
-	User user = findByAccount(account);
-	if (user == null)
-	    return false;
-	String securityPassword = "";
-	try {
-	    securityPassword  = MD5Util.getEncryptedPwd(password);
+    public boolean updatePassword(String account, String oldPassword,String newPassword) {
+	 User user = findByAccount(account);
+	 String securityPassword = "";
+	try {   
+		if (user == null || !MD5Util.validPasswd(oldPassword, user.getPassword()))
+		    return false;
+	    securityPassword  = MD5Util.getEncryptedPwd(newPassword);
 	} catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
 	    e.printStackTrace();
 	    return false;
@@ -111,7 +118,8 @@ public class UserManagerImpl extends BaseManager<User> implements UserManager{
 	    String securityPassword = user.getPassword();
 	    try {
 		if(MD5Util.validPasswd(password, securityPassword)){
-		    user.setLastLogin(new Date());
+		    Date time = new Date();
+		    user.setLastLogin(time);
 		    switch (device) {
 		    case User.DRVICE_ANDROID: user.setDevice(User.DRVICE_ANDROID);break;
 		    case User.DRVICE_IPHONE:  user.setDevice(User.DRVICE_IPHONE);break;
@@ -119,6 +127,7 @@ public class UserManagerImpl extends BaseManager<User> implements UserManager{
 			break;
 		    }
 		    update(user);
+		    livenessManager.updateLogin(user, time);
 		    httpSession.setAttribute(User.ACCOUNT, account);
 		    httpSession.setAttribute(User.TYPE, User.TYPE_USER);
 		    return true;

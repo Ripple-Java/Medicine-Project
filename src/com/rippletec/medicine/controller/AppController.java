@@ -211,7 +211,6 @@ public class AppController extends BaseController {
 			.setMaxInactiveInterval((new Integer(timeLimit)) * 60);
 		jsonUtil.setJsonObject("result", "success")
 			.setJsonObject("time", timeLimit)
-			.setJsonObject("code", VerificationCode)
 			.setJsonObject("sessionid", httpSession.getId());
 	    } else
 		jsonUtil.setResultFail().setJsonObject("tip", res);
@@ -335,10 +334,11 @@ public class AppController extends BaseController {
     public String user_updatePassword(
 	    HttpSession httpSession,
 	    @RequestParam(value = "account", required = false, defaultValue = "") String account,
-	    @RequestParam(value = "password", required = false, defaultValue = "") String password) {
-	if (StringUtil.isMobile(account) && StringUtil.hasText(password)) {
+	    @RequestParam(value = "oldPassword", required = false, defaultValue = "") String oldPassword,
+	    @RequestParam(value = "newPassword", required = false, defaultValue = "") String newPassword) {
+	if (StringUtil.isMobile(account) && StringUtil.hasText(oldPassword,newPassword)) {
 	    if (userManager.isLogined(account, httpSession)) {
-		if (userManager.updatePassword(account, password))
+		if (userManager.updatePassword(account, oldPassword, newPassword))
 		    jsonUtil.setResultSuccess();
 		else
 		    jsonUtil.setResultFail();

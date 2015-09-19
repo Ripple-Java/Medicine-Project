@@ -1,5 +1,7 @@
 package com.rippletec.test.dao;
 
+import static org.junit.Assert.*;
+
 import java.util.Date;
 
 import javax.annotation.Resource;
@@ -48,13 +50,16 @@ public class DBLogDaoTest implements IBaseDaoTest {
     @Override
     @Test
     public void testSave() throws Exception {
-	DBLog dbLog = new DBLog(1, DBLog.TYPE_SAVE, "save", new Date());
-	dbLogDao.save(dbLog);
     }
 
     @Override
     @Test
     public void testUpdate() throws Exception {
+    }
+    
+    @Test
+    public void testCount() throws Exception {
+	System.out.println(dbLogDao.getCount());
     }
 
 }
