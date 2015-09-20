@@ -19,8 +19,6 @@ public class FeedBackDaoTest implements IBaseDaoTest{
 
     @Override
     public void testFind() throws Exception {
-	int userid;
-	feedBackMassManager.findByPage("type",typeid,new PageBean(currentPage, 0, 10));
     }
 
     @Override
