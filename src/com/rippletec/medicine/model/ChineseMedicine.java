@@ -3,7 +3,6 @@
  */
 package com.rippletec.medicine.model;
 
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -113,11 +112,14 @@ public class ChineseMedicine extends BaseModel {
 
     public ChineseMedicine() {
     }
+    
+    
+
 
     public ChineseMedicine(Medicine medicine, MedicineType medicineType,
 	    String name, String content, String efficacy, String annouce,
 	    String preparations, String manual, String store, String category,
-	    Double price, Integer status) {
+	    Double price, Integer status, String sortKey) {
 	super();
 	this.medicine = medicine;
 	this.medicineType = medicineType;
@@ -131,7 +133,11 @@ public class ChineseMedicine extends BaseModel {
 	this.category = category;
 	this.price = price;
 	this.status = status;
+	this.sortKey = sortKey;
     }
+
+
+
 
     @Override
     public String toString() {

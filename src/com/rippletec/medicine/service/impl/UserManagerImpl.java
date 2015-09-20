@@ -6,8 +6,6 @@ import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
-import javax.ejb.EJB;
-import javax.jws.soap.SOAPBinding.Use;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Service;
@@ -15,11 +13,9 @@ import org.springframework.stereotype.Service;
 import com.rippletec.medicine.bean.PageBean;
 import com.rippletec.medicine.dao.FindAndSearchDao;
 import com.rippletec.medicine.dao.UserDao;
-import com.rippletec.medicine.model.Liveness;
 import com.rippletec.medicine.model.User;
 import com.rippletec.medicine.service.LivenessManager;
 import com.rippletec.medicine.service.UserManager;
-import com.rippletec.medicine.utils.DateUtil;
 import com.rippletec.medicine.utils.MD5Util;
 
 @Service(UserManager.NAME)
