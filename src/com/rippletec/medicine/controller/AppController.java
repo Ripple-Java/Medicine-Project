@@ -55,8 +55,11 @@ public class AppController extends BaseController {
     @ResponseBody
     public String user_addFeedBackMass(HttpServletRequest request,FeedBackMass feedBackMass){
     	String account= (String) request.getSession().getAttribute(User.ACCOUNT);
-    	feedBackMassManager.addFeedBackMass(feedBackMass, account);
-    	return jsonUtil.setResultSuccess().toJsonString();
+    	if(feedBackMassManager.addFeedBackMass(feedBackMass, account))
+    		return jsonUtil.setResultSuccess().toJsonString();
+    	else {
+    		return jsonUtil.setResultFail().setTip("用户未登录").toJsonString();
+		}
     }
     
     @RequestMapping(value = "/user/getAllSearch", method = RequestMethod.GET)

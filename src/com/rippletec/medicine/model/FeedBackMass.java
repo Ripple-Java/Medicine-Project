@@ -108,6 +108,16 @@ public class FeedBackMass extends BaseModel {
     public void setStatus(Integer status) {
         this.status = status;
     }
+
+
+	public String getContent() {
+		return content;
+	}
+
+
+	public void setContent(String content) {
+		this.content = content;
+	}
     
     
     

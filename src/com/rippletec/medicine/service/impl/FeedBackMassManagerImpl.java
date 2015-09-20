@@ -1,6 +1,7 @@
 package com.rippletec.medicine.service.impl;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -28,13 +29,19 @@ public class FeedBackMassManagerImpl extends BaseManager<FeedBackMass> implement
     }
 
 	@Override
-	public void addFeedBackMass(FeedBackMass feedBackMass, String account) {
+	public boolean addFeedBackMass(FeedBackMass feedBackMass, String account) {
 		// TODO Auto-generated method stub
-		User user =userDao.findByPage(User.ACCOUNT, account, new PageBean(0, 100)).get(0);
+		List<User> users=userDao.findByPage(User.ACCOUNT, account, new PageBean(0, 100));
+		if (users.size()<=0) {
+			return false;
+		}
+		User user =users.get(0);
 		feedBackMass.setUser(user);
 		feedBackMass.setStatus(0);
 		feedBackMass.setTime(new Date());
+		System.out.println(feedBackMass);
 		feedBackMassDao.save(feedBackMass);
+		return true;
 	}
 
 }
