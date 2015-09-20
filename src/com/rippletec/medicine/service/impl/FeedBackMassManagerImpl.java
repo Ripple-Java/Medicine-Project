@@ -20,4 +20,6 @@ public class FeedBackMassManagerImpl extends BaseManager<FeedBackMass> implement
 	return this.feedBackMassDao;
     }
 
+    23213
+    345678
 }
