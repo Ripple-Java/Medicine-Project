@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -21,8 +22,10 @@ import com.rippletec.medicine.bean.PageBean;
 import com.rippletec.medicine.model.ChineseMedicine;
 import com.rippletec.medicine.model.Enterprise;
 import com.rippletec.medicine.model.EnterpriseMedicineType;
+import com.rippletec.medicine.model.FeedBackMass;
 import com.rippletec.medicine.model.MedicineDocument;
 import com.rippletec.medicine.model.MedicineType;
+import com.rippletec.medicine.model.User;
 import com.rippletec.medicine.model.WestMedicine;
 import com.rippletec.medicine.utils.StringUtil;
 
@@ -48,6 +51,14 @@ public class AppController extends BaseController {
 		dateFormat, true));
     }
 
+    @RequestMapping(value = "/user/addFeedBack", method = RequestMethod.POST)
+    @ResponseBody
+    public String user_addFeedBackMass(HttpServletRequest request,FeedBackMass feedBackMass){
+    	String account= (String) request.getSession().getAttribute(User.ACCOUNT);
+    	feedBackMassManager.addFeedBackMass(feedBackMass, account);
+    	return jsonUtil.setResultSuccess().toJsonString();
+    }
+    
     @RequestMapping(value = "/user/getAllSearch", method = RequestMethod.GET)
     @ResponseBody
     public String user_getAllSearch(

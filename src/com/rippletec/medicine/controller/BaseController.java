@@ -6,6 +6,7 @@ import com.rippletec.medicine.service.ChineseMedicineManager;
 import com.rippletec.medicine.service.DoctorManager;
 import com.rippletec.medicine.service.EnterpriseManager;
 import com.rippletec.medicine.service.EnterpriseMedicineTypeManager;
+import com.rippletec.medicine.service.FeedBackMassManager;
 import com.rippletec.medicine.service.MedicineDocumentManager;
 import com.rippletec.medicine.service.MedicineManager;
 import com.rippletec.medicine.service.MedicineTypeManager;
@@ -16,6 +17,9 @@ import com.rippletec.medicine.utils.JsonUtil;
 
 public class BaseController {
     
+	@Resource(name=FeedBackMassManager.NAME)
+	protected FeedBackMassManager feedBackMassManager;
+	
     @Resource(name=JsonUtil.NAME)
     protected JsonUtil jsonUtil;
     
