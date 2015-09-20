@@ -6,4 +6,5 @@ public interface FeedBackMassManager extends IManager<FeedBackMass> {
     
     public static final String NAME = "FeedBackMassManager";
 
+    boolean addFeedBackMass(FeedBackMass feedBackMass,String account);
 }
