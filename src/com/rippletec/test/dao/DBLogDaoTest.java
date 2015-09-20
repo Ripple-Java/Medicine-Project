@@ -1,9 +1,5 @@
 package com.rippletec.test.dao;
 
-import static org.junit.Assert.*;
-
-import java.util.Date;
-
 import javax.annotation.Resource;
 
 import org.junit.Test;
@@ -14,7 +10,6 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.rippletec.medicine.dao.DBLogDao;
-import com.rippletec.medicine.model.DBLog;
 
 
 

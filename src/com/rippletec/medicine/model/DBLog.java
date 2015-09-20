@@ -47,9 +47,6 @@ public class DBLog extends BaseModel{
 	this.date = date;
     }
 
-
-
-
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Integer id;
@@ -59,7 +56,7 @@ public class DBLog extends BaseModel{
     private Integer object_id;
     
     //版本号
-    @Column(name=DB_VERSION, nullable=false)
+    @Column(name=DB_VERSION, length=12, nullable=false)
     private Integer dbVersion;
     
     //对象表
@@ -67,7 +64,7 @@ public class DBLog extends BaseModel{
     private String dbTable;
     
     //对象操作
-    @Column(name=ACTION,nullable=false)
+    @Column(name=ACTION, length =1 ,nullable=false)
     private Integer action;
     
     //最后修改日期

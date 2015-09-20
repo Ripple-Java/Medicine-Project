@@ -21,7 +21,7 @@ public class DBLogDaoImpl extends BaseDaoImpl<DBLog> implements DBLogDao{
 
     @Override
     public int getCount() {
-	return (Integer)getHibernateTemplate().find(StringUtil.getCountSql(DBLog.CLASS_NAME)).listIterator().next();
+	return ((Long)getHibernateTemplate().find(StringUtil.getCountSql(DBLog.CLASS_NAME)).listIterator().next()).intValue();
     }
       
 

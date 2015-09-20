@@ -9,5 +9,7 @@ public interface DBLoger extends IManager<DBLog>{
     public static final int DEFAULT_VERSION = 100000;
 
     Integer getVersion();
+    
+    Integer uniqueSave(DBLog dbLog);
 
 }

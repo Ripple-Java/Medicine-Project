@@ -18,7 +18,7 @@ import com.rippletec.medicine.dao.EnterpriseMedicineTypeDao;
 import com.rippletec.medicine.dao.MedicineDao;
 import com.rippletec.medicine.dao.MedicineTypeDao;
 import com.rippletec.medicine.model.ChineseMedicine;
-import com.rippletec.medicine.model.EnterpriseMedicineType;
+import com.rippletec.medicine.model.Medicine;
 import com.rippletec.medicine.model.MedicineType;
 
 
@@ -46,15 +46,14 @@ public class ChineseMedicineDaoTest implements IBaseDaoTest {
     @Override
     @Test
     public void testDelete() throws Exception {
-	chineseMedicineDao.delete(3);
+	chineseMedicineDao.delete(10);
     }
 
     @Override
     @Test
     public void testFind() throws Exception {
-	ChineseMedicine chineseMedicine = chineseMedicineDao.find(9);
+	ChineseMedicine chineseMedicine = chineseMedicineDao.find(10);
 	System.out.println(chineseMedicine.toString());
-	System.out.println(chineseMedicine.getMedicine().toString());
     }
 
     @Override
@@ -69,11 +68,10 @@ public class ChineseMedicineDaoTest implements IBaseDaoTest {
     @Override
     @Test
     public void testSave() throws Exception {
-	MedicineType medicineType = new MedicineType("testmedicinesave",MedicineType.DEFAULT_PARENT_ID,MedicineType.CHINESE);
-	EnterpriseMedicineType enterpriseMedicineType = enterpriseMedicineTypeDao.find(13);
-//	Medicine medicine = new Medicine(medicineType, Medicine.CHINESE, enterpriseMedicineType);
-	//ChineseMedicine chineseMedicine = new ChineseMedicine(medicine, "saveCheinse", "content", "efficacy", "annouce", "usage", "preparations", "store", "category");
-	//chineseMedicineDao.save(chineseMedicine);
+	MedicineType medicineType = new MedicineType("test1", MedicineType.DEFAULT_PARENT_ID, MedicineType.CHINESE);
+	Medicine medicine = new Medicine(Medicine.CHINESE);
+	ChineseMedicine chineseMedicine = new ChineseMedicine(medicine, medicineType,"name", "content", "efficacy", "annouce", "preparations", "manual", "store", "category", 100.0, ChineseMedicine.ON_PUBLISTH, "key");
+	chineseMedicineDao.save(chineseMedicine);
     }
 
     @Test
@@ -82,11 +80,14 @@ public class ChineseMedicineDaoTest implements IBaseDaoTest {
 	   for (ChineseMedicine chineseMedicine : chineseMedicines) {
 	    System.out.println(chineseMedicine.toString());
 	}
-	}
+    }
     
     @Override
     @Test
     public void testUpdate() throws Exception {
+	ChineseMedicine chineseMedicine = chineseMedicineDao.find(11);
+	chineseMedicine.setName("updateName");
+	chineseMedicineDao.update(chineseMedicine);
     }
 
 }
