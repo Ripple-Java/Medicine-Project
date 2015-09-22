@@ -2,6 +2,7 @@ package com.rippletec.medicine.controller;
 
 import javax.annotation.Resource;
 
+import com.rippletec.medicine.model.UserFavorite;
 import com.rippletec.medicine.service.ChineseMedicineManager;
 import com.rippletec.medicine.service.DoctorManager;
 import com.rippletec.medicine.service.EnterpriseManager;
@@ -11,12 +12,16 @@ import com.rippletec.medicine.service.MedicineDocumentManager;
 import com.rippletec.medicine.service.MedicineManager;
 import com.rippletec.medicine.service.MedicineTypeManager;
 import com.rippletec.medicine.service.StudentManager;
+import com.rippletec.medicine.service.UserFavoriteManager;
 import com.rippletec.medicine.service.UserManager;
 import com.rippletec.medicine.service.WestMedicineManager;
 import com.rippletec.medicine.utils.JsonUtil;
 
 public class BaseController {
     
+	@Resource(name=FeedBackMassManager.NAME)
+	protected UserFavoriteManager userFavoriteManager;
+	
 	@Resource(name=FeedBackMassManager.NAME)
 	protected FeedBackMassManager feedBackMassManager;
 	

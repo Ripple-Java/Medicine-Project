@@ -26,12 +26,12 @@ public class UserFavorite extends BaseModel{
     public static final String OBJECT_ID = "object_Id";
     public static final String TYPE = "type";
     
-    public static final int MEDICINE_CHINESE = 1;
-    public static final int MEDICINE_WEST = 2;
-    public static final int ENTER_CHINESE = 3;
-    public static final int ENTER_WEST = 4;
-    public static final int GUIDEBOOK = 5 ;
-    public static final int LITERATURE = 6 ;
+    public static final int MEDICINE_CHINESE = 1;	//中药
+    public static final int MEDICINE_WEST = 2;		//西药
+    public static final int ENTER_CHINESE = 3;		//企业中药
+    public static final int ENTER_WEST = 4;			//企业西药
+    public static final int GUIDEBOOK = 5 ;			//
+    public static final int LITERATURE = 6 ;		
     public static final int CASES = 7 ;
     
     @Id
