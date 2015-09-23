@@ -19,7 +19,7 @@ import com.rippletec.medicine.utils.JsonUtil;
 
 public class BaseController {
     
-	@Resource(name=FeedBackMassManager.NAME)
+	@Resource(name=UserFavoriteManager.NAME)
 	protected UserFavoriteManager userFavoriteManager;
 	
 	@Resource(name=FeedBackMassManager.NAME)
