@@ -26,6 +26,7 @@ import com.rippletec.medicine.model.FeedBackMass;
 import com.rippletec.medicine.model.MedicineDocument;
 import com.rippletec.medicine.model.MedicineType;
 import com.rippletec.medicine.model.User;
+import com.rippletec.medicine.model.UserFavorite;
 import com.rippletec.medicine.model.WestMedicine;
 import com.rippletec.medicine.utils.StringUtil;
 
@@ -51,6 +52,18 @@ public class AppController extends BaseController {
 		dateFormat, true));
     }
 
+    @RequestMapping(value = "/user/addFavorite", method = RequestMethod.POST)
+    @ResponseBody
+    public String user_addUserFavorite(HttpServletRequest request,UserFavorite userFavorite){
+    	String account= (String) request.getSession().getAttribute(User.ACCOUNT);
+    	if(userFavoriteManager.addUserFavorite(account, userFavorite))
+    		return jsonUtil.setResultSuccess().toJsonString();
+    	else {
+    		return jsonUtil.setResultFail().setTip("用户未登录").toJsonString();
+		}
+    	
+    }
+    
     @RequestMapping(value = "/user/addFeedBack", method = RequestMethod.POST)
     @ResponseBody
     public String user_addFeedBackMass(HttpServletRequest request,FeedBackMass feedBackMass){
