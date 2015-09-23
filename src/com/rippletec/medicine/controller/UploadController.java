@@ -27,9 +27,6 @@ public class UploadController extends BaseController{
     @ResponseBody
     public String user_uploadPortrait(HttpSession httpSession,
 	    @RequestParam("pic") CommonsMultipartFile pic) {
-	if (userManager.isLogined(acount, httpSession)) {
-	    
-	}
 	if(!FileUtil.isAllowImg(pic.getOriginalFilename()))
 	    return jsonUtil.setResultFail().setTip("不允许上传这种图片格式").toJsonString();
 	Result res = FileUtil.saveFile(IMG_SAVEPATH, pic);
