@@ -46,6 +46,14 @@ public class WestMedicineDaoTest implements IBaseDaoTest {
 	System.out.println(westMedicine.toString());
 	System.out.println(westMedicine.getMedicine().toString());
     }
+    
+    @Test
+    public void testSearch() throws Exception {
+	List<WestMedicine> medicines = westMedicineDao.findByParam("adult_dose", "[国外用法用量参考]");
+	for (WestMedicine westMedicine : medicines) {
+	    westMedicineDao.delete(westMedicine.getId());
+	}
+    }
 
     @Override
     @Test

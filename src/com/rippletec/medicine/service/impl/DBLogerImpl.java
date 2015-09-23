@@ -1,9 +1,14 @@
 package com.rippletec.medicine.service.impl;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
+import java.util.Properties;
 
 import javax.annotation.Resource;
 
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.stereotype.Repository;
 
 import com.rippletec.medicine.dao.DBLogDao;
@@ -23,9 +28,11 @@ public class DBLogerImpl extends BaseManager<DBLog> implements DBLoger{
     }
 
     @Override
-    public Integer getVersion() {
-	int count = dbLogDao.getCount();
-	return count==0 ? DEFAULT_VERSION : count+DEFAULT_VERSION;
+    public Integer getVersion() throws IOException {
+	org.springframework.core.io.Resource resource = new ClassPathResource("/config.properties");
+	Properties properties = PropertiesLoaderUtils.loadProperties(resource);
+	String ver = properties.getProperty("databaseVersion");
+	return Integer.valueOf(ver);
     }
 
     @Override
@@ -41,6 +48,18 @@ public class DBLogerImpl extends BaseManager<DBLog> implements DBLoger{
 	    return old.getId();
 	}
 	return save(dbLog);
+    }
+
+    @Override
+    public Integer updateVersion() throws IOException {
+	org.springframework.core.io.Resource resource = new ClassPathResource("/config.properties");
+	Properties properties = PropertiesLoaderUtils.loadProperties(resource);
+	Integer ver = Integer.valueOf(properties.getProperty("databaseVersion"));
+	ver++;
+	properties.setProperty("databaseVersion", ver+"");
+	FileOutputStream fos = new FileOutputStream(resource.getFile());
+	properties.store(fos, null);
+	return ver;
     }
 
 }

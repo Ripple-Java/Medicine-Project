@@ -12,10 +12,15 @@ public class SMS {
     private String APP_ID = "8a48b5514fac9535014fafeba2690515";
     private String SMS_Template = "1";
     private String[] templateArray = new String[] { "00000", "1" };
+    
+    public String send(String phoneNumber, String VerificationCode, String timeLimit){
+	return send(phoneNumber, VerificationCode, timeLimit, "1");
+    }
 
-    public String send(String phoneNumber, String VerificationCode, String timeLimit) {
+    public String send(String phoneNumber, String VerificationCode, String timeLimit, String template) {
 	this.templateArray[0] = VerificationCode;
 	this.templateArray[1] = timeLimit;
+	this.SMS_Template = template;
 	HashMap<String, Object> result = null;
 
 	// 初始化SDK

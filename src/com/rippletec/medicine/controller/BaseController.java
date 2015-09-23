@@ -17,8 +17,8 @@ import com.rippletec.medicine.utils.JsonUtil;
 
 public class BaseController {
     
-	@Resource(name=FeedBackMassManager.NAME)
-	protected FeedBackMassManager feedBackMassManager;
+    @Resource(name=FeedBackMassManager.NAME)
+    protected FeedBackMassManager feedBackMassManager;
 	
     @Resource(name=JsonUtil.NAME)
     protected JsonUtil jsonUtil;

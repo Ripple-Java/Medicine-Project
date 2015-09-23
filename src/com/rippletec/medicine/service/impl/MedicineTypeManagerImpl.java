@@ -57,4 +57,29 @@ public class MedicineTypeManagerImpl extends BaseManager<MedicineType> implement
 	return medicineTypeDao.findByParam(MedicineType.PARENT_TYPE_ID, parentId);
     }
 
+    @Override
+    public MedicineType isExist(MedicineType medicineType) {
+	List<MedicineType> medicineTypes = findByParam(MedicineType.NAME, medicineType.getName());
+	if(medicineTypes == null || medicineTypes.size() ==0)
+	    return null;
+	for (MedicineType medicineTypeTemp : medicineTypes) {
+	    if (medicineType.equals(medicineTypeTemp))
+		return medicineTypeTemp;
+	}
+	return null;
+	
+    }
+
+    @Override
+    public Integer uniqueSave(MedicineType medicineType) {
+	List<MedicineType> medicineTypes = findByParam(MedicineType.NAME, medicineType.getName());
+	if(medicineTypes != null && medicineTypes.size() > 0){
+	    for (MedicineType medicineType_temp : medicineTypes) {
+		if(medicineType.equals(medicineType_temp))
+		    return medicineType_temp.getId();
+	    }
+	}
+	return save(medicineType);
+    }
+
 }

@@ -4,38 +4,38 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
+import com.rippletec.medicine.bean.Result;
 import com.rippletec.medicine.utils.DateUtil;
+import com.rippletec.medicine.utils.FileUtil;
 import com.rippletec.medicine.utils.StringUtil;
 
 @Controller
 @RequestMapping("/upload")
 public class UploadController extends BaseController{
     
-    public static final String IMG_SAVEPATH = "/upload/images";
+    public static final String IMG_SAVEPATH = "/portrait/images";
     
-    @RequestMapping("/image")
+    @RequestMapping("/image/portrait")
     @ResponseBody
-    public String user_uploadPicture(@RequestParam("pic") CommonsMultipartFile pic) {
-	String rootPath = UploadController.class.getClassLoader().getResource("/").getPath();
-	File saveFileDir = new File(rootPath.substring(0, rootPath.indexOf("WEB-INF/classes"))+IMG_SAVEPATH);
-	if (!saveFileDir.exists()) {
-	    saveFileDir.mkdirs();
+    public String user_uploadPortrait(HttpSession httpSession,
+	    @RequestParam("pic") CommonsMultipartFile pic) {
+	if (userManager.isLogined(acount, httpSession)) {
+	    
 	}
-	String fileName = DateUtil.getSimpleDateTime(new Date()) + StringUtil.getSuffixByFilename(pic.getOriginalFilename());
-	File saveImg = new File(saveFileDir, fileName);
-	try {
-	    pic.transferTo(saveImg);
-	} catch (IllegalStateException | IOException e) {
-	    e.printStackTrace();
-	    return jsonUtil.setResultFail().setTip("写入文件失败").toJsonString();
-	}
-	return jsonUtil.setResultSuccess().setJsonObject("imgUrl",fileName).toJsonString();
+	if(!FileUtil.isAllowImg(pic.getOriginalFilename()))
+	    return jsonUtil.setResultFail().setTip("不允许上传这种图片格式").toJsonString();
+	Result res = FileUtil.saveFile(IMG_SAVEPATH, pic);
+	if(!res.isSuccess())
+	    return jsonUtil.setResultFail().setTip(res.getMessage()).toJsonString();
+	return jsonUtil.setResultSuccess().setJsonObject("imgUrl",res.getMessage()).toJsonString();
     }
     
 

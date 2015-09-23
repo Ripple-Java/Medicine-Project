@@ -2,10 +2,6 @@ package com.rippletec.test.dao;
 
 import javax.annotation.Resource;
 
-import com.rippletec.medicine.bean.PageBean;
-import com.rippletec.medicine.dao.EnterpriseDao;
-import com.rippletec.medicine.dao.EnterpriseMedicineTypeDao;
-import com.rippletec.medicine.model.FeedBackMass;
 import com.rippletec.medicine.service.FeedBackMassManager;
 
 public class FeedBackDaoTest implements IBaseDaoTest{
