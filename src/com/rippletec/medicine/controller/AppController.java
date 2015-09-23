@@ -214,6 +214,10 @@ public class AppController extends BaseController {
 	    case 1:
 		res = sms.send(phoneNumber, VerificationCode, timeLimit);
 		break;
+		
+	    case 2:
+		res = sms.send(phoneNumber, VerificationCode, timeLimit, "2");
+		break;
 	    default:
 		res = sms.send(phoneNumber, VerificationCode, timeLimit);
 		break;
@@ -295,28 +299,50 @@ public class AppController extends BaseController {
 	return jsonUtil.toJsonString();
     }
 
-    @RequestMapping(value = "/user/register", method = RequestMethod.POST)
+    @RequestMapping(value = "/user/verifyCode", method = RequestMethod.POST)
     @ResponseBody
-    public String user_setRegister(
+    public String user_verifyCode(
 	    HttpSession httpSession,
-	    @RequestParam(value = "phoneNumber", required = false, defaultValue = "") String phoneNumber,
-	    @RequestParam(value = "password", required = false, defaultValue = "") String password,
 	    @RequestParam(value = "code", required = false, defaultValue = "") String code) {
-	if (StringUtil.isMobile(phoneNumber) && StringUtil.hasText(password)) {
-	    String tempPhone = (String) httpSession.getAttribute("phoneNumber");
+	if (StringUtil.hasText(code)) {
 	    String tempCode = (String) httpSession.getAttribute("code");
-	    if (phoneNumber.equals(tempPhone) && code.equals(tempCode)) {
-		if (userManager.register(phoneNumber, password))
-		    jsonUtil.setResultSuccess().setJsonObject("account",
-			    phoneNumber);
-		else
-		    jsonUtil.setResultFail().setTip("注册失败");
-	    } else
-		jsonUtil.setResultFail().setJsonObject("tip", "手机号或验证码错误");
+	    if (tempCode!=null && code.equals(tempCode)){
+		httpSession
+		.setMaxInactiveInterval(10 * 60);
+		jsonUtil.setResultSuccess();
+	    }
+	    else
+		jsonUtil.setResultFail().setJsonObject("tip", "验证码错误或已过期");
 	} else
 	    jsonUtil.setResultFail().setJsonObject("tip", "参数错误");
 	return jsonUtil.toJsonString();
     }
+    
+    @RequestMapping(value = "/user/register", method = RequestMethod.POST)
+    @ResponseBody
+    public String user_setRegister(
+	    HttpSession httpSession,
+	    @RequestParam(value = "password", required = false, defaultValue = "") String password,
+	    @RequestParam(value = "device", required = false, defaultValue = "0") int device) {
+	if (StringUtil.hasText(password) && device>=User.DRVICE_OTHER && device<User.DRVICE_IPHONE) {
+	    String tempPhone = (String) httpSession.getAttribute("phoneNumber");
+	    if (tempPhone != null) {
+		if (userManager.register(tempPhone, password)){
+		    userManager.userLogin(tempPhone, password, device, httpSession);
+		    httpSession
+			.setMaxInactiveInterval(6 * 60 * 60);
+		    jsonUtil.setResultSuccess();
+		}    
+		else
+		    jsonUtil.setResultFail().setTip("注册失败");
+	    } else
+		jsonUtil.setResultFail().setJsonObject("tip", "此账号未验证");
+	} else
+	    jsonUtil.setResultFail().setJsonObject("tip", "参数错误");
+	return jsonUtil.toJsonString();
+    }
+    
+    
 
     @RequestMapping(value = "/user/setStuInfo", method = RequestMethod.GET)
     @ResponseBody

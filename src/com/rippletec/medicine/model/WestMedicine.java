@@ -22,6 +22,8 @@ import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.springframework.stereotype.Repository;
 
+import com.rippletec.medicine.annotation.DBLogModel;
+
 /**
  * @author Liuyi
  *
@@ -29,6 +31,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 @Entity
 @Table(name = "west_medicine")
+@DBLogModel
 public class WestMedicine extends BaseModel {
 
     public static final String CLASS_NAME = "WestMedicine";
@@ -144,13 +147,15 @@ public class WestMedicine extends BaseModel {
     public WestMedicine() {
     }
     
-    public WestMedicine(Medicine medicine,
-	    MedicineType medicineType, String name, String other_name,
-	    String content, String current_application, String pharmacolo,
-	    String pk_pd, String pharmacokinetics, String warn, String aDRS,
+   
+
+    public WestMedicine(Medicine medicine, MedicineType medicineType,
+	    String name, String other_name, String content,
+	    String current_application, String pharmacolo, String pk_pd,
+	    String pharmacokinetics, String warn, String aDRS,
 	    String interaction, String dose_explain, String manual,
 	    String adult_dose, String foreign_dose, String preparations,
-	    String store, Double price) {
+	    String store, Double price, Integer status, String sortKey) {
 	super();
 	this.medicine = medicine;
 	this.medicineType = medicineType;
@@ -171,7 +176,11 @@ public class WestMedicine extends BaseModel {
 	this.preparations = preparations;
 	this.store = store;
 	this.price = price;
+	this.status = status;
+	this.sortKey = sortKey;
     }
+
+
 
     public String getADRS() {
 	return ADRS;

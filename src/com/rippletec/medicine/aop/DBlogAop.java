@@ -1,5 +1,6 @@
 package com.rippletec.medicine.aop;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -62,6 +63,9 @@ public class DBlogAop {
 		    | IllegalArgumentException | IllegalAccessException e) {
 		// log待定
 		e.printStackTrace();
+	    } catch (IOException e) {
+		System.out.println("数据库版本配置文件读取失败");
+		e.printStackTrace();
 	    }
 
 	}
@@ -87,6 +91,9 @@ public class DBlogAop {
 		dbLoger.uniqueSave(log);
 	    } catch ( NoSuchMethodException | InvocationTargetException | IllegalAccessException | IllegalArgumentException | NoSuchFieldException | SecurityException e) {
 		// log待定
+		e.printStackTrace();
+	    } catch (IOException e) {
+		System.out.println("数据库版本配置文件读取失败");
 		e.printStackTrace();
 	    }
 
@@ -114,6 +121,9 @@ public class DBlogAop {
 	    } catch (NoSuchFieldException | SecurityException
 		    | IllegalArgumentException | IllegalAccessException e) {
 		// log待定
+		e.printStackTrace();
+	    } catch (IOException e) {
+		System.out.println("数据库版本配置文件读取失败");
 		e.printStackTrace();
 	    }
 

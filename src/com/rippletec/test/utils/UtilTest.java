@@ -74,5 +74,7 @@ public class UtilTest {
 	Date date = DateUtil.getYearMonthDate(new Date());
 	System.out.println(DateUtil.getDateTime(date));
     }
+    
+   
 
 }

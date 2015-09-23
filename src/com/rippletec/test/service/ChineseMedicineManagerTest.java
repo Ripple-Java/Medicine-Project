@@ -1,5 +1,7 @@
 package com.rippletec.test.service;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.junit.Test;
@@ -9,6 +11,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.rippletec.medicine.model.ChineseMedicine;
 import com.rippletec.medicine.service.ChineseMedicineManager;
 import com.rippletec.test.dao.IBaseDaoTest;
 /**
@@ -25,14 +28,21 @@ public class ChineseMedicineManagerTest implements IBaseDaoTest{
     private ChineseMedicineManager chineseMedicineManager;
 
     @Override
+    @Test
     public void testDelete() throws Exception {
     }
 
     @Override
+    @Test
     public void testFind() throws Exception {
+	List<ChineseMedicine> chineseMedicines = chineseMedicineManager.findByParam("annouce", "【用药监护】");
+	for (ChineseMedicine chineseMedicine : chineseMedicines) {
+	    chineseMedicineManager.delete(chineseMedicine.getId());
+	}
     }
 
     @Override
+    @Test
     public void testFindByPage() throws Exception {
     }
 
@@ -43,6 +53,7 @@ public class ChineseMedicineManagerTest implements IBaseDaoTest{
     }
 
     @Override
+    @Test
     public void testUpdate() throws Exception {
     }
     

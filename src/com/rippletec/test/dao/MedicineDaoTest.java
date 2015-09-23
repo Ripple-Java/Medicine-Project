@@ -23,7 +23,6 @@ import com.rippletec.medicine.model.ChineseMedicine;
 import com.rippletec.medicine.model.EnterpriseMedicineType;
 import com.rippletec.medicine.model.Medicine;
 import com.rippletec.medicine.model.MedicineType;
-import com.rippletec.medicine.model.WestMedicine;
 
 
 /**
@@ -104,11 +103,11 @@ public class MedicineDaoTest implements IBaseDaoTest{
 	    EnterpriseMedicineType enterpriseMedicineType = enterpriseMedicineTypeDao.find(15);
 	    MedicineType medicineType = medicineTypeDao.find(19);
 	    for (int i = 0; i < 10; i++) {
-		WestMedicine westMedicine = new WestMedicine(null,medicineType, "测哈哈", "west", "west", "west", "west", "west", "west", "west", "west", "west", "west", "west", "west", "west", "west", "west",888.0);
-		    Medicine medicine = new Medicine();
-		    westMedicine.setMedicine(medicine);
-//		    medicine.getWestMedicine().add(westMedicine);
-		    medicineDao.save(medicine);
+//		WestMedicine westMedicine = new WestMedicine(null,medicineType, "测哈哈", "west", "west", "west", "west", "west", "west", "west", "west", "west", "west", "west", "west", "west", "west", "west",888.0);
+//		    Medicine medicine = new Medicine();
+//		    westMedicine.setMedicine(medicine);
+////		    medicine.getWestMedicine().add(westMedicine);
+//		    medicineDao.save(medicine);
 	    }
 	    
 	}

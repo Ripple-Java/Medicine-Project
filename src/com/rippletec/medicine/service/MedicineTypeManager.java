@@ -13,4 +13,8 @@ public interface MedicineTypeManager extends IManager<MedicineType> {
 
     List<MedicineType> getTypeByParentId(int parentId);
 
+    MedicineType isExist(MedicineType medicineType);
+    
+    Integer uniqueSave(MedicineType medicineType);
+
 }

@@ -19,6 +19,8 @@ import javax.persistence.Table;
 
 import org.springframework.stereotype.Repository;
 
+import com.rippletec.medicine.annotation.DBLogModel;
+
 /**
  * @author Liuyi
  *
@@ -26,6 +28,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 @Entity
 @Table(name = "medicine_type")
+@DBLogModel
 public class MedicineType extends BaseModel {
     
     public static final String CLASS_NAME = "MedicineType";
@@ -135,6 +138,18 @@ public class MedicineType extends BaseModel {
 	return "MedicineType [id=" + id + ", name=" + name
 		+ ", parent_type_id=" + parent_type_id + ", gib_type="
 		+ gib_type + "]";
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+	if(obj == null)
+	    return false;
+	if(obj instanceof MedicineType){
+	    MedicineType medicineTypeObject = (MedicineType) obj;
+	    return (medicineTypeObject.getName().equals(this.getName()) && medicineTypeObject.getParent_type_id().equals(this.getParent_type_id()) && medicineTypeObject.getGib_type().equals(this.getGib_type())) ? true : false;	    
+	}
+	return false;
+	    
     }
     
     
