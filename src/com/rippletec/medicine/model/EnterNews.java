@@ -25,7 +25,7 @@ public class EnterNews extends BaseModel {
 
     private static final long serialVersionUID = -7272069046229112374L;
     
-    public static final String TABLE_NAME = "enterNews";
+    public static final String TABLE_NAME = "enternews";
     public static final String CLASS_NAME = "EnterNews";
     
     public static final String ENTERPRISE_ID = "enterprise_id";

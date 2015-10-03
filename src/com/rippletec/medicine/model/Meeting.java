@@ -31,6 +31,8 @@ public class Meeting extends BaseModel {
     
     public static final String ENTERPRISE_ID = "enterprise_id";
     
+    public static final String NAME = "name";
+    
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Integer id;

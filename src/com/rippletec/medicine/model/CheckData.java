@@ -21,7 +21,16 @@ public class CheckData extends BaseModel {
     private static final long serialVersionUID = -2672091910137983730L;
     
     public static final String CLASS_NAME = "CheckData";
-    public static final String TABLE_NAME = "checkData";
+    public static final String TABLE_NAME = "checkdata";
+    
+    public static final int CHECKING = 1;
+    public static final int PASSED = 2;
+    public static final int FAILED = 3;
+    
+    public static final int TYPE_ENTERPRISE = 1;
+    public static final int TYPE_MEDICINE = 2;
+    
+    
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

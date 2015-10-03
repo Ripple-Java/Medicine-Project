@@ -1,12 +1,17 @@
 package com.rippletec.medicine.service;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
+import com.rippletec.medicine.bean.DBLogEntity;
 import com.rippletec.medicine.model.DBLog;
 
 public interface DBLoger extends IManager<DBLog>{
     
     public static final String NAME = "DBLoger";
+    
+    public static final int DEFAULT_VERSION = 99999;
 
     Integer getVersion() throws IOException;
     
@@ -14,4 +19,12 @@ public interface DBLoger extends IManager<DBLog>{
     
     Integer uniqueSave(DBLog dbLog);
 
+    List<DBLog> getDatas(int type, int version, int serverVersion);
+    
+    List<DBLogEntity> getUpdates(int version, int serverVersion);
+    
+    List<DBLogEntity> getDeletes(int version, int serverVersion);
+    
+    List<DBLogEntity> getSaves(int version, int serverVersion);
+   
 }

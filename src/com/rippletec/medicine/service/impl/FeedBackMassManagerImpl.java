@@ -39,7 +39,7 @@ public class FeedBackMassManagerImpl extends BaseManager<FeedBackMass> implement
 		feedBackMass.setUser(user);
 		feedBackMass.setStatus(0);
 		feedBackMass.setTime(new Date());
-		System.out.println(feedBackMass);
+//		System.out.println(feedBackMass);
 		feedBackMassDao.save(feedBackMass);
 		return true;
 	}

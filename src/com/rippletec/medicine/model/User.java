@@ -45,6 +45,10 @@ public class User extends BaseModel {
     public static final int DRVICE_ANDROID = 1;
     public static final int DRVICE_IPHONE = 2;
     public static final int DRVICE_OTHER = 0;
+    
+    public static final int STATUS_NORMAL = 1;
+    public static final int STATUS_VAlIDATING = 2;
+    public static final int STATUS_BLOCKED = 3;
 
     public static final String DEFAULT_CERTIFICATEIMG = "image/certificateImg/default.png";
 
@@ -91,7 +95,7 @@ public class User extends BaseModel {
     private Date birthday;
 
     // 电话
-    @Column(name = "phone", length = 50, nullable = false)
+    @Column(name = "phone", length = 50, nullable = true)
     private String cellphone;
 
     // 邮箱
@@ -120,6 +124,10 @@ public class User extends BaseModel {
     @Column(name = "lastLogin", nullable = true)
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastLogin;
+    
+    // 用户状态
+    @Column(length=1, nullable=false)
+    private int status;
 
     public User() {
 	super();
@@ -134,6 +142,19 @@ public class User extends BaseModel {
 	this.cellphone = cellphone;
 	this.certificateImg = certificateImg;
 	this.regeditTime = regeditTime;
+    }
+    
+    
+
+    public User(String password, String account, int type, String email,
+	    Date regeditTime, int status) {
+	super();
+	this.password = password;
+	this.account = account;
+	this.type = type;
+	this.email = email;
+	this.regeditTime = regeditTime;
+	this.status = status;
     }
 
     public String getAccount() {
@@ -274,6 +295,16 @@ public class User extends BaseModel {
 
     public void setFeedBackMasses(Set<FeedBackMass> feedBackMasses) {
         this.feedBackMasses = feedBackMasses;
+    }
+    
+    
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 
     @Override

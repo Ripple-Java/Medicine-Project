@@ -19,8 +19,8 @@ import org.springframework.stereotype.Repository;
 public class UserFavorite extends BaseModel{
     
     private static final long serialVersionUID = -4947333524040803889L;
-    public static final String CLASS_NAME = "MedicineFavorite";
-    public static final String TABLE_NAME = "medicine_favorite";
+    public static final String CLASS_NAME = "UserFavorite";
+    public static final String TABLE_NAME = "userfavorite";
     
     public static final String USER_ID = "user_id";
     public static final String OBJECT_ID = "object_Id";
@@ -97,6 +97,8 @@ public class UserFavorite extends BaseModel{
     public void setObjectId(Integer objectId) {
         this.objectId = objectId;
     }
+    
+    
     
     
 

@@ -27,8 +27,8 @@ public class ExcelUtilTest {
     
     @Test
     public void testWestToDB() throws Exception {
-	String excelPath = "E:\\Desktop\\MedicineProject\\西药汇总数据(新).xlsx";
-	String sheetName = "终版汇总";
+	String excelPath = "E:\\Desktop\\MedicineProject\\西药汇总数据（正确）.xlsx";
+	String sheetName = "Sheet1";
 	excelUtil.setExcelPath(excelPath)
 		.setSheetName(sheetName);
 	System.out.println(excelUtil.setWestTypeToDatabase());

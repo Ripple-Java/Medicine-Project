@@ -6,17 +6,23 @@ import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.persistence.Id;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Service;
 
 import com.rippletec.medicine.bean.PageBean;
+import com.rippletec.medicine.dao.CheckDataDao;
+import com.rippletec.medicine.dao.EnterpriseDao;
 import com.rippletec.medicine.dao.FindAndSearchDao;
 import com.rippletec.medicine.dao.UserDao;
+import com.rippletec.medicine.model.CheckData;
+import com.rippletec.medicine.model.Enterprise;
 import com.rippletec.medicine.model.User;
 import com.rippletec.medicine.service.LivenessManager;
 import com.rippletec.medicine.service.UserManager;
 import com.rippletec.medicine.utils.MD5Util;
+import com.rippletec.medicine.utils.StringUtil;
 
 @Service(UserManager.NAME)
 public class UserManagerImpl extends BaseManager<User> implements UserManager{
@@ -26,6 +32,12 @@ public class UserManagerImpl extends BaseManager<User> implements UserManager{
     @Resource(name = LivenessManager.NAME)
     private LivenessManager livenessManager;
     
+    @Resource(name=EnterpriseDao.NAME)
+    private EnterpriseDao enterpriseDao;
+    
+    @Resource(name=CheckDataDao.NAME)
+    private CheckDataDao checkDataDao;
+     
     @Override
     public User findByAccount(String account) {
 	List<User> users = userDao.findByPage(User.ACCOUNT, account, new PageBean(0, 100));
@@ -51,11 +63,12 @@ public class UserManagerImpl extends BaseManager<User> implements UserManager{
     }
 
     @Override
-    public boolean isLogined(String account, HttpSession httpSession) {
-	String sessionAc = (String) httpSession.getAttribute(User.ACCOUNT);
-	if(sessionAc != null && account.equals(sessionAc))
-	    return true;
-	return false;
+    public boolean isLogined(HttpSession httpSession) {
+	Object accountAttr = httpSession.getAttribute(User.ACCOUNT);
+	if(accountAttr == null)
+	    return false;
+	String sessionAc = (String) accountAttr;
+	return StringUtil.hasText(sessionAc);
     }
 
     @Override
@@ -71,6 +84,7 @@ public class UserManagerImpl extends BaseManager<User> implements UserManager{
 	user.setDegree(0);
 	user.setEmail(null);
 	user.setSex(0);
+	user.setStatus(User.STATUS_NORMAL);
 	int userid = userDao.save(user);
 	livenessManager.save(find(userid));
 	return true;
@@ -92,6 +106,7 @@ public class UserManagerImpl extends BaseManager<User> implements UserManager{
 	userDao.update(user);
 	return true;
     }
+    
 
     @Override
     public void updateUserInfo(String account, int sex, Date birthday,
@@ -141,6 +156,72 @@ public class UserManagerImpl extends BaseManager<User> implements UserManager{
     public boolean loginOut(String account, HttpSession httpSession) {
 	httpSession.removeAttribute(User.ACCOUNT);
 	httpSession.removeAttribute(User.TYPE);
+	return true;
+    }
+
+    @Override
+    public boolean getBackPassword(String account, String newPassword) {
+	User user = findByAccount(account);
+	String securityPassword = "";
+	if (user == null)
+	    return false;
+	try {   	
+	    securityPassword  = MD5Util.getEncryptedPwd(newPassword);
+	} catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
+	    e.printStackTrace();
+	    return false;
+	}
+	user.setPassword(securityPassword);
+	userDao.update(user);
+	return true;
+    }
+
+    @Override
+    public boolean adminLogin(String account, String password,
+	    HttpSession httpSession) {
+	User user  = findByAccount(account);
+	if(user == null)
+	   return false;
+	String dbPassword = user.getPassword();
+	try {
+	    if(MD5Util.validPasswd(password, dbPassword)){
+		httpSession.setAttribute(User.ACCOUNT, account);
+		httpSession.setAttribute(User.TYPE, user.getType());
+		return true;
+	    }
+	} catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
+	    e.printStackTrace();
+	    return false;
+	}
+	return false;
+    }
+
+    @Override
+    public boolean verifyPassword(String account, String oldPassword) {
+	User user = findByAccount(account);
+	if(user != null){
+	    String dbPassword = user.getPassword();
+	    try {
+		return MD5Util.validPasswd(oldPassword, dbPassword);
+	    } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
+		e.printStackTrace();
+		return false;
+	    }
+	    
+	}
+	return false;
+    }
+
+    @Override
+    public boolean registerEnterprise(String email, String password,
+	    HttpSession httpSession) {
+	User user = new User(password, email, User.TYPE_ENTER, email, new Date(), User.STATUS_VAlIDATING);
+	Enterprise enterprise = (Enterprise) httpSession.getAttribute(Enterprise.CLASS_NAME);
+	CheckData checkData = (CheckData) httpSession.getAttribute(CheckData.CLASS_NAME);
+	enterprise.setUser(user);
+	int enterprise_id = enterpriseDao.save(enterprise);
+	checkData.setObject_id(enterprise_id);
+	checkDataDao.save(checkData);
 	return true;
     }
     

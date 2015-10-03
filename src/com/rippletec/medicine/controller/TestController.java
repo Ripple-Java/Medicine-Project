@@ -20,19 +20,9 @@ public class TestController extends BaseController{
 	@Resource
 	private EnterpriseManager enterpriseManager;
 	
-	@RequestMapping(value="/json", method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody Enterprise byProducesJson() {
-	    
-	    return null;
-	}
-	
-	@RequestMapping("/simple")
-	public @ResponseBody String simple() {
-	    MedicineType medicineType = new MedicineType("test1", MedicineType.DEFAULT_PARENT_ID, MedicineType.CHINESE);
-		Medicine medicine = new Medicine(Medicine.CHINESE);
-		ChineseMedicine chineseMedicine = new ChineseMedicine(medicine, medicineType,"name", "content", "efficacy", "annouce", "preparations", "manual", "store", "category", 100.0, ChineseMedicine.ON_PUBLISTH, "key");
-		chineseMedicineManager.save(chineseMedicine);
-		return "hello world";
+	@RequestMapping("/helloword")
+	public @ResponseBody String helloword() {
+	    return "hello world";
 	}
 
 }

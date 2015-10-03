@@ -15,7 +15,7 @@ public interface UserManager extends IManager<User> {
 
     boolean isExist(String phoneNumber);
 
-    boolean isLogined(String acount, HttpSession httpSession);
+    boolean isLogined( HttpSession httpSession);
 
     boolean register(String phoneNumber, String password);
 
@@ -29,5 +29,15 @@ public interface UserManager extends IManager<User> {
 	    HttpSession httpSession);
 
     boolean loginOut(String account, HttpSession httpSession);
+
+    boolean getBackPassword(String account, String newPassword);
+
+    boolean adminLogin(String account, String password, HttpSession httpSession);
+
+    boolean verifyPassword(String account, String oldPassword);
+
+    boolean registerEnterprise(String email, String password,
+	    HttpSession httpSession);
+
 
 }

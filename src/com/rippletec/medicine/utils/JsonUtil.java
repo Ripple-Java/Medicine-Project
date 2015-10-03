@@ -4,15 +4,18 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 import org.springframework.stereotype.Repository;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.JSONSerializer;
 import com.alibaba.fastjson.serializer.PropertyPreFilter;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 
 /**
  * @author Liuyi
@@ -42,7 +45,7 @@ public class JsonUtil {
     }
     
     public void clear() {
-	jsonObjectMap = new HashMap<String, Object>();
+	jsonObjectMap.clear();
 	nameNumber  = 0;
     }
     
@@ -123,8 +126,14 @@ public class JsonUtil {
 	return jssonString;
     }
     
+    
+    
     public String toJsonString(final String url){
 	return toJsonString(url, jsonObjectMap);
+    }
+    
+    public String toJsonString(final String url, boolean ignored){
+   	return toJsonIgnoredString(url, jsonObjectMap);
     }
     
     public String toJsonString(final String url, Object jsonObject){
@@ -141,7 +150,26 @@ public class JsonUtil {
 		else
 		    return true;
 	    }
-	});
+	},SerializerFeature.DisableCircularReferenceDetect);
+	clear();
+	return jsonString;
+    }
+    
+    public String toJsonIgnoredString(final String url, Object jsonObject){
+	if (!jsonMap.containsKey(url))
+	    return "[]";
+	String jsonString = JSON.toJSONString(jsonObject, new PropertyPreFilter() {
+	    
+	    @Override
+	    public boolean apply(JSONSerializer arg0, Object object, String name) {
+		if(isConllection(object))
+		    return true;
+		if (isModel(object))
+		    return !jsonMap.get(url).contains(name);
+		else
+		    return true;
+	    }
+	},SerializerFeature.DisableCircularReferenceDetect);
 	clear();
 	return jsonString;
     }

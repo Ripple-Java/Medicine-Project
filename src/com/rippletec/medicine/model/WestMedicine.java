@@ -31,7 +31,6 @@ import com.rippletec.medicine.annotation.DBLogModel;
 @Repository
 @Entity
 @Table(name = "west_medicine")
-@DBLogModel
 public class WestMedicine extends BaseModel {
 
     public static final String CLASS_NAME = "WestMedicine";

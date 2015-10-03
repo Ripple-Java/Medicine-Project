@@ -12,12 +12,15 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+import org.omg.CORBA.PRIVATE_MEMBER;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -38,6 +41,8 @@ public class Enterprise extends BaseModel {
     public static final String PHONE = "phone";
     public static final String EMAIL = "email";
     public static final String TYPE = "type";
+    
+    public static final String USER_ID = "user_id";
     
     /**
      * 外资
@@ -67,6 +72,12 @@ public class Enterprise extends BaseModel {
     @Cascade(CascadeType.ALL)
     @OrderBy(value="id asc")
     private Set<Video> videos = new LinkedHashSet<Video>();
+    
+    // 关联企业账号
+    @OneToOne(fetch=FetchType.LAZY)
+    @Cascade(CascadeType.ALL)
+    @JoinColumn(name = USER_ID)
+    private User user;
 
     // 企业类型type：1表示外资，2表示合资，3表示内资
     @Column(name = "type", length = 1, nullable = false)
@@ -87,23 +98,20 @@ public class Enterprise extends BaseModel {
     // 企业邮箱,可为null
     @Column(name = "email", length = 100, nullable = true)
     private String email;
+    
+    //企业执照号
+    @Column(name = "enterpriseNumber", length=15, nullable=false)
+    private String enterpriseNumber;
 
     public Enterprise() {
     }
     
- 
-
-    public Enterprise(Integer type, String name, String logo, String phone,
-	    String email) {
+    public Enterprise(Integer type, String name, String enterpriseNumber) {
 	super();
 	this.type = type;
 	this.name = name;
-	this.logo = logo;
-	this.phone = phone;
-	this.email = email;
+	this.enterpriseNumber = enterpriseNumber;
     }
-
-
 
     public String getEmail() {
 	return email;
@@ -172,8 +180,25 @@ public class Enterprise extends BaseModel {
     public void setVideos(Set<Video> videos) {
         this.videos = videos;
     }
+    
+    
+    
 
+    public String getEnterpriseNumber() {
+        return enterpriseNumber;
+    }
 
+    public void setEnterpriseNumber(String enterpriseNumber) {
+        this.enterpriseNumber = enterpriseNumber;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     @Override
     public String toString() {

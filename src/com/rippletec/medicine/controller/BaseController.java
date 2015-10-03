@@ -1,19 +1,28 @@
 package com.rippletec.medicine.controller;
 
 import javax.annotation.Resource;
+import javax.swing.text.View;
 
+import com.rippletec.medicine.model.BackGroundMedicineType;
+import com.rippletec.medicine.model.EnterChineseMedicine;
 import com.rippletec.medicine.model.UserFavorite;
+import com.rippletec.medicine.service.BackGroundMedicineTypeManager;
 import com.rippletec.medicine.service.ChineseMedicineManager;
+import com.rippletec.medicine.service.DBLoger;
 import com.rippletec.medicine.service.DoctorManager;
+import com.rippletec.medicine.service.EnterChineseMedicineManager;
+import com.rippletec.medicine.service.EnterWestMedicineManager;
 import com.rippletec.medicine.service.EnterpriseManager;
 import com.rippletec.medicine.service.EnterpriseMedicineTypeManager;
 import com.rippletec.medicine.service.FeedBackMassManager;
 import com.rippletec.medicine.service.MedicineDocumentManager;
 import com.rippletec.medicine.service.MedicineManager;
 import com.rippletec.medicine.service.MedicineTypeManager;
+import com.rippletec.medicine.service.MeetingManager;
 import com.rippletec.medicine.service.StudentManager;
 import com.rippletec.medicine.service.UserFavoriteManager;
 import com.rippletec.medicine.service.UserManager;
+import com.rippletec.medicine.service.VideoManager;
 import com.rippletec.medicine.service.WestMedicineManager;
 import com.rippletec.medicine.utils.JsonUtil;
 
@@ -40,6 +49,12 @@ public class BaseController {
     @Resource(name=ChineseMedicineManager.NAME)
     protected ChineseMedicineManager chineseMedicineManager;
     
+    @Resource(name=EnterChineseMedicineManager.NAME)
+    protected EnterChineseMedicineManager enterChineseMedicineManager;
+    
+    @Resource(name=EnterWestMedicineManager.NAME)
+    protected EnterWestMedicineManager enterWestMedicineManager;
+    
     @Resource(name=EnterpriseMedicineTypeManager.NAME)
     protected EnterpriseMedicineTypeManager enterpriseMedicineTypeManager;
     
@@ -57,6 +72,18 @@ public class BaseController {
     
     @Resource(name=WestMedicineManager.NAME)
     protected WestMedicineManager westMedicineManager;
+    
+    @Resource(name=DBLoger.NAME)
+    protected DBLoger dbLoger;
+    
+    @Resource(name=MeetingManager.NAME)
+    protected MeetingManager meetingManager;
+    
+    @Resource(name=VideoManager.NAME)
+    protected VideoManager videoManager;
+    
+    @Resource(name=BackGroundMedicineTypeManager.NAME)
+    protected BackGroundMedicineTypeManager backGroundMedicineTypeManager;
     
     
 }

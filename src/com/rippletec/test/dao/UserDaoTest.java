@@ -26,7 +26,7 @@ public class UserDaoTest implements IBaseDaoTest {
     @Override
     @Test
     public void testDelete() throws Exception {
-	userDao.delete(1);
+	userDao.delete(2);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.rippletec.medicine.service.impl;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -38,6 +39,15 @@ public class UserFavoriteManagerImpl extends BaseManager<UserFavorite> implement
 		userFavorite.setUser(users.get(0));
 		userFavoriteDao.save(userFavorite);
 		return true;
+	}
+
+	@Override
+	public List<UserFavorite> findByAccount(String account) {
+	    List<UserFavorite> userFavorites = new LinkedList<UserFavorite>();
+	    List<User> user = userDao.findByParam(User.ACCOUNT, account);
+	    if(user !=null && user.size()>0)
+		userFavorites = findBySql(UserFavorite.TABLE_NAME, UserFavorite.USER_ID, account);
+	    return userFavorites;
 	}
     
    

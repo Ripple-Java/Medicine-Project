@@ -20,7 +20,19 @@ http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
 		p:driverClass="${jdbc.driverClassName}"
 		p:jdbcUrl="${jdbc.url}" 
 		p:user="${jdbc.username}" 
-		p:password="${jdbc.password}" />
+		p:password="${jdbc.password}"
+		p:maxPoolSize="${c3p0.maxPoolSize}"
+		p:minPoolSize="${c3p0.minPoolSize}">
+		<property name="initialPoolSize" value="${c3p0.initialPoolSize}" />
+		<property name="maxIdleTime" value="${c3p0.maxIdleTime}"/>
+		<property name="acquireIncrement" value="${c3p0.acquireIncrement}"/>
+		<property name="acquireRetryAttempts" value="${c3p0.acquireRetryAttempts}"/>
+		<property name="acquireRetryDelay" value="${c3p0.acquireRetryDelay}"/>
+		<property name="testConnectionOnCheckin" value="${c3p0.testConnectionOnCheckin}"/>
+		<property name="automaticTestTable" value="${c3p0.automaticTestTable}"/>
+		<property name="idleConnectionTestPeriod" value="${c3p0.idleConnectionTestPeriod}"/>
+		<property name="checkoutTimeout" value="${c3p0.checkoutTimeout}"/>
+		</bean>
 
 	<!-- session工厂 -->
 	<bean id="sessionFactory"
@@ -52,7 +64,7 @@ http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
 		<tx:attributes>
 			<!-- get开头的方法设置为read-only -->
 			<tx:method name="save*" propagation="REQUIRED" />
-			<tx:method name="get*" propagation="REQUIRED" read-only="true" />
+			<tx:method name="get*" propagation="REQUIRED" />
 			<tx:method name="find*" propagation="REQUIRED" read-only="true" />
 			<tx:method name="*" />
 		</tx:attributes>

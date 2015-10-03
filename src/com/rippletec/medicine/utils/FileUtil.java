@@ -11,7 +11,7 @@ import com.rippletec.medicine.bean.Result;
 public class FileUtil {
     
     private enum allowImg{
-	JPEG, JPG, PNG, BMP, SVG, GIF;
+	JPEG, JPG, PNG, BMP;
     }
 
     /**
@@ -31,14 +31,12 @@ public class FileUtil {
 	return path.substring(0,path.indexOf("WEB-INF/classes"));
     }
 
-    public static Result saveFile(String savePath, CommonsMultipartFile file) {
+    public static Result saveFile(String savePath, CommonsMultipartFile file, String fileName) {
 	String rootPath = getRootPath();
 	File saveFileDir = new File(rootPath + savePath);
 	if (!saveFileDir.exists()) {
 	    saveFileDir.mkdirs();
 	}
-	String fileName = DateUtil.getSimpleDateTime(new Date())
-		+ getSuffixByFilename(file.getOriginalFilename());
 	File saveImg = new File(saveFileDir, fileName);
 	try {
 	    file.transferTo(saveImg);

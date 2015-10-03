@@ -3,6 +3,8 @@ package com.rippletec.medicine.utils;
 import java.util.Random;
 import java.util.regex.Pattern;
 
+import com.rippletec.medicine.model.Enterprise;
+
 /**
  * @author Liuyi
  *
@@ -12,7 +14,7 @@ public class StringUtil {
     /**
      * 正则表达式：验证用户名
      */
-    public static final String REGEX_USERNAME = "^[a-zA-Z]\\w{5,17}$";
+    public static final String REGEX_USERNAME = "^[a-zA-Z]\\w{5,6}$";
 
     /**
      * 正则表达式：验证密码
@@ -38,6 +40,13 @@ public class StringUtil {
      * 正则表达式：验证身份证
      */
     public static final String REGEX_ID_CARD = "(^\\d{18}$)|(^\\d{15}$)";
+    
+    /**
+     * 正则表达式：验证数子
+     */
+    public static final String REGEX_NUMBER = "^[0-9]*$";
+    
+    
 
     public static String generateCode(int charCount) {
 	String charValue = "";
@@ -200,10 +209,30 @@ public class StringUtil {
     public static boolean isUsername(String username) {
 	return Pattern.matches(REGEX_USERNAME, username);
     }
+    
+    /**
+     * 校验数字
+     * 
+     * @param number
+     * @return 校验通过返回true，否则返回false
+     */
+    public static boolean isNumber(String number) {
+	return Pattern.matches(REGEX_NUMBER, number);
+    }
 
     public static int randomInt(int from, int to) {
 	Random r = new Random();
 	return from + r.nextInt(to - from);
+    }
+
+    public static boolean isEnterpriseName(String name) {
+	return true;
+    }
+
+    public static boolean isEnterpriseType(int type) {
+	if(type == Enterprise.DOMESTIC || type == Enterprise.FOREIGN || type==Enterprise.JOINT)
+	    return true;
+	return false;
     }
 
     

@@ -10,7 +10,7 @@ import com.rippletec.medicine.model.EnterWestMedicine;
 import com.rippletec.medicine.service.EnterWestMedicineManager;
 
 @Repository(EnterWestMedicineManager.NAME)
-public class EnterWestMedicineManagerImpl extends BaseManager<EnterWestMedicine> {
+public class EnterWestMedicineManagerImpl extends BaseManager<EnterWestMedicine> implements EnterWestMedicineManager{
     
     @Resource(name = EnterWestMedicineDao.NAME)
     private EnterWestMedicineDao enterWestMedicineDao;
