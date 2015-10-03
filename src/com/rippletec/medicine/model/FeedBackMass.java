@@ -26,7 +26,7 @@ public class FeedBackMass extends BaseModel {
     private static final long serialVersionUID = 8388753053148224238L;
     
     public static final String CLASSE_NAME = "FeedBackMass";
-    public static final String TABLE_NAME = "feedBackMass";
+    public static final String TABLE_NAME = "feedbackmass";
     
     public static final String USER_ID = "user_id";
     

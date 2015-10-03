@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.hibernate.SessionFactory;
+import org.springframework.ui.Model;
 
 import com.rippletec.medicine.bean.PageBean;
 import com.rippletec.medicine.dao.Dao;
@@ -23,8 +24,12 @@ public abstract class BaseDaoImpl<T> extends PlusHibernateSupport<T> implements 
     }
     
     @Override
-    public void delete(Integer id) {
-	getHibernateTemplate().delete(find(id));
+    public boolean delete(Integer id) {
+	T model = find(id);
+	if(model == null) 
+	    return false;
+	getHibernateTemplate().delete(model);
+	return true;
     }
     
     @Override
@@ -58,6 +63,8 @@ public abstract class BaseDaoImpl<T> extends PlusHibernateSupport<T> implements 
     
     @Override
     public List<T> findByPage(String param, Object value, PageBean page) {
+	if(param == null || value == null)
+	    return findByPage(page);
 	String hql = StringUtil.getSelectHql(getClassName(), param);
 	return findByPage(hql, param, value, page.offset, page.pageSize);
     }
@@ -94,6 +101,8 @@ public abstract class BaseDaoImpl<T> extends PlusHibernateSupport<T> implements 
     @Override
     public List<T> findBySql(String tableName, String param, Object value,
 	    PageBean page) {
+	if(param == null || value == null)
+	    return findByPage(page);
 	String sql = StringUtil.getSelectSql(tableName,param);
 	return findBySql(getPersistClass(), sql, value, page.offset, page.pageSize);
     }

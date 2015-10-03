@@ -2,10 +2,12 @@ package com.rippletec.medicine.dao.impl;
 
 import org.springframework.stereotype.Repository;
 
+import com.rippletec.medicine.annotation.DBLogModel;
 import com.rippletec.medicine.dao.MedicineTypeDao;
 import com.rippletec.medicine.model.MedicineType;
 
 @Repository(MedicineTypeDao.NAME)
+@DBLogModel
 public class MedicineTypeDaoImpl extends BaseDaoImpl<MedicineType> implements MedicineTypeDao {
 
     @Override

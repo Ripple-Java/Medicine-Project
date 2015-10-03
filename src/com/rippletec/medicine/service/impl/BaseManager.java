@@ -10,8 +10,8 @@ import com.rippletec.medicine.service.IManager;
 public abstract class BaseManager<T> implements IManager<T> {
 
     @Override
-    public void delete(Integer id) {
-	getDao().delete(id);
+    public boolean delete(Integer id) {
+	return getDao().delete(id);
     }
 
     @Override

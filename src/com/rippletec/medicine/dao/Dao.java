@@ -16,7 +16,7 @@ public interface Dao <T>{
      * Dao层基础delete()方法
      * @param id 需要删除条目的id
      */
-    public void delete(Integer id);
+    public boolean delete(Integer id);
     
     /**
      * Dao层基础find方法

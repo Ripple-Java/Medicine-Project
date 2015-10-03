@@ -16,10 +16,13 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Repository;
 
+import com.rippletec.medicine.dao.BackGroundMedicineTypeDao;
+import com.rippletec.medicine.model.BackGroundMedicineType;
 import com.rippletec.medicine.model.ChineseMedicine;
 import com.rippletec.medicine.model.Medicine;
 import com.rippletec.medicine.model.MedicineType;
 import com.rippletec.medicine.model.WestMedicine;
+import com.rippletec.medicine.service.BackGroundMedicineTypeManager;
 import com.rippletec.medicine.service.ChineseMedicineManager;
 import com.rippletec.medicine.service.MedicineTypeManager;
 import com.rippletec.medicine.service.WestMedicineManager;
@@ -41,6 +44,9 @@ public class ExcelUtil {
     
     @Resource(name = ChineseMedicineManager.NAME)
     private ChineseMedicineManager chineseMedicineManager;
+    
+    @Resource(name = BackGroundMedicineTypeManager.NAME)
+    private BackGroundMedicineTypeManager backGroundMedicineTypeManager;
     
 
     public ExcelUtil() {
@@ -95,23 +101,35 @@ public class ExcelUtil {
 	while (rowIterator.hasNext()) {
 	    Row row = rowIterator.next();
 	    int parent_id = bigTypeId;
+	    BackGroundMedicineType backGroundMedicineType = new BackGroundMedicineType();
+	    backGroundMedicineType.setType(BackGroundMedicineType.TYPE_NORMAL);
+	    backGroundMedicineType.setFirstType("西药");
+	    backGroundMedicineType.setFirstType_id(bigTypeId);
 	    for (int i = 1; i < 4; i++) {
 		String typeString = getCellString(row, i);
 		if (!StringUtil.hasText(typeString)) {
 		    typeString = "其他";
 		    parent_id = medicineTypeManager.uniqueSave(new MedicineType(typeString, parent_id, MedicineType.WEST));
+		    backGroundMedicineType.setMedicineType(i+1, parent_id, typeString);
 		    break;
 		}
 		MedicineType medicineType = new MedicineType(typeString, parent_id, MedicineType.WEST);
 		MedicineType mType = medicineTypeManager.isExist(medicineType);
 		if(mType != null){
 		    parent_id = mType.getId();
+		    backGroundMedicineType.setMedicineType(i+1, parent_id, typeString);
 		    continue;
 		}
 		parent_id = medicineTypeManager.uniqueSave(medicineType);
+		backGroundMedicineType.setMedicineType(i+1, parent_id, typeString);
 	    }
 	    if (row.getCell(18) == null || row.getCell(17)==null || row.getCell(16) == null)
-		continue;  
+		continue;
+	    MedicineType medicineType = medicineTypeManager.find(parent_id);
+	    if(medicineType.getBackGroundMedicineType() == null){
+		medicineType.setBackGroundMedicineType(backGroundMedicineType);
+		medicineTypeManager.update(medicineType);
+	    }
 	    Medicine medicine = new Medicine(Medicine.WEST);
 	    WestMedicine westMedicine = 
 			new WestMedicine(medicine, medicineTypeManager.find(parent_id), 

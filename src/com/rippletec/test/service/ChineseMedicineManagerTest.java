@@ -30,6 +30,9 @@ public class ChineseMedicineManagerTest implements IBaseDaoTest{
     @Override
     @Test
     public void testDelete() throws Exception {
+	chineseMedicineManager.delete(2);
+	chineseMedicineManager.delete(3);
+	chineseMedicineManager.delete(30);
     }
 
     @Override

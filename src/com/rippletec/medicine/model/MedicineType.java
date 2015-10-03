@@ -13,10 +13,13 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Cascade;
 import org.springframework.stereotype.Repository;
 
 import com.rippletec.medicine.annotation.DBLogModel;
@@ -28,12 +31,12 @@ import com.rippletec.medicine.annotation.DBLogModel;
 @Repository
 @Entity
 @Table(name = "medicine_type")
-@DBLogModel
 public class MedicineType extends BaseModel {
     
     public static final String CLASS_NAME = "MedicineType";
     public static final String TABLE_NAME = "medicine_type";
     public static final String PARENT_TYPE_ID = "parent_type_id";
+    public static final String BACKGROUND_MEDICINETYPE_ID = "backGroundMedicineType_id";
     public static final String NAME = "name";
     public static final int CHINESE = 1;
     public static final int WEST = 2;
@@ -46,6 +49,11 @@ public class MedicineType extends BaseModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    
+    // 后台分类格式表
+    @OneToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+    @JoinColumn(name = BACKGROUND_MEDICINETYPE_ID)
+    private BackGroundMedicineType backGroundMedicineType;
     
     @OneToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY,mappedBy="medicineType")
     @OrderBy(value="id asc")
@@ -131,6 +139,17 @@ public class MedicineType extends BaseModel {
 
     public void setWestMedicines(Set<WestMedicine> westMedicines) {
         this.westMedicines = westMedicines;
+    }
+    
+    
+
+    public BackGroundMedicineType getBackGroundMedicineType() {
+        return backGroundMedicineType;
+    }
+
+    public void setBackGroundMedicineType(
+    	BackGroundMedicineType backGroundMedicineType) {
+        this.backGroundMedicineType = backGroundMedicineType;
     }
 
     @Override

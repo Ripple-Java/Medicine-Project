@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
@@ -32,6 +33,7 @@ public class EnterpriseMedicineType extends BaseModel {
     public static final String TABLE_NAME = "enterprise_medicine_type";
     public static final String ENTERPRISE_ID = "enterprise_id";
     public static final String PARENT_TYPE_ID = "parent_type_id";
+    public static final String BACKGROUND_MEDICINETYPE_ID = "backGroundMedicineType_id";
     public static final String NAME = "name";
     public static final int CHINESE = 1;
     public static final int WEST = 2;
@@ -71,6 +73,12 @@ public class EnterpriseMedicineType extends BaseModel {
     @Cascade(CascadeType.SAVE_UPDATE)
     @JoinColumn(name = ENTERPRISE_ID)
     private Enterprise enterprise;
+    
+    // 后台分类格式表
+    @OneToOne(fetch=FetchType.LAZY)
+    @Cascade(CascadeType.ALL)
+    @JoinColumn(name = BACKGROUND_MEDICINETYPE_ID)
+    private BackGroundMedicineType backGroundMedicineType;
 
     public EnterpriseMedicineType() {
     }
@@ -153,6 +161,16 @@ public class EnterpriseMedicineType extends BaseModel {
     public void setParent_type_id(Integer parent_type_id) {
         this.parent_type_id = parent_type_id;
     }
+
+    public BackGroundMedicineType getBackGroundMedicineType() {
+        return backGroundMedicineType;
+    }
+
+    public void setBackGroundMedicineType(
+    	BackGroundMedicineType backGroundMedicineType) {
+        this.backGroundMedicineType = backGroundMedicineType;
+    }
     
+  
 
 }

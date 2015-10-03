@@ -25,11 +25,15 @@ public class Video extends BaseModel {
     public static final String TABLE_NAME = "video";
     
     public static final String ENTERPRISE_ID = "enterprise_id";
+    public static final String NAME = "name";
     
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    
+    @Column(name = "name", length=255, nullable = false)
+    private String name;
     
     @Column(name = "path", length = 255, nullable = false)
     private String path;
@@ -45,17 +49,22 @@ public class Video extends BaseModel {
     public Video() {
     }
 
-    public Video(String path, Enterprise enterprise, Integer length) {
+    
+
+    public Video(String name, String path, Enterprise enterprise, Integer length) {
 	super();
+	this.name = name;
 	this.path = path;
 	this.enterprise = enterprise;
 	this.length = length;
     }
 
+
+
     @Override
     public String toString() {
-	return "Video [id=" + id + ", path=" + path + ", length=" + length
-		+ "]";
+	return "Video [id=" + id + ", name=" + name + ", path=" + path
+		+ ", length=" + length + "]";
     }
 
     public Integer getId() {
@@ -89,6 +98,16 @@ public class Video extends BaseModel {
     public void setLength(Integer length) {
         this.length = length;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+    
+    
     
     
     

@@ -40,6 +40,8 @@ public class Medicine extends BaseModel {
     
     public static final int CHINESE = 1;
     public static final int WEST = 2;
+    public static final int ENTER_CHINESE = 3;
+    public static final int ENTER_WEST = 4;
 
     // 药品Id
     @Id
