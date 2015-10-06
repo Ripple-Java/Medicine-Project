@@ -39,5 +39,9 @@ public interface UserManager extends IManager<User> {
     boolean registerEnterprise(String email, String password,
 	    HttpSession httpSession);
 
+    void activeUser(String account);
+
+    boolean initPassword(String account);
+
 
 }

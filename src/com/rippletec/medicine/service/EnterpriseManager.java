@@ -11,4 +11,6 @@ public interface EnterpriseManager extends IManager<Enterprise>{
     List<EnterpriseMedicineType> getEnterMedicineTypes(int id);
 
     List<Enterprise> getEnterprise(int size, int type, int page);
+
+    void deleteByUser(int id);
 }

@@ -127,7 +127,7 @@ public class AppController extends BaseController {
 	    return jsonUtil.setModelList(enterprises).toJsonString(
 		    "/user/getEnterprise");
 	}
-	return jsonUtil.setResultFail().toJsonString();
+	return jsonUtil.setResultFail("参数错误").toJsonString();
     }
 
     @RequestMapping(value = "/user/getEnterMedicine", method = RequestMethod.GET)
@@ -141,7 +141,7 @@ public class AppController extends BaseController {
 		jsonObject = enterChineseMedicineManager.find(id);
 	    else if (type == Medicine.ENTER_WEST)
 		jsonObject = enterWestMedicineManager.find(id);
-	    return jsonUtil.setResultSuccess().setJsonObject("medicine", jsonObject).toJsonString("/user/getEnterMedicine");
+	    return jsonUtil.setResultSuccess().setJsonObject("entity", jsonObject).toJsonString("/user/getEnterMedicine");
 	}
 	return jsonUtil.setResultFail().setTip("参数错误").toJsonString();
     }
@@ -215,7 +215,7 @@ public class AppController extends BaseController {
 	    return jsonUtil.setResultFail().setTip("用户未登录").toJsonString();
     }
 
-    @RequestMapping(value = "/user/getVerificationCode", method = RequestMethod.GET)
+    @RequestMapping(value = "/getVerificationCode", method = RequestMethod.GET)
     @ResponseBody
     public String user_getVerificationCode(
 	    HttpSession httpSession,
@@ -223,8 +223,9 @@ public class AppController extends BaseController {
 	    @RequestParam(value = "type", required = false, defaultValue = "0") int type) {
 	if (StringUtil.isMobile(phoneNumber)) {
 	    if (type<=1 && userManager.isExist(phoneNumber))
-		return jsonUtil.setResultFail().setJsonObject("tip", "此账号以存在")
-			.toJsonString();
+		return jsonUtil.setResultFail("此账号以存在").toJsonString();
+	    if(type == 2 && !userManager.isExist(phoneNumber))
+		return jsonUtil.setResultFail("该用户不存在").toJsonString();
 	    String VerificationCode = StringUtil.generateCode(6);
 	    String timeLimit = "1";
 	    SMS sms = new SMS();
@@ -284,7 +285,7 @@ public class AppController extends BaseController {
 	return jsonUtil.setResultFail().setTip("参数错误").toJsonString();
     }
 
-    @RequestMapping(value = "/user/login", method = RequestMethod.POST)
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ResponseBody
     public String user_setLogin(
 	    HttpSession httpSession,
@@ -317,7 +318,7 @@ public class AppController extends BaseController {
 	return jsonUtil.toJsonString();
     }
 
-    @RequestMapping(value = "/user/verifyCode", method = RequestMethod.GET)
+    @RequestMapping(value = "/verifyCode", method = RequestMethod.GET)
     @ResponseBody
     public String user_verifyCode(
 	    HttpSession httpSession,
@@ -341,7 +342,7 @@ public class AppController extends BaseController {
 	return jsonUtil.toJsonString();
     }
     
-    @RequestMapping(value = "/user/register", method = RequestMethod.POST)
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
     @ResponseBody
     public String user_setRegister(
 	    HttpSession httpSession,
@@ -415,7 +416,7 @@ public class AppController extends BaseController {
 	return jsonUtil.setResultFail().setTip("参数错误").toJsonString();
     }
     
-    @RequestMapping(value = "/user/getBackPassword", method = RequestMethod.POST)
+    @RequestMapping(value = "/getBackPassword", method = RequestMethod.POST)
     @ResponseBody
     public String user_getBackPassword(
 	    HttpSession httpSession,
@@ -425,20 +426,20 @@ public class AppController extends BaseController {
 	    Object flagAttr = httpSession.getAttribute("verify");
 	    Object typeAttr = httpSession.getAttribute("type");
 	    if(accountAttr ==null || flagAttr==null || typeAttr==null)
-		return jsonUtil.setResultFail().setTip("此账号未通过验证").toJsonString();
+		return jsonUtil.setResultFail("此账号未通过验证").toJsonString();
 	    String account = (String) accountAttr;
 	    boolean verifyFlag = (boolean) flagAttr;
 	    int type = (int) typeAttr;
 	    
-	    if (account != null && verifyFlag && type==2) {
+	    if (StringUtil.isMobile(account) && verifyFlag && type==2) {
 		if(userManager.getBackPassword(account, newPassword))
 		    return jsonUtil.setResultSuccess().toJsonString();
 		else
-		    return jsonUtil.setResultFail().setTip("修改失败或此用户未注册").toJsonString();
+		    return jsonUtil.setResultFail("修改失败或此用户未注册").toJsonString();
 	    }
 		
 	}
-	return jsonUtil.setResultFail().setTip("参数错误").toJsonString();
+	return jsonUtil.setResultFail("参数错误").toJsonString();
     }
     
 
@@ -480,6 +481,18 @@ public class AppController extends BaseController {
 	List<DBLogEntity> saves = dbLoger.getSaves(version, serverVersion);
 	return jsonUtil.setResultSuccess().setJsonObject("updates", updates).setJsonObject("deletes", deletes).setJsonObject("saves",saves).toJsonString("/user/updateDBversion",true);
     }
+    
+    @RequestMapping(value = "/checkCode", method = RequestMethod.POST)
+    @ResponseBody
+    public String user_checkCode(
+	    @RequestParam(value = "code", required = false, defaultValue = "") String code) {
+	if(androidCode.equals(code))
+	    jsonUtil.setResultSuccess();
+	else jsonUtil.setResultFail();
+	return jsonUtil.toJsonString();
+    }
+    
+    
     
     private String getAccount(HttpSession httpSession) {
 	Object accountAttr = httpSession.getAttribute(User.ACCOUNT);

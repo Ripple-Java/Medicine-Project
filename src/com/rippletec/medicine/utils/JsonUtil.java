@@ -108,6 +108,11 @@ public class JsonUtil {
 	jsonObjectMap.put("result", "fail");
 	return this;
     }
+    public JsonUtil setResultFail(String tip) {
+	jsonObjectMap.put("result", "fail");
+	setTip(tip);
+	return this;
+    }
     
     public JsonUtil setResultSuccess() {
 	jsonObjectMap.put("result", "success");

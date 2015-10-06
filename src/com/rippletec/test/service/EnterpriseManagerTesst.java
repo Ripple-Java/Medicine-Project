@@ -28,7 +28,7 @@ public class EnterpriseManagerTesst implements IBaseDaoTest {
     @Override
     @Test
     public void testDelete() throws Exception {
-	enterpriseManager.delete(22);
+	enterpriseManager.delete(1);
     }
 
     @Override

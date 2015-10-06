@@ -67,9 +67,18 @@
 		<filter-name>encodingFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
-
-
 	
+	
+	<!-- 跨域请求配置 -->
+	<filter>
+		<filter-name>apiCorsFilter</filter-name>
+		<filter-class>com.rippletec.medicine.filter.ApiCorsFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>apiCorsFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
 
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>

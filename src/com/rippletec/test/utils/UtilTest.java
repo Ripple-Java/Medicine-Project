@@ -1,5 +1,7 @@
 package com.rippletec.test.utils;
 
+import static org.junit.Assert.*;
+
 import java.lang.reflect.Field;
 import java.util.Date;
 import java.util.LinkedList;
@@ -11,6 +13,7 @@ import com.rippletec.medicine.SMS.SMS;
 import com.rippletec.medicine.model.BaseModel;
 import com.rippletec.medicine.model.Enterprise;
 import com.rippletec.medicine.utils.DateUtil;
+import com.rippletec.medicine.utils.EmailUtil;
 import com.rippletec.medicine.utils.JsonUtil;
 import com.rippletec.medicine.utils.MD5Util;
 import com.rippletec.medicine.utils.StringUtil;
@@ -73,6 +76,16 @@ public class UtilTest {
     public void testDate() throws Exception {
 	Date date = DateUtil.getYearMonthDate(new Date());
 	System.out.println(DateUtil.getDateTime(date));
+    }
+    
+    @Test
+    public void testEmail() throws Exception {
+	System.out.println(EmailUtil.sendEmail("860986808@qq.com" ,StringUtil.RegisterContent("86096880@qq.com", "12345"), "测试"));
+    }
+    
+    @Test
+    public void testEmailContent() throws Exception {
+	System.out.println(StringUtil.RegisterContent("860986808@qq.com", "test"));
     }
     
    
