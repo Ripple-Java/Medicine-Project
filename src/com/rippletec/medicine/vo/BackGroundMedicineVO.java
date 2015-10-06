@@ -1,23 +1,31 @@
 package com.rippletec.medicine.vo;
 
 import com.rippletec.medicine.model.BackGroundMedicineType;
+import com.rippletec.medicine.model.BaseModel;
 
-public class BackGroundMedicineVO <T>{
+public class BackGroundMedicineVO {
     
     public static final String CLASS_NAME = "BackGroundMedicineVO";
     
-    public T entity;
-    
     public BackGroundMedicineType type;
     
-    public BackGroundMedicineVO() {
-    }
-    public BackGroundMedicineVO(T medicine, BackGroundMedicineType type) {
+    public String name;
+    
+    public String enterpriseName;
+    
+    public Integer id;
+    
+    public BackGroundMedicineVO(BackGroundMedicineType type, String name,
+	    String enterpriseName, int id) {
 	super();
-	this.entity = medicine;
 	this.type = type;
+	this.name = name;
+	this.enterpriseName = enterpriseName;
+	this.id = id;
     }
 
+    public BackGroundMedicineVO() {
+    }
 
     public BackGroundMedicineType getType() {
         return type;
@@ -26,22 +34,33 @@ public class BackGroundMedicineVO <T>{
     public void setType(BackGroundMedicineType type) {
         this.type = type;
     }
-    public T getEntity() {
-        return entity;
+
+    public String getName() {
+        return name;
     }
-    public void setEntity(T entity) {
-        this.entity = entity;
+
+    public String getEnterpriseName() {
+        return enterpriseName;
     }
-    @Override
-    public String toString() {
-	return "BackGroundMedicineVO [entity=" + entity + ", type=" + type
-		+ "]";
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setEnterpriseName(String enterpriseName) {
+        this.enterpriseName = enterpriseName;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
     
     
-  
-    
-    
+ 
     
 
 }

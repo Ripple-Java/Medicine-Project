@@ -6,6 +6,7 @@ import javax.annotation.Resource;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -23,10 +24,15 @@ import com.rippletec.test.dao.IBaseDaoTest;
 public class UserManagerTest implements IBaseDaoTest {
     
     @Resource(name=UserManager.NAME)
-    private UserManager userManager; 
+    private UserManager userManager;
+    
+    @Value("${android.code}")
+    private String code;
 
     @Override
+    @Test
     public void testDelete() throws Exception {
+	System.out.println(code);
     }
 
     @Override
@@ -47,9 +53,9 @@ public class UserManagerTest implements IBaseDaoTest {
     
     @Test
     public void testGetBackPassword() throws Exception {
-	User user = userManager.findByAccount("15622739759");
+	User user = userManager.findByAccount("admins");
 	System.out.println(user.toString());
-	userManager.getBackPassword(user.getAccount(), "23456");
+	userManager.getBackPassword(user.getAccount(), "12345");
     }
 
 }

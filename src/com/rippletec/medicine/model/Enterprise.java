@@ -88,7 +88,7 @@ public class Enterprise extends BaseModel {
     private String name;
 
     // 企业logo
-    @Column(name = "logo", length = 255, nullable = false)
+    @Column(name = "logo", length = 255, nullable = true)
     private String logo;
 
     // 企业联系电话,可为null

@@ -49,24 +49,35 @@ public class FeedBackMass extends BaseModel {
     @Column(name="status", length=1, nullable=false)
     private Integer status;
     
+    @Column(name="phone", length=20, nullable=true)
+    private String phone;
+    
+    @Column(name="qqNumber", length=15, nullable=true)
+    private String qqNumber;
+    
     
     public FeedBackMass() {
     }
 
 
-    public FeedBackMass(String content, Date time, User user, Integer status) {
+    public FeedBackMass(String content, Date time, User user, Integer status, String phone, String qqNumber) {
 	super();
 	this.content = content;
 	this.time = time;
 	this.user = user;
 	this.status = status;
+	this.phone = phone;
+	this.qqNumber = qqNumber;
     }
 
+
+    
 
     @Override
     public String toString() {
 	return "FeedBackMass [id=" + id + ", content=" + content + ", time="
-		+ time + ", status=" + status + "]";
+		+ time + ", status=" + status + ", phone=" + phone
+		+ ", qqNumber=" + qqNumber + "]";
     }
 
 
@@ -117,6 +128,26 @@ public class FeedBackMass extends BaseModel {
 
 	public void setContent(String content) {
 		this.content = content;
+	}
+
+
+	public String getPhone() {
+	    return phone;
+	}
+
+
+	public String getQqNumber() {
+	    return qqNumber;
+	}
+
+
+	public void setPhone(String phone) {
+	    this.phone = phone;
+	}
+
+
+	public void setQqNumber(String qqNumber) {
+	    this.qqNumber = qqNumber;
 	}
     
     

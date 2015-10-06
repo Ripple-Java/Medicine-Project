@@ -38,4 +38,14 @@ public class EnterpriseManagerImpl extends BaseManager<Enterprise> implements En
 	return findByPage(Enterprise.TYPE, type, new PageBean(currentPage, 0, size));
     }
 
+    @Override
+    public void deleteByUser(int id) {
+	List<Enterprise> enterprises = findBySql(Enterprise.TABLE_NAME, Enterprise.USER_ID, id);
+	if(enterprises == null)
+	    return;
+	for (Enterprise enterprise : enterprises) {
+	    delete(enterprise.getId());
+	}
+    }
+
 }

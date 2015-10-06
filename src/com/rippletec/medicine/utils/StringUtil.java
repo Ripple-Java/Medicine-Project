@@ -1,5 +1,8 @@
 package com.rippletec.medicine.utils;
 
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
+import java.util.Date;
 import java.util.Random;
 import java.util.regex.Pattern;
 
@@ -10,6 +13,8 @@ import com.rippletec.medicine.model.Enterprise;
  *
  */
 public class StringUtil {
+    
+    public static final String SERVER_URL = "112.74.131.194:8080";
     
     /**
      * 正则表达式：验证用户名
@@ -55,6 +60,28 @@ public class StringUtil {
 	    charValue += String.valueOf(c);
 	}
 	return charValue;
+    }
+    
+    public static String RegisterContent(String account, String password) {
+	String securityUrl;
+	try {
+	    securityUrl = MD5Util.getEncryptedPwd(account + password);
+	} catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
+	    e.printStackTrace();
+	    return null;
+	}
+	///邮件的内容  
+        StringBuffer sb=new StringBuffer("点击下面链接激活账号，48小时生效，否则重新注册账号，链接只能使用一次，请尽快激活！</br>");  
+        sb.append("<a href=\"http://"+SERVER_URL+"/MedicineProject/Web/enteruser/validate?action=1&account=");  
+        sb.append(account);   
+        sb.append("&code=");   
+        sb.append(securityUrl);  
+        sb.append("\">http://"+SERVER_URL+"/MedicineProject/Web/enteruser/validate?action=1&account=");   
+        sb.append(account);  
+        sb.append("&code=");  
+        sb.append(securityUrl);  
+        sb.append("</a>");  
+	return sb.toString();
     }
 
     public static String getAccount() {

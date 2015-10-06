@@ -21,6 +21,6 @@ public interface MedicineManager extends IManager<Medicine> {
     boolean getMedicine(PageBean page, int type, JsonUtil jsonUtil,
 	    String param, Object value);
 
-    void getChineseOrWest(List<BackGroundMedicineVO<BaseModel>> models, List<Medicine> medicines);
+    void getChineseOrWest(List<BackGroundMedicineVO> models, List<Medicine> medicines);
     
 }

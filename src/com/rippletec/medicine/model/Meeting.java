@@ -30,8 +30,14 @@ public class Meeting extends BaseModel {
     public static final String CLASS_NAME = "Meeting";
     
     public static final String ENTERPRISE_ID = "enterprise_id";
+    public static final String MEDICINE_ID = "medicine_id";
     
     public static final String NAME = "name";
+    
+    public static final int ON_PUBLISTH = 1;
+    public static final int ON_CHECKING = 2;
+    public static final int ON_RECHECKING = 3;
+    public static final int ON_CLOSE = 4;
     
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -42,24 +48,38 @@ public class Meeting extends BaseModel {
     @JoinColumn(name = ENTERPRISE_ID)
     private Enterprise enterprise;
     
+    @ManyToOne(fetch = FetchType.LAZY)
+    @Cascade(CascadeType.SAVE_UPDATE)
+    @JoinColumn(name = MEDICINE_ID)
+    private Medicine medicine;
+    
     @Column(name = "name", length = 50, nullable = false)
     private String name;
     
-    @Column(name = "speaker", length = 20, nullable =false)
+    @Column(name = "speaker", length = 20, nullable =true)
     private String speaker;
     
-    @Column(name = "tag", length = 255, nullable = false)
+    @Column(name = "tag", length = 255, nullable = true)
     private String tag;
     
     @Column(name = "date",nullable = false)
     @Temporal(TemporalType.DATE)
     private Date date;
     
-    @Column(name = "PPT", length = 200, nullable = false)
+    @Column(name = "PPT", length = 200, nullable = true)
     private String PPT;
     
-    @Column(name = "video", length = 255, nullable = false)
+    @Column(name = "video", length = 255, nullable = true)
     private String video;
+    
+    @Column(name = "content", columnDefinition= "TEXT", nullable =true)
+    private String content;
+    
+    @Column(name = "subject", length=50, nullable = true)
+    private String subject;
+    
+    @Column(name = "status", length=1, nullable = false)
+    private Integer status;
     
     public Meeting() {
     }
@@ -146,6 +166,40 @@ public class Meeting extends BaseModel {
     public void setVideo(String video) {
         this.video = video;
     }
+
+    public Medicine getMedicine() {
+        return medicine;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setMedicine(Medicine medicine) {
+        this.medicine = medicine;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+    
+    
     
     
 }

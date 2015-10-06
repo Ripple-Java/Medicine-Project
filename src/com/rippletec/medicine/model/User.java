@@ -77,7 +77,7 @@ public class User extends BaseModel {
     private String password;
 
     // 用户账号
-    @Column(name = "account", length = 11, nullable = false)
+    @Column(name = "account", length = 30, nullable = false)
     private String account;
 
 

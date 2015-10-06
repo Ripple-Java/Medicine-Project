@@ -3,6 +3,8 @@ package com.rippletec.medicine.controller;
 import javax.annotation.Resource;
 import javax.swing.text.View;
 
+import org.springframework.beans.factory.annotation.Value;
+
 import com.rippletec.medicine.model.BackGroundMedicineType;
 import com.rippletec.medicine.model.EnterChineseMedicine;
 import com.rippletec.medicine.model.UserFavorite;
@@ -84,6 +86,10 @@ public class BaseController {
     
     @Resource(name=BackGroundMedicineTypeManager.NAME)
     protected BackGroundMedicineTypeManager backGroundMedicineTypeManager;
+    
+    //安卓app签名
+    @Value("${android.code}")
+    protected String androidCode;
     
     
 }

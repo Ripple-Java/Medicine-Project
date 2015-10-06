@@ -24,7 +24,7 @@ import com.rippletec.medicine.utils.StringUtil;
 public class UploadController extends BaseController{
     
     public static final String USERIMG_SAVEPATH = "/portrait/images";
-    public static final String ENTERPRISEIMG_SAVEPATH = "/enterprise/images";
+    public static final String ENTERPRISEIMG_SAVEPATH = "/enterprise/checkImages";
     
     @RequestMapping(value = "/image/portrait", method = RequestMethod.POST)
     @ResponseBody

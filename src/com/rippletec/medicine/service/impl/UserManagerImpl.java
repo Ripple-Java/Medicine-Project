@@ -21,6 +21,7 @@ import com.rippletec.medicine.model.Enterprise;
 import com.rippletec.medicine.model.User;
 import com.rippletec.medicine.service.LivenessManager;
 import com.rippletec.medicine.service.UserManager;
+import com.rippletec.medicine.utils.EmailUtil;
 import com.rippletec.medicine.utils.MD5Util;
 import com.rippletec.medicine.utils.StringUtil;
 
@@ -215,13 +216,48 @@ public class UserManagerImpl extends BaseManager<User> implements UserManager{
     @Override
     public boolean registerEnterprise(String email, String password,
 	    HttpSession httpSession) {
-	User user = new User(password, email, User.TYPE_ENTER, email, new Date(), User.STATUS_VAlIDATING);
+	String securityPassword = "";
+	try {
+	    securityPassword = MD5Util.getEncryptedPwd(password);
+	} catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
+	    e.printStackTrace();
+	    return false;
+	}
+	Date registerDate = new Date();
+	User user = new User(securityPassword, email, User.TYPE_ENTER, email, registerDate, User.STATUS_VAlIDATING);
 	Enterprise enterprise = (Enterprise) httpSession.getAttribute(Enterprise.CLASS_NAME);
 	CheckData checkData = (CheckData) httpSession.getAttribute(CheckData.CLASS_NAME);
 	enterprise.setUser(user);
 	int enterprise_id = enterpriseDao.save(enterprise);
 	checkData.setObject_id(enterprise_id);
 	checkDataDao.save(checkData);
+	if(!EmailUtil.sendEmail(email, StringUtil.RegisterContent(email, securityPassword), "医药汇注册验证"))
+	    return false;
+	return true;
+    }
+
+    @Override
+    public void activeUser(String account) {
+	User user = findByAccount(account);
+	user.setStatus(User.STATUS_NORMAL);
+	userDao.update(user);
+    }
+
+    @Override
+    public boolean initPassword(String account) {
+	String newPassword = StringUtil.generateCode(8);
+	String securityword = "";
+	try {
+	    securityword = MD5Util.getEncryptedPwd(newPassword);
+	} catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
+	    e.printStackTrace();
+	    return false;
+	}
+	User user = findByAccount(account);
+	if(user == null )
+	    return false;
+	user.setPassword(securityword);
+	userDao.update(user);
 	return true;
     }
     
