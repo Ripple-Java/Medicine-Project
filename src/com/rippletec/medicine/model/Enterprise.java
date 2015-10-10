@@ -55,7 +55,7 @@ public class Enterprise extends BaseModel {
     /**
      * 内资
      */
-    public static final int DOMESTIC = 3;
+    public static final int DOMESTIC = 0;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

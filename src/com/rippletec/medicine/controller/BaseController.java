@@ -1,12 +1,18 @@
 package com.rippletec.medicine.controller;
 
+import java.util.List;
+
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 import javax.swing.text.View;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 
 import com.rippletec.medicine.model.BackGroundMedicineType;
 import com.rippletec.medicine.model.EnterChineseMedicine;
+import com.rippletec.medicine.model.User;
 import com.rippletec.medicine.model.UserFavorite;
 import com.rippletec.medicine.service.BackGroundMedicineTypeManager;
 import com.rippletec.medicine.service.ChineseMedicineManager;
@@ -90,6 +96,23 @@ public class BaseController {
     //安卓app签名
     @Value("${android.code}")
     protected String androidCode;
+    
+    protected String toErrorJson(BindingResult result) {
+	List<ObjectError> errors = result.getAllErrors();
+	String errorStr = "";
+	for (ObjectError objectError : errors) {
+	    errorStr += objectError.getDefaultMessage() +", ";
+	}
+	errorStr = errorStr.substring(0,errorStr.length()-2);
+	return jsonUtil.setResultFail(errorStr).toJsonString();
+    }
+    
+    
+    protected String getAccount(HttpSession httpSession) {
+	Object accountAttr = httpSession.getAttribute(User.ACCOUNT);
+	return accountAttr == null ? null : (String) accountAttr;
+    }
+       
     
     
 }

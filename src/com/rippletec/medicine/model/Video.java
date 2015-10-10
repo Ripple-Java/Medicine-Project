@@ -1,5 +1,7 @@
 package com.rippletec.medicine.model;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -9,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.security.auth.Subject;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
@@ -26,6 +29,13 @@ public class Video extends BaseModel {
     
     public static final String ENTERPRISE_ID = "enterprise_id";
     public static final String NAME = "name";
+    public static final String PASS_DATE = "passDate";
+    public static final String STATUS = "status";
+    
+    public static final int ON_PUBLISTH = 1;
+    public static final int ON_CHECKING = 2;
+    public static final int ON_RECHECKING = 3;
+    public static final int ON_CLOSE = 4;
     
     
     @Id
@@ -38,6 +48,12 @@ public class Video extends BaseModel {
     @Column(name = "path", length = 255, nullable = false)
     private String path;
     
+    @Column(name = "speaker", length = 40, nullable = true)
+    private String speaker;
+    
+    @Column(name = "subject", length = 40, nullable = true)
+    private String subject;
+    
     @ManyToOne(fetch = FetchType.LAZY)
     @Cascade(CascadeType.ALL)
     @JoinColumn(name = ENTERPRISE_ID)
@@ -46,19 +62,27 @@ public class Video extends BaseModel {
     @Column(name="length",nullable = false)
     private Integer length;
     
+    @Column(name=STATUS,nullable=false)
+    private Integer status;
+    
+    @Column(name=PASS_DATE,nullable=false)
+    private Date passDate;
+    
     public Video() {
     }
-
-    
-
-    public Video(String name, String path, Enterprise enterprise, Integer length) {
+ 
+    public Video(String name, String path, String speaker, String subject,
+	    Enterprise enterprise, Integer length, Integer status, Date passDate) {
 	super();
 	this.name = name;
 	this.path = path;
+	this.speaker = speaker;
+	this.subject = subject;
 	this.enterprise = enterprise;
 	this.length = length;
+	this.status = status;
+	this.passDate = passDate;
     }
-
 
 
     @Override
@@ -106,8 +130,49 @@ public class Video extends BaseModel {
     public void setName(String name) {
         this.name = name;
     }
-    
-    
+
+    public Integer getStatus() {
+        return status;
+    }
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+
+
+    public String getSpeaker() {
+        return speaker;
+    }
+
+
+
+    public String getSubject() {
+        return subject;
+    }
+
+
+
+    public Date getPassDate() {
+        return passDate;
+    }
+
+
+
+    public void setSpeaker(String speaker) {
+        this.speaker = speaker;
+    }
+
+
+
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
+
+
+
+    public void setPassDate(Date passDate) {
+        this.passDate = passDate;
+    }
     
     
     

@@ -3,6 +3,7 @@ package com.rippletec.medicine.controller;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import sun.print.resources.serviceui;
 
 import com.rippletec.medicine.SMS.SMS;
 import com.rippletec.medicine.bean.DBLogEntity;
@@ -73,7 +76,7 @@ public class AppController extends BaseController {
 		}
     }
     
-    @RequestMapping(value = "/user/getFavorite", method = RequestMethod.GET)
+    @RequestMapping(value = "/user/getFavorite", method = RequestMethod.POST)
     @ResponseBody
     public String user_addUserFavorite(HttpSession httpSession){
     	if(userManager.isLogined(httpSession)){
@@ -95,7 +98,7 @@ public class AppController extends BaseController {
 		}
     }
     
-    @RequestMapping(value = "/user/getAllSearch", method = RequestMethod.GET)
+    @RequestMapping(value = "/user/getAllSearch", method = RequestMethod.POST)
     @ResponseBody
     public String user_getAllSearch(
 	    @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword) {
@@ -104,7 +107,6 @@ public class AppController extends BaseController {
 		    .setModelList(chineseMedicineManager.search(ChineseMedicine.NAME,keyword))
 		    .setModelList(enterChineseMedicineManager.search(EnterChineseMedicine.NAME, keyword))
 		    .setModelList(enterWestMedicineManager.search(EnterWestMedicine.NAME, keyword))
-		    .setModelList(medicineTypeManager.search(MedicineType.NAME,keyword))
 		    .setModelList(enterpriseManager.search(Enterprise.NAME, keyword))
 		    .setModelList(meetingManager.search(Meeting.NAME, keyword))
 		    .setModelList(videoManager.search(Video.NAME,keyword))
@@ -115,7 +117,7 @@ public class AppController extends BaseController {
 	return jsonUtil.setResultFail().setTip("参数错误").toJsonString();
     }
 
-    @RequestMapping(value = "/user/getEnterprise", method = RequestMethod.GET)
+    @RequestMapping(value = "/user/getEnterprise", method = RequestMethod.POST)
     @ResponseBody
     public String user_getEnterprise(
 	    @RequestParam(value = "type", required = false, defaultValue = "0") int type,
@@ -124,13 +126,25 @@ public class AppController extends BaseController {
 	if (type > 0 && size > 0 && currentPage > 0) {
 	    List<Enterprise> enterprises = enterpriseManager.getEnterprise(
 		    size, type, currentPage);
-	    return jsonUtil.setModelList(enterprises).toJsonString(
+	    return jsonUtil.setResultSuccess().setModelList(enterprises).toJsonString(
 		    "/user/getEnterprise");
 	}
 	return jsonUtil.setResultFail("参数错误").toJsonString();
     }
+    
+    @RequestMapping(value = "/user/getEnterContent", method = RequestMethod.POST)
+    @ResponseBody
+    public String user_getEnterContent(
+	    @RequestParam(value = "id", required = false, defaultValue = "0") int id) {
+	if (id > 0) {
+	    Enterprise enterprise = enterpriseManager.find(id);
+	    return jsonUtil.setResultSuccess().setJsonObject("enterContent", enterprise).toJsonString(
+		    "/user/getEnterContent");
+	}
+	return jsonUtil.setResultFail("参数错误").toJsonString();
+    }
 
-    @RequestMapping(value = "/user/getEnterMedicine", method = RequestMethod.GET)
+    @RequestMapping(value = "/user/getEnterMedicine", method = RequestMethod.POST)
     @ResponseBody
     public String user_getEnterpriseMedicine(
 	    @RequestParam(value = "id", required = false, defaultValue = "-1") int id,
@@ -146,20 +160,8 @@ public class AppController extends BaseController {
 	return jsonUtil.setResultFail().setTip("参数错误").toJsonString();
     }
 
-    @RequestMapping(value = "/user/getEnterMedicineType", method = RequestMethod.GET)
-    @ResponseBody
-    public String user_getEnterpriseMedicineType(
-	    @RequestParam(value = "id", required = false, defaultValue = "-1") int id) {
-	if (id >= 0) {
-	    List<EnterpriseMedicineType> enterpriseMedicineTypes = enterpriseMedicineTypeManager
-		    .getTypesByEnterpriseId(id);
-	    return jsonUtil.setModelList(enterpriseMedicineTypes).toJsonString(
-		    "/user/getEnterMedicineType");
-	}
-	return jsonUtil.setResultFail().toJsonString();
-    }
 
-    @RequestMapping(value = "/user/getMedicine", method = RequestMethod.GET)
+    @RequestMapping(value = "/user/getMedicine", method = RequestMethod.POST)
     @ResponseBody
     public String user_getMedicine(
 	    @RequestParam(value = "typeId", required = false, defaultValue = "0") int typeId,
@@ -177,7 +179,7 @@ public class AppController extends BaseController {
 	return jsonUtil.setResultFail().toJsonString();
     }
 
-    @RequestMapping(value = "/user/getMedicineDom", method = RequestMethod.GET)
+    @RequestMapping(value = "/user/getMedicineDom", method = RequestMethod.POST)
     @ResponseBody
     public String user_getMedicineDom(
 	    @RequestParam(value = "medicineId", required = false, defaultValue = "0") int medicineId,
@@ -191,7 +193,7 @@ public class AppController extends BaseController {
 	return jsonUtil.setResultFail().toJsonString();
     }
 
-    @RequestMapping(value = "/user/getMedicineType", method = RequestMethod.GET)
+    @RequestMapping(value = "/user/getMedicineType", method = RequestMethod.POST)
     @ResponseBody
     public String user_getMedicineType(
 	    @RequestParam(value = "parentId", required = false, defaultValue = "-1") int parentId) {
@@ -204,7 +206,7 @@ public class AppController extends BaseController {
 	return jsonUtil.setResultFail().toJsonString();
     }
 
-    @RequestMapping(value = "/user/getUserInfo", method = RequestMethod.GET)
+    @RequestMapping(value = "/user/getUserInfo", method = RequestMethod.POST)
     @ResponseBody
     public String user_getUserInfo(
 	    HttpSession httpSession) {
@@ -215,7 +217,7 @@ public class AppController extends BaseController {
 	    return jsonUtil.setResultFail().setTip("用户未登录").toJsonString();
     }
 
-    @RequestMapping(value = "/getVerificationCode", method = RequestMethod.GET)
+    @RequestMapping(value = "/getVerificationCode", method = RequestMethod.POST)
     @ResponseBody
     public String user_getVerificationCode(
 	    HttpSession httpSession,
@@ -263,7 +265,7 @@ public class AppController extends BaseController {
 	return jsonUtil.toJsonString();
     }
 
-    @RequestMapping(value = "/user/setDocInfo", method = RequestMethod.GET)
+    @RequestMapping(value = "/user/setDocInfo", method = RequestMethod.POST)
     @ResponseBody
     public String user_setDocInfo(
 	    HttpSession httpSession,
@@ -304,7 +306,7 @@ public class AppController extends BaseController {
 	return jsonUtil.toJsonString();
     }
     
-    @RequestMapping(value = "/user/loginOut", method = RequestMethod.GET)
+    @RequestMapping(value = "/user/loginOut", method = RequestMethod.POST)
     @ResponseBody
     public String user_setLoginOut(
 	    HttpSession httpSession) {
@@ -318,7 +320,7 @@ public class AppController extends BaseController {
 	return jsonUtil.toJsonString();
     }
 
-    @RequestMapping(value = "/verifyCode", method = RequestMethod.GET)
+    @RequestMapping(value = "/verifyCode", method = RequestMethod.POST)
     @ResponseBody
     public String user_verifyCode(
 	    HttpSession httpSession,
@@ -373,7 +375,7 @@ public class AppController extends BaseController {
     
     
 
-    @RequestMapping(value = "/user/setStuInfo", method = RequestMethod.GET)
+    @RequestMapping(value = "/user/setStuInfo", method = RequestMethod.POST)
     @ResponseBody
     public String user_setStuInfo(
 	    HttpSession httpSession,
@@ -464,7 +466,7 @@ public class AppController extends BaseController {
     }
     
     
-    @RequestMapping(value = "/user/updateDBversion", method = RequestMethod.GET)
+    @RequestMapping(value = "/user/updateDBversion", method = RequestMethod.POST)
     @ResponseBody
     public String user_updateDBversion(
 	    @RequestParam(value = "version", required = false, defaultValue = (DBLoger.DEFAULT_VERSION-1)+"") int version) {
@@ -492,12 +494,52 @@ public class AppController extends BaseController {
 	return jsonUtil.toJsonString();
     }
     
-    
-    
-    private String getAccount(HttpSession httpSession) {
-	Object accountAttr = httpSession.getAttribute(User.ACCOUNT);
-	return accountAttr == null ? null : (String) accountAttr;
+    @RequestMapping(value = "/user/getRecentMeeting", method = RequestMethod.POST)
+    @ResponseBody
+    public String user_getRecentMeeting(
+	    @RequestParam(value = "size", required = false, defaultValue = "0") int size) {
+	if(size <= 0)
+	    return jsonUtil.setResultFail("参数不合法").toJsonString();
+	List<Meeting> meetings = meetingManager.findRecentMeeting(new PageBean(1, 0, size),Meeting.STATUS,Meeting.ON_PUBLISTH);
+	return jsonUtil.setModelList(meetings).toJsonString("/user/getRecentMeeting");
     }
+    
+    @RequestMapping(value = "/user/getMeetings", method = RequestMethod.POST)
+    @ResponseBody
+    public String user_getMeetings(
+	    @RequestParam(value = "id", required = false, defaultValue = "0") int id) {
+	if(id <= 0)
+	    return jsonUtil.setResultFail("参数不合法").toJsonString();
+	Map<String, Object> paramMap = new HashMap<String, Object>();
+	paramMap.put(Meeting.ENTERPRISE_ID, id);
+	paramMap.put(Meeting.STATUS, Meeting.ON_PUBLISTH);
+	List<Meeting> meetings = meetingManager.findBySql(Meeting.TABLE_NAME, paramMap);
+	return jsonUtil.setModelList(meetings).toJsonString("/user/getMeetings");
+    }
+    
+    @RequestMapping(value = "/user/getRecentVideo", method = RequestMethod.POST)
+    @ResponseBody
+    public String user_getRecentVideo(
+	    @RequestParam(value = "size", required = false, defaultValue = "0") int size) {
+	if(size <= 0)
+	    return jsonUtil.setResultFail("参数不合法").toJsonString();
+	List<Video> videos = videoManager.findRecentMeeting(new PageBean(0, size),Video.STATUS,Video.ON_PUBLISTH);
+	return jsonUtil.setModelList(videos).toJsonString("/user/getRecentVideo");
+    }
+    
+    @RequestMapping(value = "/user/getVideoes", method = RequestMethod.POST)
+    @ResponseBody
+    public String user_getVideoes(
+	    @RequestParam(value = "id", required = false, defaultValue = "0") int id) {
+	if(id <= 0)
+	    return jsonUtil.setResultFail("参数不合法").toJsonString();
+	Map<String, Object> paramMap = new HashMap<String, Object>();
+	paramMap.put(Video.ENTERPRISE_ID, id);
+	paramMap.put(Video.STATUS, Meeting.ON_PUBLISTH);
+	List<Video> videos = videoManager.findBySql(Video.TABLE_NAME, paramMap);
+	return jsonUtil.setModelList(videos).toJsonString("/user/getVideoes"); 
+    }
+
     
     
 

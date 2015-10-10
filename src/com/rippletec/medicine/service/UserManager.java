@@ -43,5 +43,7 @@ public interface UserManager extends IManager<User> {
 
     boolean initPassword(String account);
 
+    void validUser(String account);
+
 
 }

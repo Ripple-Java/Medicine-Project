@@ -6,7 +6,7 @@ import com.rippletec.medicine.bean.PageBean;
 import com.rippletec.medicine.model.BaseModel;
 import com.rippletec.medicine.model.Medicine;
 import com.rippletec.medicine.utils.JsonUtil;
-import com.rippletec.medicine.vo.BackGroundMedicineVO;
+import com.rippletec.medicine.vo.web.BackGroundMedicineVO;
 
 public interface MedicineManager extends IManager<Medicine> {
     public static final String NAME = "MedicineManager";

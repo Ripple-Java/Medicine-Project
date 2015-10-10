@@ -29,15 +29,15 @@ public class UploadController extends BaseController{
     @RequestMapping(value = "/image/portrait", method = RequestMethod.POST)
     @ResponseBody
     public String user_uploadPortrait(HttpSession httpSession,
-	    @RequestParam("pic") CommonsMultipartFile pic) {
+	    @RequestParam("img") CommonsMultipartFile img) {
 	if(!userManager.isLogined(httpSession))
 	    return jsonUtil.setResultFail().setTip("用户未登录").toJsonString();
-	if(!FileUtil.isAllowImg(pic.getOriginalFilename()))
+	if(!FileUtil.isAllowImg(img.getOriginalFilename()))
 	    return jsonUtil.setResultFail().setTip("不允许上传这种图片格式").toJsonString();
 	String userAccount = (String) httpSession.getAttribute(User.ACCOUNT);
 	User user =  userManager.findByAccount(userAccount);
-	String fileName = userAccount + "_" + user.getId() +FileUtil.getSuffixByFilename(pic.getOriginalFilename());
-	Result res = FileUtil.saveFile(USERIMG_SAVEPATH, pic, fileName);
+	String fileName = userAccount + "_" + user.getId() +FileUtil.getSuffixByFilename(img.getOriginalFilename());
+	Result res = FileUtil.saveFile(USERIMG_SAVEPATH, img, fileName);
 	if(!res.isSuccess()){
 	    user.setCertificateImg(res.getMessage());
 	    userManager.update(user);
@@ -49,11 +49,11 @@ public class UploadController extends BaseController{
     @RequestMapping(value = "/image/enterCheckImg", method = RequestMethod.POST)
     @ResponseBody
     public String user_uploadEnterCheckImg(HttpSession httpSession,
-	    @RequestParam("pic") CommonsMultipartFile pic) {
-	if(!FileUtil.isAllowImg(pic.getOriginalFilename()))
+	    @RequestParam("img") CommonsMultipartFile img) {
+	if(!FileUtil.isAllowImg(img.getOriginalFilename()))
 	    return jsonUtil.setResultFail().setTip("不允许上传这种图片格式").toJsonString();
-	String fileName =StringUtil.generateCode(6) + DateUtil.getDateTime(new Date()) +FileUtil.getSuffixByFilename(pic.getOriginalFilename());
-	Result res = FileUtil.saveFile(ENTERPRISEIMG_SAVEPATH, pic, fileName);
+	String fileName =DateUtil.getSimpleDateTime(new Date()) + StringUtil.generateCode(6) + FileUtil.getSuffixByFilename(img.getOriginalFilename());
+	Result res = FileUtil.saveFile(ENTERPRISEIMG_SAVEPATH, img, fileName);
 	if(!res.isSuccess()){
 	    return jsonUtil.setResultFail().setTip(res.getMessage()).toJsonString();
 	}

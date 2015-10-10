@@ -35,7 +35,7 @@ public class AuthorityInterceptor extends HandlerInterceptorAdapter{
 	    return false;
 	}
 	int userType = (int) typeAttr;
-	if(userType < type){
+	if(userType != type){
 	    response.setContentType("text/html;charset=utf-8");
 	    Writer writer =  response.getWriter();
 	    writer.append(jsonUtil.setResultFail("用户权限不足！").toJsonString());

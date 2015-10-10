@@ -4,11 +4,15 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 
+import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import com.rippletec.medicine.bean.Result;
 
+@Repository(FileUtil.NAME)
 public class FileUtil {
+    
+    public static final String NAME = "FileUtil";
     
     private enum allowImg{
 	JPEG, JPG, PNG, BMP;

@@ -126,7 +126,7 @@ public class JsonUtil {
     }
     
     public String toJsonString() {
-	String jssonString =  JSON.toJSONString(jsonObjectMap);
+	String jssonString =  JSON.toJSONString(jsonObjectMap,SerializerFeature.WriteMapNullValue);
 	clear();
 	return jssonString;
     }
@@ -155,7 +155,7 @@ public class JsonUtil {
 		else
 		    return true;
 	    }
-	},SerializerFeature.DisableCircularReferenceDetect);
+	},SerializerFeature.DisableCircularReferenceDetect,SerializerFeature.WriteMapNullValue);
 	clear();
 	return jsonString;
     }
@@ -174,7 +174,7 @@ public class JsonUtil {
 		else
 		    return true;
 	    }
-	},SerializerFeature.DisableCircularReferenceDetect);
+	},SerializerFeature.DisableCircularReferenceDetect,SerializerFeature.WriteMapNullValue);
 	clear();
 	return jsonString;
     }
