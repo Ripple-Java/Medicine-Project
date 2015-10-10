@@ -12,14 +12,19 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import sun.launcher.resources.launcher;
+import sun.security.krb5.internal.EncAPRepPart;
 
 import com.rippletec.medicine.bean.PageBean;
 import com.rippletec.medicine.model.BaseModel;
@@ -33,7 +38,10 @@ import com.rippletec.medicine.model.WestMedicine;
 import com.rippletec.medicine.utils.DateUtil;
 import com.rippletec.medicine.utils.MD5Util;
 import com.rippletec.medicine.utils.StringUtil;
-import com.rippletec.medicine.vo.BackGroundMedicineVO;
+import com.rippletec.medicine.vo.web.BackGroundMedicineVO;
+import com.rippletec.medicine.vo.web.EnterChineseVO;
+import com.rippletec.medicine.vo.web.EnterWestVO;
+import com.rippletec.medicine.vo.web.MeetingVo;
 
 
 @Controller
@@ -200,7 +208,7 @@ public class WebController extends BaseController {
 		return jsonUtil.setResultFail("此用户已验证或被冻结").toJsonString();
 	    try {
 		if(MD5Util.validPasswd(user.getAccount()+user.getPassword(), code)){
-		    userManager.activeUser(account);
+		    userManager.validUser(account);
 		    return jsonUtil.setResultSuccess().toJsonString();
 		}   
 	    } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
@@ -218,7 +226,7 @@ public class WebController extends BaseController {
 	    HttpSession httpSession,
 	    @RequestParam(value = "account", required = false, defaultValue = "") String account,
 	    @RequestParam(value = "password", required = false, defaultValue = "") String password) {
-	if (StringUtil.isUsername(account) && StringUtil.hasText(password)) {
+	if (StringUtil.isEmail(account) && StringUtil.hasText(password)) {
 	    if (userManager.isLogined(httpSession))
 		return jsonUtil.setResultFail("账号已登录，请勿重复登陆").toJsonString();
 	    if (userManager.adminLogin(account, password, httpSession))
@@ -254,11 +262,45 @@ public class WebController extends BaseController {
     
     @RequestMapping(value = "/enterprise/addMeeting", method = RequestMethod.POST)
     @ResponseBody
-    public String enterprise_addMeeting(HttpSession httpSession,Meeting meeting) {
-	
-	return null;
+    public String enterprise_addMeeting(HttpSession httpSession,@Validated @ModelAttribute MeetingVo meeting, BindingResult result) {
+	if (result.hasErrors())
+	    return toErrorJson(result);
+	User user = userManager.findByAccount(getAccount(httpSession));
+	Enterprise enterprise = enterpriseManager.findByUser(user);
+	if(meetingManager.addMeeting(enterprise,meeting))
+	    return jsonUtil.setResultSuccess().toJsonString();
+	return jsonUtil.setResultFail().toJsonString();
     }
     
+    @RequestMapping(value = "/enterprise/addChinMedicine", method = RequestMethod.POST)
+    @ResponseBody
+    public String enterprise_addChinMedicine(HttpSession httpSession,@Validated @ModelAttribute EnterChineseVO entChineseVO, BindingResult result) {
+	if (result.hasErrors())
+	    return toErrorJson(result);
+	User user = userManager.findByAccount(getAccount(httpSession));
+	Enterprise enterprise = enterpriseManager.findByUser(user);
+	ChineseMedicine chineseMedicine = chineseMedicineManager.find(entChineseVO.getMedicineId());
+	if(enterChineseMedicineManager.addMedicine(enterprise,chineseMedicine,entChineseVO))
+	    return jsonUtil.setResultSuccess().toJsonString();
+	return jsonUtil.setResultFail().toJsonString();
+	
+    }
+    
+    @RequestMapping(value = "/enterprise/addWestMedicine", method = RequestMethod.POST)
+    @ResponseBody
+    public String enterprise_addWestMedicine(HttpSession httpSession,@Validated @ModelAttribute EnterWestVO enterWestVO, BindingResult result) {
+	if (result.hasErrors())
+	    return toErrorJson(result);
+	User user = userManager.findByAccount(getAccount(httpSession));
+	Enterprise enterprise = enterpriseManager.findByUser(user);
+	WestMedicine westMedicine = westMedicineManager.find(enterWestVO.getMedicineId());
+	if(enterWestMedicineManager.addMedicine(enterprise,westMedicine,enterWestVO))
+	    return jsonUtil.setResultSuccess().toJsonString();
+	return jsonUtil.setResultFail().toJsonString();
+	
+    }
+
+   
    
 
 }

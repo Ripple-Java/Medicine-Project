@@ -1,0 +1,48 @@
+﻿.header_message{
+    width:235px;
+    border-right:#b5b5b5 1px solid;
+    float:left;
+    height:100%;
+    display:table;
+}
+.header_message div{display:table-cell;vertical-align:middle; padding-left:20px;}
+.header_home_icon{
+    color:#c0ffb6;
+    font-size:2em;
+    padding-right:10px;
+}
+.header_app_name{
+    color:#eaffe6;
+    font-size:1.5em;
+    padding-right:5px;
+}
+.header_app_backSystem{color:#d6d6d6;font-size:1em; font:bold;}
+.header_user{
+    height:100%;
+    float:right; 
+    color:#dfdfdf;
+    padding-right:20px;
+    font-size:2em;
+    display:table;    
+    text-align:center;
+}
+.header_user em{vertical-align:middle; display:table-cell; width:2em; background-color:#3d3d3d;}
+.header_userFunction{
+    position:absolute;
+    right:20px;
+    top:4.5em;
+    background-color:#3d3d3d;    
+}
+.header_userFunction li a{
+    height:2.2em;
+    text-align:center;
+    width:10em;
+    color:#f2f2f2;
+    font-size:1.1em;
+    display: table-cell;
+    vertical-align: middle;
+}
+.header_userFunction li a .iconfont{padding-right:3px;}
+.header_edit{
+    border-bottom:1px #737373 solid;
+}

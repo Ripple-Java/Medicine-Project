@@ -12,6 +12,7 @@ import com.rippletec.medicine.dao.EnterpriseDao;
 import com.rippletec.medicine.dao.FindAndSearchDao;
 import com.rippletec.medicine.model.Enterprise;
 import com.rippletec.medicine.model.EnterpriseMedicineType;
+import com.rippletec.medicine.model.User;
 import com.rippletec.medicine.service.EnterpriseManager;
 
 @Service(EnterpriseManager.NAME)
@@ -46,6 +47,12 @@ public class EnterpriseManagerImpl extends BaseManager<Enterprise> implements En
 	for (Enterprise enterprise : enterprises) {
 	    delete(enterprise.getId());
 	}
+    }
+
+    @Override
+    public Enterprise findByUser(User user) {
+	List<Enterprise> enterprises = enterpriseDao.findBySql(Enterprise.TABLE_NAME, Enterprise.USER_ID, user.getId());
+	return enterprises.get(0);
     }
 
 }

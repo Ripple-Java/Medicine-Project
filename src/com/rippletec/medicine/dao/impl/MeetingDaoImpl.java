@@ -1,9 +1,13 @@
 package com.rippletec.medicine.dao.impl;
 
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
+import com.rippletec.medicine.bean.PageBean;
 import com.rippletec.medicine.dao.MeetingDao;
 import com.rippletec.medicine.model.Meeting;
+import com.rippletec.medicine.utils.StringUtil;
 
 
 @Repository(MeetingDao.NAME)
@@ -17,6 +21,11 @@ public class MeetingDaoImpl extends BaseDaoImpl<Meeting> implements MeetingDao{
     @Override
     public Class<Meeting> getPersistClass() {
 	return Meeting.class;
+    }
+
+    @Override
+    public List<Meeting> findByTime(PageBean page, String param, Object value) {
+	return findByPage(StringUtil.getSearchHql(Meeting.CLASS_NAME, param)+" order by commitDate desc", param ,value, page.getOffset(), page.getMaxSize());
     }
     
 

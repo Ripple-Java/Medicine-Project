@@ -53,9 +53,9 @@ public class UserManagerTest implements IBaseDaoTest {
     
     @Test
     public void testGetBackPassword() throws Exception {
-	User user = userManager.findByAccount("admins");
+	User user = userManager.findByAccount("860986808@qq.com");
 	System.out.println(user.toString());
-	userManager.getBackPassword(user.getAccount(), "12345");
+	userManager.getBackPassword(user.getAccount(), "19941213");
     }
 
 }

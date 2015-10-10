@@ -260,5 +260,12 @@ public class UserManagerImpl extends BaseManager<User> implements UserManager{
 	userDao.update(user);
 	return true;
     }
+
+    @Override
+    public void validUser(String account) {
+	User user = findByAccount(account);
+	user.setStatus(User.STATUS_CHECKING);
+	userDao.update(user);
+    }
     
 }

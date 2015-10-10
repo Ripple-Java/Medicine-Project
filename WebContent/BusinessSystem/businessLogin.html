@@ -1,0 +1,26 @@
+﻿<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8" />
+    <title>Login</title>
+    <link href="css/demo.css" rel="stylesheet" />
+    <link href="css/iconfont.css" rel="stylesheet" />
+    <link href="css/common.css" rel="stylesheet" />
+    <link href="modules/header/css/login_header.css" rel="stylesheet" />
+    <link href="modules/content/css/login_content.css" rel="stylesheet" />
+    <link href="modules/content/css/register_content.css" rel="stylesheet" />
+    <script src="js/angular.js"></script>
+    <script src="js/jquery-2.1.0.js"></script>  
+    <script src="js/jQuery.md5.js"></script>  
+    <script src="js/jquery-form.js"></script>
+    <script src="js/login.js"></script>
+</head>
+<body ng-app="doctorLogin" class="background_body">
+    <header ng-include src="'modules/header/login_header.html'"></header>
+    <div class="login_content" ng-include src="'modules/content/login_content.html'"  ></div>
+    <div class="register_content" ng-include src="'modules/content/register_content.html'"></div>
+    <footer class="login_footer">
+        www.yiyaohui.com 医药汇2015 powered by rippletec
+    </footer>
+</body>
+</html>

@@ -18,6 +18,8 @@ import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.springframework.stereotype.Repository;
 
+import com.rippletec.medicine.vo.web.MeetingVo;
+
 
 @Entity
 @Repository
@@ -33,6 +35,7 @@ public class Meeting extends BaseModel {
     public static final String MEDICINE_ID = "medicine_id";
     
     public static final String NAME = "name";
+    public static final String STATUS = "status";
     
     public static final int ON_PUBLISTH = 1;
     public static final int ON_CHECKING = 2;
@@ -66,6 +69,10 @@ public class Meeting extends BaseModel {
     @Temporal(TemporalType.DATE)
     private Date date;
     
+    @Column(name = "commitDate",nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date commitDate;
+    
     @Column(name = "PPT", length = 200, nullable = true)
     private String PPT;
     
@@ -78,8 +85,11 @@ public class Meeting extends BaseModel {
     @Column(name = "subject", length=50, nullable = true)
     private String subject;
     
-    @Column(name = "status", length=1, nullable = false)
+    @Column(name = STATUS, length=1, nullable = false)
     private Integer status;
+    
+    @Column(name = "enterpriseName", length=50, nullable = true)
+    private String enterpriseName;
     
     public Meeting() {
     }
@@ -94,6 +104,20 @@ public class Meeting extends BaseModel {
 	this.date = date;
 	PPT = pPT;
 	this.video = video;
+    }
+    
+    public Meeting(Enterprise enterprise, MeetingVo vo) {
+	super();
+	this.enterprise = enterprise;
+	this.name = vo.getName();
+	this.speaker = vo.getSpeaker();
+	this.tag = vo.getTag();
+	this.date = vo.getDate();
+	PPT = vo.getPPT();
+	this.video = vo.getVideo();
+	this.content = vo.getContent();
+	this.subject = vo.getSubject();
+	this.enterpriseName = enterprise.getName();
     }
 
     @Override
@@ -198,6 +222,24 @@ public class Meeting extends BaseModel {
     public void setStatus(Integer status) {
         this.status = status;
     }
+
+    public Date getCommitDate() {
+        return commitDate;
+    }
+
+    public void setCommitDate(Date commitDate) {
+        this.commitDate = commitDate;
+    }
+
+    public String getEnterpriseName() {
+        return enterpriseName;
+    }
+
+    public void setEnterpriseName(String enterpriseName) {
+        this.enterpriseName = enterpriseName;
+    }
+    
+    
     
     
     

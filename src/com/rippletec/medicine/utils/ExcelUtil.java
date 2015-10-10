@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -16,6 +17,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Repository;
 
+import com.rippletec.medicine.bean.PageBean;
 import com.rippletec.medicine.dao.BackGroundMedicineTypeDao;
 import com.rippletec.medicine.model.BackGroundMedicineType;
 import com.rippletec.medicine.model.ChineseMedicine;
@@ -155,15 +157,14 @@ public class ExcelUtil {
 	    return false;
 	}
 	int bigTypeId = medicineTypeManager.save(new MedicineType("中药", MedicineType.DEFAULT_PARENT_ID, MedicineType.CHINESE));
-	XSSFSheet xssfSheet = xssfWorkbook.getSheet(sheetName);
 	
+	XSSFSheet xssfSheet = xssfWorkbook.getSheet(sheetName);	
 	Iterator<Row> rowIterator = xssfSheet.iterator();
-	String Announce = "";
-	ChineseMedicine chineseMedicine = new ChineseMedicine();
 	while (rowIterator.hasNext()) {
+	    ChineseMedicine chineseMedicine = new ChineseMedicine();
 	    Row row = rowIterator.next();
 	    int parent_id = bigTypeId;
-	    for (int i = 0; i < 4; i++) {
+	    for (int i = 0; i < 3; i++) {
 		String typeString = getCellString(row, i);
 		if (!StringUtil.hasText(typeString)) {
 		    typeString = "其他";
@@ -178,47 +179,30 @@ public class ExcelUtil {
 		}
 		parent_id = medicineTypeManager.uniqueSave(medicineType);
 	    }
-	    if(row.getCell(4) == null){
-		String value = getCellString(row, 5);
-		if (value.contains("【功效主治】"))
-		    chineseMedicine.setEfficacy(value);
-		else if (value.contains("【用药监护】")){
-		    Announce = "【用药监护】";
-		}
-		else if(value.contains("【用法与用量】")){
-		    chineseMedicine.setAnnouce(Announce);
-		    chineseMedicine.setManual(value);
-		}    
-		else if(value.contains("【制剂量】") || value.contains("【制剂】"))
-		    chineseMedicine.setPreparations(value);
-		else if(value.contains("【贮法】"))
-		    chineseMedicine.setStore(value);
-		else if (value.contains("【管理分类】")){
-		    chineseMedicine.setCategory(value);
-		    Medicine medicine  = new Medicine(Medicine.CHINESE);
-		    chineseMedicine.setMedicine(medicine);
-		    System.out.println(chineseMedicine);
-		    chineseMedicineManager.save(chineseMedicine);
-		}
-		else {
-		    Announce +=value;
-		}   
-	    }
-	    else {
-		chineseMedicine = new ChineseMedicine();
-		chineseMedicine.setMedicineType(medicineTypeManager.find(parent_id));
-		chineseMedicine.setPrice(1.0);
-		chineseMedicine.setSortKey("sortKey");
-		chineseMedicine.setStatus(ChineseMedicine.ON_PUBLISTH);
-		chineseMedicine.setName(getCellString(row, 4));
-		chineseMedicine.setContent(getCellString(row, 5));
-	    }
-	      
 	    
+	    MedicineType type =  medicineTypeManager.find(parent_id);
+	    chineseMedicine.setName(getCellString(row, 4));
+	    chineseMedicine.setContent(getCellString(row, 5));
+	    chineseMedicine.setEfficacy(getCellString(row, 6));
+	    chineseMedicine.setAnnouce(getCellString(row, 7));
+	    chineseMedicine.setManual(getCellString(row, 8));
+	    chineseMedicine.setPreparations(getCellString(row, 9));
+	    chineseMedicine.setStore(getCellString(row, 10));
+	    chineseMedicine.setCategory(getCellString(row, 11));
+	    chineseMedicine.setMedicineType(type);
+	    Medicine medicine = new Medicine(Medicine.CHINESE);
+	    chineseMedicine.setMedicine(medicine);
+	    chineseMedicine.setPrice(1.00);
+	    chineseMedicine.setSortKey("sorkey");
+	    chineseMedicine.setStatus(ChineseMedicine.ON_PUBLISTH);
+	    chineseMedicineManager.save(chineseMedicine);
 	}
 	System.out.println(xssfSheet.getLastRowNum());
    	return true;
     }
+    
+   
+    
     
     public  String getCellString(Row row , int index) {
 	Cell cell = row.getCell(index);

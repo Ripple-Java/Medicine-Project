@@ -69,9 +69,7 @@ public class EnterpriseMedicineTypeDaoTest implements IBaseDaoTest {
     @Override
     @Test
     public void testSave() throws Exception {
-	Enterprise enterprise = enterpriseDao.find(2);
-	EnterpriseMedicineType enterpriseMedicineType = new EnterpriseMedicineType("企业药品分类", EnterpriseMedicineType.WEST,1, enterprise);
-	enterpriseMedicineTypeDao.save(enterpriseMedicineType);
+	
     }
     
     @Override

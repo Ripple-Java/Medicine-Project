@@ -15,6 +15,8 @@ import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.springframework.stereotype.Repository;
 
+import com.rippletec.medicine.vo.web.EnterChineseVO;
+
 @Repository
 @Entity
 @Table(name="enter_chinese_medicine")
@@ -27,6 +29,7 @@ public class EnterChineseMedicine extends BaseModel{
     public static final String ENTER_MEDICINE_TYPE_ID = "enter_medicine_type_id";
     public static final String MEDICINE_ID = "medicine_id";
     public static final String CHIN_MEDICINE_ID = "chin_medicine_id";
+    public static final String MEDICINE_TYPE_ID = "medicine_type_id";
     
     public static final int ON_PUBLISTH = 1;
     public static final int ON_CHECKING = 2;
@@ -45,11 +48,11 @@ public class EnterChineseMedicine extends BaseModel{
     @JoinColumn(name = MEDICINE_ID)
     private Medicine medicine;
 
-    // 药品所属企业药品分类id
+    // 关联所属类别
     @ManyToOne(fetch = FetchType.LAZY)
     @Cascade(CascadeType.SAVE_UPDATE)
-    @JoinColumn(name = ENTER_MEDICINE_TYPE_ID)
-    private EnterpriseMedicineType enterpriseMedicineType;
+    @JoinColumn(name = MEDICINE_TYPE_ID)
+    private MedicineType medicineType;
     
     // 关联通用中药
     @ManyToOne(fetch = FetchType.LAZY)
@@ -107,14 +110,14 @@ public class EnterChineseMedicine extends BaseModel{
     public EnterChineseMedicine() {
     }
     public EnterChineseMedicine(Medicine medicine,
-	    EnterpriseMedicineType enterpriseMedicineType,
+	    MedicineType medicineType,
 	    String enterprise_name, String name, String content,
 	    String efficacy, String annouce, String preparations,
 	    String manual, String store, String category, Double price,
 	    Integer status) {
 	super();
 	this.medicine = medicine;
-	this.enterpriseMedicineType = enterpriseMedicineType;
+	this.medicineType = medicineType;
 	this.enterprise_name = enterprise_name;
 	this.name = name;
 	this.content = content;
@@ -126,6 +129,25 @@ public class EnterChineseMedicine extends BaseModel{
 	this.category = category;
 	this.price = price;
 	this.status = status;
+    }
+    
+    public EnterChineseMedicine(Medicine medicine,
+	    MedicineType medicineType,Enterprise enterprise, EnterChineseVO enterChineseVO, String sortKey) {
+	super();
+	this.medicine = medicine;
+	this.medicineType = medicineType;
+	this.enterprise_name = enterprise.getName();
+	this.name = enterChineseVO.getName();
+	this.content = enterChineseVO.getContent();
+	this.efficacy = enterChineseVO.getEfficacy();
+	this.annouce = enterChineseVO.getAnnouce();
+	this.preparations = enterChineseVO.getPreparations();
+	this.manual = enterChineseVO.getManual();
+	this.store = enterChineseVO.getStore();
+	this.category = enterChineseVO.getCategory();
+	this.price = enterChineseVO.getPrice();
+	this.status = ON_CHECKING;
+	this.sortkey = sortKey;
     }
     
     
@@ -155,9 +177,6 @@ public class EnterChineseMedicine extends BaseModel{
 	return efficacy;
     }
 
-    public EnterpriseMedicineType getEnterpriseMedicineType() {
-	return enterpriseMedicineType;
-    }
 
     public Integer getId() {
 	return id;
@@ -198,10 +217,6 @@ public class EnterChineseMedicine extends BaseModel{
 	this.efficacy = efficacy;
     }
 
-    public void setEnterpriseMedicineType(
-	    EnterpriseMedicineType enterpriseMedicineType) {
-	this.enterpriseMedicineType = enterpriseMedicineType;
-    }
 
     public void setId(Integer id) {
 	this.id = id;
@@ -264,6 +279,14 @@ public class EnterChineseMedicine extends BaseModel{
     public void setChineseMedicine(ChineseMedicine chineseMedicine) {
         this.chineseMedicine = chineseMedicine;
     }
+    public MedicineType getMedicineType() {
+        return medicineType;
+    }
+    public void setMedicineType(MedicineType medicineType) {
+        this.medicineType = medicineType;
+    }
+    
+    
     
     
     

@@ -48,6 +48,7 @@ public class User extends BaseModel {
     
     public static final int STATUS_NORMAL = 1;
     public static final int STATUS_VAlIDATING = 2;
+    public static final int STATUS_CHECKING = 4;
     public static final int STATUS_BLOCKED = 3;
 
     public static final String DEFAULT_CERTIFICATEIMG = "image/certificateImg/default.png";

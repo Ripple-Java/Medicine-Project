@@ -24,11 +24,13 @@ public class CheckData extends BaseModel {
     public static final String TABLE_NAME = "checkdata";
     
     public static final int CHECKING = 1;
-    public static final int PASSED = 2;
     public static final int FAILED = 3;
     
     public static final int TYPE_ENTERPRISE = 1;
     public static final int TYPE_MEDICINE = 2;
+    public static final int TYPE_MEETING = 3;
+    public static final int TYPE_VIDEO = 4;
+    
     
     
     

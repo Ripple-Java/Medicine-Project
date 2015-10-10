@@ -1,5 +1,8 @@
 package com.rippletec.medicine.bean;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
 /**
  * @author Liuyi 
  * 页面Bean对象
@@ -7,6 +10,8 @@ package com.rippletec.medicine.bean;
 public class PageBean {
 
     // 当前页数
+    @NotNull(message="currentPage不能为空")
+    @Min(value=1,message="currentPage参数不合法")
     public int currentPage;
 
     // 下一页
@@ -16,9 +21,11 @@ public class PageBean {
     public int lastPage;
 
     // 页面起始位置
-    public int offset;
+    public int offset = 0;
 
     // 页面条目数
+    @NotNull(message="pageSize不能为空")
+    @Min(value=1,message="pageSize参数不合法")
     public int pageSize;
 
     public PageBean(int offset, int pageSize) {

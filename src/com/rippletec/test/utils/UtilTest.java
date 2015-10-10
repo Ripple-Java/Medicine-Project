@@ -11,6 +11,7 @@ import org.junit.Test;
 
 import com.rippletec.medicine.SMS.SMS;
 import com.rippletec.medicine.model.BaseModel;
+import com.rippletec.medicine.model.ChineseMedicine;
 import com.rippletec.medicine.model.Enterprise;
 import com.rippletec.medicine.utils.DateUtil;
 import com.rippletec.medicine.utils.EmailUtil;
@@ -87,6 +88,15 @@ public class UtilTest {
     public void testEmailContent() throws Exception {
 	System.out.println(StringUtil.RegisterContent("860986808@qq.com", "test"));
     }
+    
+    @Test
+    public void testString() throws Exception {
+	String string = "【药物成分】羌活、防风、苍术、细辛、川芎、白芷、黄芩、甘草、地黄";
+	System.out.println(string.replace("【药物成分】", ""));
+    }
+
+    
+ 
     
    
 

@@ -44,17 +44,17 @@ public class EnterpriseMedicineType extends BaseModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    // 关联药物
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "enterpriseMedicineType")
-    @Cascade(CascadeType.ALL)
-    @OrderBy(value = "id asc")
-    private Set<EnterChineseMedicine> enterChineseMedicines = new LinkedHashSet<EnterChineseMedicine>();
-
-    // 关联药物
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "enterpriseMedicineType")
-    @Cascade(CascadeType.ALL)
-    @OrderBy(value = "id asc")
-    private Set<EnterWestMedicine> enterWestMedicines = new LinkedHashSet<EnterWestMedicine>();
+//    // 关联药物
+//    @OneToMany(fetch = FetchType.LAZY, mappedBy = "enterpriseMedicineType")
+//    @Cascade(CascadeType.ALL)
+//    @OrderBy(value = "id asc")
+//    private Set<EnterChineseMedicine> enterChineseMedicines = new LinkedHashSet<EnterChineseMedicine>();
+//
+//    // 关联药物
+//    @OneToMany(fetch = FetchType.LAZY, mappedBy = "enterpriseMedicineType")
+//    @Cascade(CascadeType.ALL)
+//    @OrderBy(value = "id asc")
+//    private Set<EnterWestMedicine> enterWestMedicines = new LinkedHashSet<EnterWestMedicine>();
 
     // 企业药品类别名称
     @Column(name = "name", length = 255, nullable = false)
@@ -86,12 +86,11 @@ public class EnterpriseMedicineType extends BaseModel {
    
 
 
-    public EnterpriseMedicineType(String name, Integer gib_type,
-	    Integer parent_type_id, Enterprise enterprise) {
+    public EnterpriseMedicineType(MedicineType medicineType, Enterprise enterprise) {
 	super();
-	this.name = name;
-	this.gib_type = gib_type;
-	this.parent_type_id = parent_type_id;
+	this.name = medicineType.getName();
+	this.gib_type = medicineType.getGib_type();
+	this.parent_type_id = medicineType.getParent_type_id();
 	this.enterprise = enterprise;
     }
 
@@ -137,22 +136,6 @@ public class EnterpriseMedicineType extends BaseModel {
 	this.name = name;
     }
 
-    public Set<EnterChineseMedicine> getEnterChineseMedicines() {
-	return enterChineseMedicines;
-    }
-
-    public Set<EnterWestMedicine> getEnterWestMedicines() {
-	return enterWestMedicines;
-    }
-
-    public void setEnterChineseMedicines(
-	    Set<EnterChineseMedicine> enterChineseMedicines) {
-	this.enterChineseMedicines = enterChineseMedicines;
-    }
-
-    public void setEnterWestMedicines(Set<EnterWestMedicine> enterWestMedicines) {
-	this.enterWestMedicines = enterWestMedicines;
-    }
 
     public Integer getParent_type_id() {
         return parent_type_id;

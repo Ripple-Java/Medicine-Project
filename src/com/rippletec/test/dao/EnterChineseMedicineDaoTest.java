@@ -49,9 +49,8 @@ public class EnterChineseMedicineDaoTest implements IBaseDaoTest {
     @Override
     @Test
     public void testSave() throws Exception {
-	EnterpriseMedicineType enterpriseMedicineType = enterpriseMedicineTypeDao.find(1);
 	Medicine medicine = new Medicine(Medicine.CHINESE);
-	EnterChineseMedicine enterChineseMedicine = new EnterChineseMedicine(medicine, enterpriseMedicineType, "enterprise_name", "name", "content", "efficacy", "annouce", "preparations", "manual", "store", "category", 44.0, EnterChineseMedicine.ON_PUBLISTH);
+	EnterChineseMedicine enterChineseMedicine = new EnterChineseMedicine(medicine, null, "enterprise_name", "name", "content", "efficacy", "annouce", "preparations", "manual", "store", "category", 44.0, EnterChineseMedicine.ON_PUBLISTH);
 	enterChineseMedicineDao.save(enterChineseMedicine);
     }
 

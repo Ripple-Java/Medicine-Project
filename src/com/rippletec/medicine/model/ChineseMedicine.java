@@ -71,7 +71,7 @@ public class ChineseMedicine extends BaseModel {
     private String name;
 
     // 药物成分
-    @Column(name = "content", length = 255, nullable = false)
+    @Column(name = "content", columnDefinition = "TEXT", nullable = false)
     private String content;
 
     // 功效主治
@@ -99,7 +99,7 @@ public class ChineseMedicine extends BaseModel {
     private String category;
 
     // 药品价格
-    @Column(name = "price", length = 10, nullable = false, precision = 2)
+    @Column(name = "price", length = 10, nullable = true, precision = 2)
     private Double price;
 
     // 药品发布状态
@@ -135,6 +135,8 @@ public class ChineseMedicine extends BaseModel {
 	this.status = status;
 	this.sortKey = sortKey;
     }
+    
+    
 
 
 
