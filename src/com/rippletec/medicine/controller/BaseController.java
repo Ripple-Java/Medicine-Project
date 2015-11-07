@@ -7,6 +7,9 @@ import javax.servlet.http.HttpSession;
 import javax.swing.text.View;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 
@@ -15,6 +18,7 @@ import com.rippletec.medicine.model.EnterChineseMedicine;
 import com.rippletec.medicine.model.User;
 import com.rippletec.medicine.model.UserFavorite;
 import com.rippletec.medicine.service.BackGroundMedicineTypeManager;
+import com.rippletec.medicine.service.CheckDataManager;
 import com.rippletec.medicine.service.ChineseMedicineManager;
 import com.rippletec.medicine.service.DBLoger;
 import com.rippletec.medicine.service.DoctorManager;
@@ -32,7 +36,11 @@ import com.rippletec.medicine.service.UserFavoriteManager;
 import com.rippletec.medicine.service.UserManager;
 import com.rippletec.medicine.service.VideoManager;
 import com.rippletec.medicine.service.WestMedicineManager;
+import com.rippletec.medicine.utils.ExcelUtil;
 import com.rippletec.medicine.utils.JsonUtil;
+import com.sun.jndi.url.corbaname.corbanameURLContextFactory;
+
+
 
 public class BaseController {
     
@@ -44,6 +52,9 @@ public class BaseController {
 	
     @Resource(name=JsonUtil.NAME)
     protected JsonUtil jsonUtil;
+    
+    @Resource(name=ExcelUtil.NAME)
+    protected ExcelUtil excelUtil;
     
     @Resource(name=UserManager.NAME)
     protected UserManager userManager;
@@ -93,9 +104,15 @@ public class BaseController {
     @Resource(name=BackGroundMedicineTypeManager.NAME)
     protected BackGroundMedicineTypeManager backGroundMedicineTypeManager;
     
+    @Resource(name=CheckDataManager.NAME)
+    protected CheckDataManager checkDataManager;
+    
     //安卓app签名
     @Value("${android.code}")
     protected String androidCode;
+    
+    @Value("${allow.number}")
+    protected String allow_number;
     
     protected String toErrorJson(BindingResult result) {
 	List<ObjectError> errors = result.getAllErrors();

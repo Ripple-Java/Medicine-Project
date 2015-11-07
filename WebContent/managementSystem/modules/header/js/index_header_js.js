@@ -1,5 +1,5 @@
 ﻿function userExitFunction() {//用户退出
-    $.get("http://112.74.131.194:8080/MedicineProject/Web/admin/loginOut",
+    $.get("http://localhost:8080/MedicineProject/Web/admin/loginOut",
         function (data) {
             $(".header_userFunction").css("display", "none");
             alert( "退出成功！");

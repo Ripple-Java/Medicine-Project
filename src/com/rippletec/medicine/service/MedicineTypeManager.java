@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.rippletec.medicine.bean.PageBean;
 import com.rippletec.medicine.model.MedicineType;
+import com.rippletec.medicine.vo.web.BackGroundMedicineVO;
 
 public interface MedicineTypeManager extends IManager<MedicineType> {
     public static final String NAME = "MedicineTypeManager";
@@ -16,5 +17,15 @@ public interface MedicineTypeManager extends IManager<MedicineType> {
     MedicineType isExist(MedicineType medicineType);
     
     Integer uniqueSave(MedicineType medicineType);
+    
+    Boolean flushJsonString();
+
+    String getTypeJson();
+
+    List<MedicineType> getAllChild(MedicineType medicineType);
+
+    List<BackGroundMedicineVO> searchBackGroundVO(String keyword);
+
+    List<BackGroundMedicineVO> getBackGroundMedicineVO(MedicineType medicineType);
 
 }

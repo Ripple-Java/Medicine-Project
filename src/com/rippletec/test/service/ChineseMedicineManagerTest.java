@@ -11,7 +11,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.rippletec.medicine.bean.PageBean;
 import com.rippletec.medicine.model.ChineseMedicine;
+import com.rippletec.medicine.model.Medicine;
+import com.rippletec.medicine.model.MedicineType;
 import com.rippletec.medicine.service.ChineseMedicineManager;
 import com.rippletec.test.dao.IBaseDaoTest;
 /**
@@ -47,12 +50,19 @@ public class ChineseMedicineManagerTest implements IBaseDaoTest{
     @Override
     @Test
     public void testFindByPage() throws Exception {
+	List<ChineseMedicine> chineseMedicines = chineseMedicineManager.findByPage(new PageBean(0, 50));
+	for (ChineseMedicine chineseMedicine : chineseMedicines) {
+	    System.out.println(chineseMedicine.toString());
+	}
     }
 
     @Override
     @Test
     public void testSave() throws Exception {
-	chineseMedicineManager.save(null);
+	Medicine medicine = new Medicine(-1);
+	MedicineType medicineType = new MedicineType("测试typename", -1, Medicine.CHINESE);
+	ChineseMedicine chineseMedicine = new ChineseMedicine(medicine, medicineType, "中药", "中药组成", "efficacy", "annouce", "preparations", "manual", "store", "category", 0.0, ChineseMedicine.ON_PUBLISTH, "sortKey");
+	chineseMedicineManager.save(chineseMedicine);
     }
 
     @Override

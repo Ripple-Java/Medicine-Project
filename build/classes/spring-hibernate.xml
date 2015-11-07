@@ -33,6 +33,7 @@ http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
 		<property name="idleConnectionTestPeriod" value="${c3p0.idleConnectionTestPeriod}"/>
 		<property name="checkoutTimeout" value="${c3p0.checkoutTimeout}"/>
 		</bean>
+		
 
 	<!-- session工厂 -->
 	<bean id="sessionFactory"

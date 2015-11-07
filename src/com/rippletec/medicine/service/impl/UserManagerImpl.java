@@ -49,11 +49,6 @@ public class UserManagerImpl extends BaseManager<User> implements UserManager{
     }
     
     @Override
-    public int getCount() {
-	return userDao.getCount();
-    }
-
-    @Override
     protected FindAndSearchDao<User> getDao() {
 	return this.userDao;
     }

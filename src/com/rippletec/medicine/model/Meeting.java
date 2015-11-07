@@ -26,7 +26,7 @@ import com.rippletec.medicine.vo.web.MeetingVo;
 @Table(name = Meeting.TABLE_NAME)
 public class Meeting extends BaseModel {
 
-    private static final long serialVersionUID = 3239548865591119786L;
+    protected static final long serialVersionUID = 3239548865591119786L;
     
     public static final String TABLE_NAME = "meeting";
     public static final String CLASS_NAME = "Meeting";
@@ -36,6 +36,7 @@ public class Meeting extends BaseModel {
     
     public static final String NAME = "name";
     public static final String STATUS = "status";
+    public static final String SUBJECT = "subject";
     
     public static final int ON_PUBLISTH = 1;
     public static final int ON_CHECKING = 2;
@@ -44,52 +45,55 @@ public class Meeting extends BaseModel {
     
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private Integer id;
+    protected Integer id;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @Cascade(CascadeType.SAVE_UPDATE)
     @JoinColumn(name = ENTERPRISE_ID)
-    private Enterprise enterprise;
+    protected Enterprise enterprise;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @Cascade(CascadeType.SAVE_UPDATE)
     @JoinColumn(name = MEDICINE_ID)
-    private Medicine medicine;
+    protected Medicine medicine;
     
     @Column(name = "name", length = 50, nullable = false)
-    private String name;
+    protected String name;
     
     @Column(name = "speaker", length = 20, nullable =true)
-    private String speaker;
+    protected String speaker;
     
     @Column(name = "tag", length = 255, nullable = true)
-    private String tag;
+    protected String tag;
     
     @Column(name = "date",nullable = false)
     @Temporal(TemporalType.DATE)
-    private Date date;
+    protected Date date;
     
     @Column(name = "commitDate",nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date commitDate;
+    protected Date commitDate;
     
     @Column(name = "PPT", length = 200, nullable = true)
-    private String PPT;
+    protected String PPT;
     
     @Column(name = "video", length = 255, nullable = true)
-    private String video;
+    protected String video;
     
     @Column(name = "content", columnDefinition= "TEXT", nullable =true)
-    private String content;
+    protected String content;
     
     @Column(name = "subject", length=50, nullable = true)
-    private String subject;
+    protected String subject;
     
     @Column(name = STATUS, length=1, nullable = false)
-    private Integer status;
+    protected Integer status;
     
     @Column(name = "enterpriseName", length=50, nullable = true)
-    private String enterpriseName;
+    protected String enterpriseName;
+    
+    @Column(name = "pageUrl", length= 100, nullable=true)
+    protected String pageUrl;
     
     public Meeting() {
     }
@@ -118,6 +122,7 @@ public class Meeting extends BaseModel {
 	this.content = vo.getContent();
 	this.subject = vo.getSubject();
 	this.enterpriseName = enterprise.getName();
+	this.pageUrl = vo.getPageUrl();
     }
 
     @Override
@@ -125,6 +130,16 @@ public class Meeting extends BaseModel {
 	return "Meeting [id=" + id + ", name=" + name + ", speaker=" + speaker
 		+ ", tag=" + tag + ", date=" + date + ", PPT=" + PPT
 		+ ", video=" + video + "]";
+    }
+    
+    
+
+    public String getPageUrl() {
+        return pageUrl;
+    }
+
+    public void setPageUrl(String pageUrl) {
+        this.pageUrl = pageUrl;
     }
 
     public Integer getId() {

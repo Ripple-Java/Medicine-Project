@@ -11,9 +11,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.rippletec.medicine.dao.EnterChineseMedicineDao;
 import com.rippletec.medicine.dao.EnterpriseMedicineTypeDao;
+import com.rippletec.medicine.dao.MedicineTypeDao;
 import com.rippletec.medicine.model.EnterChineseMedicine;
 import com.rippletec.medicine.model.EnterpriseMedicineType;
 import com.rippletec.medicine.model.Medicine;
+import com.rippletec.medicine.model.MedicineType;
 
 
 /**
@@ -30,6 +32,8 @@ public class EnterChineseMedicineDaoTest implements IBaseDaoTest {
     private EnterChineseMedicineDao enterChineseMedicineDao;
     @Resource(name=EnterpriseMedicineTypeDao.NAME)
     private EnterpriseMedicineTypeDao enterpriseMedicineTypeDao;
+    @Resource(name=MedicineTypeDao.NAME)
+    private MedicineTypeDao medicineTypeDao;
 
     @Override
     @Test
@@ -49,8 +53,9 @@ public class EnterChineseMedicineDaoTest implements IBaseDaoTest {
     @Override
     @Test
     public void testSave() throws Exception {
-	Medicine medicine = new Medicine(Medicine.CHINESE);
-	EnterChineseMedicine enterChineseMedicine = new EnterChineseMedicine(medicine, null, "enterprise_name", "name", "content", "efficacy", "annouce", "preparations", "manual", "store", "category", 44.0, EnterChineseMedicine.ON_PUBLISTH);
+	Medicine medicine = new Medicine(Medicine.ENTER_CHINESE);
+	MedicineType medicineType = medicineTypeDao.find(5);
+	EnterChineseMedicine enterChineseMedicine = new EnterChineseMedicine(medicine, medicineType, "enterprise_name", "name", "content", "efficacy", "annouce", "preparations", "manual", "store", "category", 44.0, EnterChineseMedicine.ON_PUBLISTH);
 	enterChineseMedicineDao.save(enterChineseMedicine);
     }
 

@@ -1,21 +1,50 @@
-﻿<div class="content_content_function">
-    <button class="content_content_function_all"><em>全选</em></button>
-    <button class="content_content_function_add" ng-click="addDrug(1);"><em class=" iconfont">&#xe634;</em><em>添加</em></button>
-    <button class="content_content_function_delete"><em class="iconfont">&#xe61f;</em><em>删除</em></button>
-    <button class="content_content_function_upload"><em class=" iconfont">&#xe62b;</em><em>批量上传</em></button>
-    <em class="cut_off_rule"></em>
-    <button class="content_content_function_select"><em>筛选</em></button>
+﻿<script type="text/javascript">
+$(function(){
+	var initPagination = function() {
+		$("#Pagination").pagination(100, {
+	        num_edge_entries: 0, //边缘页数
+	        num_display_entries: 4, //主体页数
+	        callback: pageselectCallback,//回调函数
+	        items_per_page:1, //每页显示1项
+	        ellipse_text: "",
+	        prev_show_always:"<"
+	    });
+	 }();
+	 
+	function pageselectCallback(page_index, jq){
+		$(".pagination a").removeClass("content_content_pageNum_hadSelect");
+		if($(".current").length>1)
+		$(".current:nth-child(2)").addClass("content_content_pageNum_hadSelect");
+		else $(".current").addClass("content_content_pageNum_hadSelect");
+	    loadingResourceManagement_drugList(8, page_index + 1);
+	    return false;
+	}
+});
+</script>
+<div class="content_content_function">
+	<button class="content_content_function_all">
+		<em>全选</em>
+	</button>
+	<button class="content_content_function_add" ng-click="addDrug(1);">
+		<em class=" iconfont">&#xe634;</em><em>添加</em>
+	</button>
+	<button class="content_content_function_delete" onclick="deleteDrug();">
+		<em class="iconfont">&#xe61f;</em><em>删除</em>
+	</button>
+	<button class="content_content_function_upload">
+		<em class=" iconfont">&#xe62b;</em><em>批量上传</em>
+	</button>
+	<em class="cut_off_rule"></em>
+	<button class="content_content_function_select">
+		<em>筛选</em>
+	</button>
 </div>
 <div class="content_content_pageNum">
-    <a>
-        <ul>
-            <li class="page1">1</li>
-            <li class="page2">2</li>
-            <li class="page3">3</li>
-            <li class="page4">4</li>
-            <li class="page5">5</li>
-            <li class="">&gt;</li>
-            <li class="">&gt;&gt;</li>
-        </ul>
-    </a>
+	<a>
+		<ul>
+		    <li >&lt;&lt;</li>
+            <li  id="Pagination" class="pagination page"></li>
+			<li >&gt;&gt;</li>
+		</ul>
+	</a>
 </div>

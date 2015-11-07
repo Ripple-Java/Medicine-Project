@@ -1,26 +1,28 @@
 ﻿<!DOCTYPE html>
 <html lang="zh-cn">
 <head>
-    <meta charset="utf-8" />
-    <link href="css/demo.css"  rel="stylesheet"/>
-    <link href="css/iconfont.css" rel="stylesheet" />
-    <link href="css/common.css" rel="stylesheet" />
-    <link href="modules/header/css/index_header.css" rel="stylesheet" />
-    <link href="modules/aside/css/index_aside.css" rel="stylesheet" />
-    <link href="modules/content/css/index_content.css" rel="stylesheet" />
-    <link href="modules/content/css/add.css"  rel="stylesheet"/>
-    <script src="js/jquery-2.1.0.js"></script>
-    <script src="js/angular.js"></script>
-    <script src="js/index.js"></script>
-    <script src="modules/header/js/index_header_js.js"></script>
-    <script src="modules/content/js/indexContentFunction.js"></script>
-    <title>Index</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="css/demo.css" rel="stylesheet" />
+<link href="css/iconfont.css" rel="stylesheet" />
+<link href="css/common.css" rel="stylesheet" />
+<link href="modules/header/css/index_header.css" rel="stylesheet" />
+<link href="modules/aside/css/index_aside.css" rel="stylesheet" />
+<link href="modules/content/css/index_content.css" rel="stylesheet" />
+<link href="modules/content/css/add.css" rel="stylesheet" />
+<script src="js/jquery-2.1.0.js"></script>
+<script src="js/jquery.pagination.js"></script>
+<script src="js/angular.js"></script>
+<script src="js/index.js"></script>
+<script src="modules/header/js/index_header_js.js"></script>
+<script src="modules/content/js/indexContentFunction.js"></script>
+<script src="modules/content/js/indexContent_resourceManagement.js"></script>
+<title>AdminIndex</title>
 </head>
 <body ng-app="doctor_app" ng-controller="my">
-    <header ng-include src="'modules/header/index_header.html'"></header>
-    <aside ng-include src="'modules/aside/index_aside.html'"></aside>
-    <div class="index_content" >
-        <div ng-include src="pageContent"></div>
-    </div>
+	<header ng-include src="'modules/header/index_header.html'"></header>
+	<aside ng-include src="'modules/aside/index_aside.html'"></aside>
+	<div class="index_content">
+		<div ng-include src="pageContent"></div>
+	</div>
 </body>
 </html>

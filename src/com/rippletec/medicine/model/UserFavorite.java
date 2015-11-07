@@ -30,9 +30,11 @@ public class UserFavorite extends BaseModel{
     public static final int MEDICINE_WEST = 2;		//西药
     public static final int ENTER_CHINESE = 3;		//企业中药
     public static final int ENTER_WEST = 4;			//企业西药
-    public static final int GUIDEBOOK = 5 ;			//
-    public static final int LITERATURE = 6 ;		
-    public static final int CASES = 7 ;
+    public static final int VIDEO = 5 ;			//视频
+    public static final int MEETING = 6 ;			//会议
+    public static final int ENTERPRISE = 7 ;			//企业
+    
+    public static final int CASES = 8 ;
     
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)

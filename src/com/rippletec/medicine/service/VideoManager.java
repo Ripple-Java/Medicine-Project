@@ -11,4 +11,6 @@ public interface VideoManager extends IManager<Video> {
 
     List<Video> findRecentMeeting(PageBean pageBean, String param, Object value);
 
+    void active(int id);
+
 }

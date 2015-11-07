@@ -17,4 +17,6 @@ public interface MeetingManager extends IManager<Meeting> {
 
     List<Meeting> findRecentMeeting(PageBean pageBean , String param, Object value);
 
+    void active(int id);
+
 }

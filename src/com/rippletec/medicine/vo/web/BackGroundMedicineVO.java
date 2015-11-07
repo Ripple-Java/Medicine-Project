@@ -58,6 +58,12 @@ public class BackGroundMedicineVO {
     public void setId(Integer id) {
         this.id = id;
     }
+
+    @Override
+    public String toString() {
+	return "BackGroundMedicineVO [type=" + type + ", name=" + name
+		+ ", enterpriseName=" + enterpriseName + ", id=" + id + "]";
+    }
     
     
  

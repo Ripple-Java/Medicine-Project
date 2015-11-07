@@ -127,6 +127,27 @@ public class PlusHibernateSupport<T> extends HibernateDaoSupport{
 	return items;
       }
     
+    @SuppressWarnings({ "unchecked", "deprecation" })
+    public List<T> findCount(final String sql, final String[] params,final Object[] values) {
+	List<T> items = getHibernateTemplate().executeFind(new HibernateCallback<List<T>>() {
+
+	    @Override
+	    public List<T> doInHibernate(Session session)
+		    throws HibernateException, SQLException {
+		Query q = session.createSQLQuery(sql);
+		if(values != null && values.length > 0){
+        		for (int i = 0; i < params.length; i++) {
+        		    q.setParameter(i, values[i]);
+        		}
+		}
+		List<T> result = q.list();
+		return result;
+	    }
+	    
+	});
+	return items;
+      }
+    
     public List<T> Search(final String hql,final String param ,final Object value) {
 	return Search(hql, new String[]{param}, new Object[]{value});
     }

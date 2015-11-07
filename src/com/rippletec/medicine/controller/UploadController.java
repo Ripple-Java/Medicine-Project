@@ -25,6 +25,8 @@ public class UploadController extends BaseController{
     
     public static final String USERIMG_SAVEPATH = "/portrait/images";
     public static final String ENTERPRISEIMG_SAVEPATH = "/enterprise/checkImages";
+    public static final String ENTERPRISE_PPT_SAVEPATH = "/enterprise/ppt";
+    public static final String SEVER_TEMP = "/temp";
     
     @RequestMapping(value = "/image/portrait", method = RequestMethod.POST)
     @ResponseBody
@@ -38,11 +40,10 @@ public class UploadController extends BaseController{
 	User user =  userManager.findByAccount(userAccount);
 	String fileName = userAccount + "_" + user.getId() +FileUtil.getSuffixByFilename(img.getOriginalFilename());
 	Result res = FileUtil.saveFile(USERIMG_SAVEPATH, img, fileName);
-	if(!res.isSuccess()){
-	    user.setCertificateImg(res.getMessage());
-	    userManager.update(user);
+	if(!res.isSuccess())   
 	    return jsonUtil.setResultFail().setTip(res.getMessage()).toJsonString();
-	}
+	user.setCertificateImg(res.getMessage());
+	userManager.update(user);
 	return jsonUtil.setResultSuccess().setJsonObject("imgUrl",res.getMessage()).toJsonString();
     }
     
@@ -59,6 +60,21 @@ public class UploadController extends BaseController{
 	}
 	return jsonUtil.setResultSuccess().setJsonObject("imgUrl",res.getMessage()).toJsonString();
     }
+    
+    @RequestMapping(value = "/PPTfile", method = RequestMethod.POST)
+    @ResponseBody
+    public String user_uploadPPT(HttpSession httpSession,
+	    @RequestParam("ppt") CommonsMultipartFile ppt) {
+	if(!FileUtil.isAllowPPT(ppt.getOriginalFilename()))
+	    return jsonUtil.setResultFail().setTip("不允许上传此种格式ppt").toJsonString();
+	String fileName =DateUtil.getSimpleDateTime(new Date()) + StringUtil.generateCode(6) + FileUtil.getSuffixByFilename(ppt.getOriginalFilename());
+	Result res = FileUtil.saveFile(ENTERPRISE_PPT_SAVEPATH, ppt, fileName);
+	if(!res.isSuccess()){
+	    return jsonUtil.setResultFail().setTip(res.getMessage()).toJsonString();
+	}
+	return jsonUtil.setResultSuccess().setJsonObject("pptUrl",res.getMessage()).toJsonString();
+    }
+    
     
 
 }

@@ -30,6 +30,8 @@ public class EnterChineseMedicine extends BaseModel{
     public static final String MEDICINE_ID = "medicine_id";
     public static final String CHIN_MEDICINE_ID = "chin_medicine_id";
     public static final String MEDICINE_TYPE_ID = "medicine_type_id";
+    public static final String ENTERPRISE_ID = "enterpriese_id";
+    public static final String STATUS = "status";
     
     public static final int ON_PUBLISTH = 1;
     public static final int ON_CHECKING = 2;
@@ -59,6 +61,12 @@ public class EnterChineseMedicine extends BaseModel{
     @Cascade(CascadeType.SAVE_UPDATE)
     @JoinColumn(name = CHIN_MEDICINE_ID)
     private ChineseMedicine chineseMedicine;
+    
+    // 关联企业
+    @ManyToOne(fetch = FetchType.LAZY)
+    @Cascade(CascadeType.SAVE_UPDATE)
+    @JoinColumn(name = ENTERPRISE_ID)
+    private Enterprise enterprise;
     
     // 企业名称
     @Column(name="enterprise_name",length=50,nullable=false)
@@ -148,6 +156,7 @@ public class EnterChineseMedicine extends BaseModel{
 	this.price = enterChineseVO.getPrice();
 	this.status = ON_CHECKING;
 	this.sortkey = sortKey;
+	this.enterprise = enterprise;
     }
     
     
@@ -284,6 +293,12 @@ public class EnterChineseMedicine extends BaseModel{
     }
     public void setMedicineType(MedicineType medicineType) {
         this.medicineType = medicineType;
+    }
+    public Enterprise getEnterprise() {
+        return enterprise;
+    }
+    public void setEnterprise(Enterprise enterprise) {
+        this.enterprise = enterprise;
     }
     
     

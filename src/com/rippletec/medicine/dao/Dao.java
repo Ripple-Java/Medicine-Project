@@ -6,6 +6,8 @@ package com.rippletec.medicine.dao;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.orm.hibernate3.HibernateTemplate;
+
 /**
  * @author Liuyi
  *
@@ -45,5 +47,13 @@ public interface Dao <T>{
      * @param model 更新实体
      */
     public void update(T model);
+    
+    int getCount(String tableName);
+	
+    int getCount(String tableName, String param, Object value);
+    
+    int getCount(String tableName, String[] param, Object[] value);
+    
+    HibernateTemplate getDaoHibernateTemplate();
 
 }

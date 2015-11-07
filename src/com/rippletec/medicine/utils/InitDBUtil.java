@@ -40,8 +40,19 @@ public class InitDBUtil {
    	    for (MedicineType medicineType1 : firstTypes) {
    		List<MedicineType> secondTypes = medicineTypeManager.findByParam(MedicineType.PARENT_TYPE_ID, medicineType1.getId());
    		for (MedicineType medicineType2 : secondTypes) {
+   		    if(medicineType2.getBackGroundMedicineType() != null)
+   			continue;
+   		    if(medicineType2.getFlag()){
+   			BackGroundMedicineType backGroundMedicineType = new BackGroundMedicineType(medicineType, medicineType1, medicineType2, new MedicineType());
+			    backGroundMedicineType.setType(BackGroundMedicineType.TYPE_NORMAL);
+			    medicineType2.setBackGroundMedicineType(backGroundMedicineType);
+			    medicineTypeManager.update(medicineType2);
+			    continue;
+   		    }    
    		    List<MedicineType> thridTypes = medicineTypeManager.findByParam(MedicineType.PARENT_TYPE_ID, medicineType2.getId());
    		    for (MedicineType medicineType3 : thridTypes) {
+   				if(medicineType3.getBackGroundMedicineType() != null)
+   				    continue;
    			    BackGroundMedicineType backGroundMedicineType = new BackGroundMedicineType(medicineType, medicineType1, medicineType2, medicineType3);
    			    backGroundMedicineType.setType(BackGroundMedicineType.TYPE_NORMAL);
    			    medicineType3.setBackGroundMedicineType(backGroundMedicineType);

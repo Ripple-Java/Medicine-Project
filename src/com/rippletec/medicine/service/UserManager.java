@@ -10,8 +10,6 @@ public interface UserManager extends IManager<User> {
     public static final String NAME = "UserManager";
 
     User findByAccount(String acount);
-    
-    int getCount();
 
     boolean isExist(String phoneNumber);
 

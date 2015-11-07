@@ -41,6 +41,7 @@ public class User extends BaseModel {
     public static final String DOCTOR_ID = "doctor_id";
     public static final String ACCOUNT = "account";
     public static final String TYPE = "type";
+    public static final String STATUS = "status";
 
     public static final int DRVICE_ANDROID = 1;
     public static final int DRVICE_IPHONE = 2;
@@ -51,7 +52,7 @@ public class User extends BaseModel {
     public static final int STATUS_CHECKING = 4;
     public static final int STATUS_BLOCKED = 3;
 
-    public static final String DEFAULT_CERTIFICATEIMG = "image/certificateImg/default.png";
+    public static final String DEFAULT_CERTIFICATEIMG = "images/defaultUser.png";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

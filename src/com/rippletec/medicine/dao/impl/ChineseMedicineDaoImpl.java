@@ -8,7 +8,6 @@ import com.rippletec.medicine.model.ChineseMedicine;
 
 
 @Repository(ChineseMedicineDao.NAME)
-@DBLogModel
 public class ChineseMedicineDaoImpl extends BaseDaoImpl<ChineseMedicine> implements
 	ChineseMedicineDao {
 
@@ -21,5 +20,7 @@ public class ChineseMedicineDaoImpl extends BaseDaoImpl<ChineseMedicine> impleme
     public Class<ChineseMedicine> getPersistClass() {
 	return ChineseMedicine.class;
     }
+    
+    
     
 }

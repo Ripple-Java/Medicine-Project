@@ -16,6 +16,9 @@
 
 	<!-- 注解扫描包 -->
 	<context:component-scan base-package="com.rippletec.medicine.controller"/>
+	<!-- 引入属性文件 -->
+	<context:property-placeholder location="classpath:config.properties" />
+	
 
 	<!-- 以下 validator ConversionService 在使用 mvc:annotation-driven 会 自动注册 -->
 	<bean id="validator"
@@ -62,6 +65,11 @@
 	<mvc:resources mapping="/html/**" location="/html/" />
 	<mvc:resources mapping="/BusinessSystem/**" location="/BusinessSystem/" />
 	<mvc:resources mapping="/managementSystem/**" location="/managementSystem/" />
+	<mvc:resources mapping="/pptshow/**" location="/pptshow/" />
+	<mvc:resources mapping="/portrait/**" location="/portrait/" />
+	<mvc:resources mapping="/enterprise/**" location="/enterprise/" />
+	<mvc:resources mapping="/video/**" location="/video/" />
+	
 	
 	<mvc:interceptors>
 		<mvc:interceptor>

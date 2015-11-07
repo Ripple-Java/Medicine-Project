@@ -6,6 +6,8 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.stereotype.Component;
 
+import com.rippletec.medicine.model.Meeting;
+
 public class MeetingVo {
     
     public static final String CLASS_NAME = "MeetingVo";
@@ -14,6 +16,8 @@ public class MeetingVo {
     private String name;
     
     private String speaker;
+    
+    public Integer medicineID;
 
     private String tag;
     
@@ -30,16 +34,49 @@ public class MeetingVo {
     @NotNull(message="所属科目不能为空")
     private String subject;
     
+    private String pageUrl;
+    
+    public String medicineName;
+    
     public MeetingVo() {
     }
     
     
+
+    public MeetingVo(Meeting meeting) {
+	super();
+	this.name = meeting.getName();
+	this.speaker = meeting.getSpeaker();
+	this.medicineID = meeting.getMedicine().getId();
+	this.tag = meeting.getTag();
+	this.date = meeting.getCommitDate();
+	PPT = meeting.getPPT();
+	this.video = meeting.getVideo();
+	this.content = meeting.getContent();
+	this.subject = meeting.getSubject();
+	this.pageUrl = meeting.getPageUrl();
+    }
+
+
 
     @Override
     public String toString() {
 	return "MeetingVo [name=" + name + ", speaker=" + speaker + ", tag="
 		+ tag + ", date=" + date + ", PPT=" + PPT + ", video=" + video
 		+ ", content=" + content + ", subject=" + subject + "]";
+    }
+
+
+    
+
+    public String getPageUrl() {
+        return pageUrl;
+    }
+
+
+
+    public void setPageUrl(String pageUrl) {
+        this.pageUrl = pageUrl;
     }
 
 
@@ -107,6 +144,32 @@ public class MeetingVo {
     public void setSubject(String subject) {
         this.subject = subject;
     }
+
+
+
+    public Integer getMedicineID() {
+        return medicineID;
+    }
+
+
+
+    public void setMedicineID(Integer medicineID) {
+        this.medicineID = medicineID;
+    }
+
+
+
+    public String getMedicineName() {
+        return medicineName;
+    }
+
+
+
+    public void setMedicineName(String medicineName) {
+        this.medicineName = medicineName;
+    }
+    
+    
     
     
     

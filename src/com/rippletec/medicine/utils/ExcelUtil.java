@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 
@@ -17,9 +19,6 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Repository;
 
-import com.rippletec.medicine.bean.PageBean;
-import com.rippletec.medicine.dao.BackGroundMedicineTypeDao;
-import com.rippletec.medicine.model.BackGroundMedicineType;
 import com.rippletec.medicine.model.ChineseMedicine;
 import com.rippletec.medicine.model.Medicine;
 import com.rippletec.medicine.model.MedicineType;
@@ -28,12 +27,13 @@ import com.rippletec.medicine.service.BackGroundMedicineTypeManager;
 import com.rippletec.medicine.service.ChineseMedicineManager;
 import com.rippletec.medicine.service.MedicineTypeManager;
 import com.rippletec.medicine.service.WestMedicineManager;
+import com.sun.org.apache.bcel.internal.generic.NEW;
 
 
 @Repository(ExcelUtil.NAME)
 public class ExcelUtil {
     
-    public static final String NAME = "Excelutil";
+    public static final String NAME = "ExcelUtil";
 
     private  String excelPath = "";
     private  String sheetName = "";
@@ -49,6 +49,7 @@ public class ExcelUtil {
     
     @Resource(name = BackGroundMedicineTypeManager.NAME)
     private BackGroundMedicineTypeManager backGroundMedicineTypeManager;
+    
     
 
     public ExcelUtil() {
@@ -79,7 +80,7 @@ public class ExcelUtil {
 	    e.printStackTrace();
 	    return null;
 	}
-	XSSFSheet xssfSheet = xssfWorkbook.getSheet(sheetName);
+	XSSFSheet xssfSheet = xssfWorkbook.getSheetAt(0);
 	Iterator<Row> rowIterator = xssfSheet.iterator();
 	while (rowIterator.hasNext()) {
 	    Row row = rowIterator.next();
@@ -96,55 +97,37 @@ public class ExcelUtil {
 	    e.printStackTrace();
 	    return false;
 	}
-	int bigTypeId = medicineTypeManager.save(new MedicineType("西药", MedicineType.DEFAULT_PARENT_ID, MedicineType.WEST));
-	XSSFSheet xssfSheet = xssfWorkbook.getSheet(sheetName);
+	int bigTypeId = medicineTypeManager.uniqueSave(new MedicineType("西药", MedicineType.DEFAULT_PARENT_ID, MedicineType.WEST,false));
+	XSSFSheet xssfSheet = xssfWorkbook.getSheetAt(0);
 	
 	Iterator<Row> rowIterator = xssfSheet.iterator();
+	rowIterator.next();
 	while (rowIterator.hasNext()) {
 	    Row row = rowIterator.next();
 	    int parent_id = bigTypeId;
-	    BackGroundMedicineType backGroundMedicineType = new BackGroundMedicineType();
-	    backGroundMedicineType.setType(BackGroundMedicineType.TYPE_NORMAL);
-	    backGroundMedicineType.setFirstType("西药");
-	    backGroundMedicineType.setFirstType_id(bigTypeId);
-	    for (int i = 1; i < 4; i++) {
+	    for (int i = 1; i < 3; i++) {
 		String typeString = getCellString(row, i);
-		if (!StringUtil.hasText(typeString)) {
-		    typeString = "其他";
-		    parent_id = medicineTypeManager.uniqueSave(new MedicineType(typeString, parent_id, MedicineType.WEST));
-		    backGroundMedicineType.setMedicineType(i+1, parent_id, typeString);
-		    break;
-		}
 		MedicineType medicineType = new MedicineType(typeString, parent_id, MedicineType.WEST);
 		MedicineType mType = medicineTypeManager.isExist(medicineType);
 		if(mType != null){
 		    parent_id = mType.getId();
-		    backGroundMedicineType.setMedicineType(i+1, parent_id, typeString);
 		    continue;
 		}
+		if(i == 2)
+		    medicineType.setFlag(true);
 		parent_id = medicineTypeManager.uniqueSave(medicineType);
-		backGroundMedicineType.setMedicineType(i+1, parent_id, typeString);
-	    }
-	    if (row.getCell(18) == null || row.getCell(17)==null || row.getCell(16) == null)
-		continue;
-	    MedicineType medicineType = medicineTypeManager.find(parent_id);
-	    if(medicineType.getBackGroundMedicineType() == null){
-		medicineType.setBackGroundMedicineType(backGroundMedicineType);
-		medicineTypeManager.update(medicineType);
 	    }
 	    Medicine medicine = new Medicine(Medicine.WEST);
 	    WestMedicine westMedicine = 
 			new WestMedicine(medicine, medicineTypeManager.find(parent_id), 
-				getCellString(row, 4), getCellString(row, 5), getCellString(row, 6),
-				getCellString(row, 7), getCellString(row, 8), getCellString(row, 9),
-				getCellString(row, 10), getCellString(row, 11), getCellString(row, 12),
-				getCellString(row, 13), getCellString(row, 14), getCellString(row, 15),
-				getCellString(row, 16), getCellString(row, 17), getCellString(row, 18),
-				getCellString(row, 18), 1.00, WestMedicine.ON_PUBLISTH, "sortkey");
+				getCellString(row, 3), getCellString(row, 4), getCellString(row, 5,true),
+				getCellString(row, 6,true),getCellString(row, 8,true)+"\n"+getCellString(row, 9,true), getCellString(row, 10,true), getCellString(row, 11,true),
+				getCellString(row, 12,true), getCellString(row, 13,true), getCellString(row, 14,true),getCellString(row, 15,true),0.00, WestMedicine.ON_PUBLISTH, StringUtil.toPinYin(getCellString(row, 3)));
+	    
 	    westMedicineManager.save(westMedicine);
 	    
 	}
-	System.out.println(xssfSheet.getLastRowNum());
+	LoggerUtil.UtilLogger.info("导入通用西药："+xssfSheet.getLastRowNum());
    	return true;
     }
     
@@ -156,9 +139,9 @@ public class ExcelUtil {
 	    e.printStackTrace();
 	    return false;
 	}
-	int bigTypeId = medicineTypeManager.save(new MedicineType("中药", MedicineType.DEFAULT_PARENT_ID, MedicineType.CHINESE));
+	int bigTypeId = medicineTypeManager.uniqueSave(new MedicineType("中药", MedicineType.DEFAULT_PARENT_ID, MedicineType.CHINESE,false));
 	
-	XSSFSheet xssfSheet = xssfWorkbook.getSheet(sheetName);	
+	XSSFSheet xssfSheet = xssfWorkbook.getSheetAt(0);
 	Iterator<Row> rowIterator = xssfSheet.iterator();
 	while (rowIterator.hasNext()) {
 	    ChineseMedicine chineseMedicine = new ChineseMedicine();
@@ -166,9 +149,9 @@ public class ExcelUtil {
 	    int parent_id = bigTypeId;
 	    for (int i = 0; i < 3; i++) {
 		String typeString = getCellString(row, i);
-		if (!StringUtil.hasText(typeString)) {
-		    typeString = "其他";
-		    parent_id = medicineTypeManager.uniqueSave(new MedicineType(typeString, parent_id, MedicineType.CHINESE));
+		if (i>0 && !StringUtil.hasText(typeString)) {
+		    typeString = "其它";
+		    parent_id = medicineTypeManager.uniqueSave(new MedicineType(typeString, parent_id, MedicineType.CHINESE,true));
 		    break;
 		}
 		MedicineType medicineType = new MedicineType(typeString, parent_id, MedicineType.CHINESE);
@@ -177,31 +160,32 @@ public class ExcelUtil {
 		    parent_id = mType.getId();
 		    continue;
 		}
+		if(i == 2)
+		    medicineType.setFlag(true);
 		parent_id = medicineTypeManager.uniqueSave(medicineType);
 	    }
 	    
 	    MedicineType type =  medicineTypeManager.find(parent_id);
 	    chineseMedicine.setName(getCellString(row, 4));
 	    chineseMedicine.setContent(getCellString(row, 5));
-	    chineseMedicine.setEfficacy(getCellString(row, 6));
-	    chineseMedicine.setAnnouce(getCellString(row, 7));
-	    chineseMedicine.setManual(getCellString(row, 8));
-	    chineseMedicine.setPreparations(getCellString(row, 9));
-	    chineseMedicine.setStore(getCellString(row, 10));
-	    chineseMedicine.setCategory(getCellString(row, 11));
+	    chineseMedicine.setEfficacy(getCellString(row, 6,true));
+	    chineseMedicine.setAnnouce(getCellString(row, 7,true));
+	    chineseMedicine.setManual(getCellString(row, 8,true));
+	    chineseMedicine.setPreparations(getCellString(row, 9,true));
+	    chineseMedicine.setStore(getCellString(row, 10,true));
+	    chineseMedicine.setCategory(getCellString(row, 11,true));
 	    chineseMedicine.setMedicineType(type);
 	    Medicine medicine = new Medicine(Medicine.CHINESE);
 	    chineseMedicine.setMedicine(medicine);
-	    chineseMedicine.setPrice(1.00);
-	    chineseMedicine.setSortKey("sorkey");
+	    chineseMedicine.setPrice(0.00);
+	    chineseMedicine.setSortKey(StringUtil.toPinYin(getCellString(row, 4)));
 	    chineseMedicine.setStatus(ChineseMedicine.ON_PUBLISTH);
 	    chineseMedicineManager.save(chineseMedicine);
 	}
-	System.out.println(xssfSheet.getLastRowNum());
+	LoggerUtil.UtilLogger.info("导入通用中药："+xssfSheet.getLastRowNum());
    	return true;
     }
     
-   
     
     
     public  String getCellString(Row row , int index) {
@@ -209,6 +193,13 @@ public class ExcelUtil {
 	if (cell == null || cell.getCellType() != Cell.CELL_TYPE_STRING) 
 	    return "";
 	return cell.getStringCellValue();
+    }
+    
+    public  String getCellString(Row row , int index , boolean filter) {
+	if(filter == false)
+	    return getCellString(row, index);
+	String str =  getCellString(row, index);
+	return StringUtil.formatData(str);
     }
 
     public String getExcelPath() {

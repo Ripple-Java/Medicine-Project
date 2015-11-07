@@ -24,6 +24,9 @@ import com.rippletec.medicine.service.ChineseMedicineManager;
 import com.rippletec.medicine.service.DBLoger;
 import com.rippletec.medicine.service.MedicineTypeManager;
 import com.rippletec.medicine.service.WestMedicineManager;
+import com.rippletec.medicine.vo.app.ChineseMedicineVO;
+import com.rippletec.medicine.vo.app.WestMedicineVO;
+import com.sun.org.apache.bcel.internal.generic.NEW;
 import com.sun.swing.internal.plaf.basic.resources.basic;
 
 @Repository(DBLoger.NAME)
@@ -95,11 +98,11 @@ public class DBLogerImpl extends BaseManager<DBLog> implements DBLoger{
 	    String dbTable = dbLog.getDbTable();
 	    int object_id = dbLog.getObject_id();
 	    if (dbTable.equals(ChineseMedicine.TABLE_NAME))
-		object = chineseMedicineManager.find(object_id);
+		object = new ChineseMedicineVO(chineseMedicineManager.find(object_id));
 	    else if(dbTable.equals(WestMedicine.TABLE_NAME))
-		object = westMedicineManager.find(object_id);
+		object = new WestMedicineVO(westMedicineManager.find(object_id));
 	    else if (dbTable.equals(MedicineType.TABLE_NAME))
-		object = westMedicineManager.find(object_id);
+		object =  medicineTypeManager.find(object_id);
 	    DBLogEntity dbLogEntity = new DBLogEntity(dbTable,object); 
 	    dbLogEntities.add(dbLogEntity);
 	}
@@ -126,9 +129,9 @@ public class DBLogerImpl extends BaseManager<DBLog> implements DBLoger{
 	    String dbTable = dbLog.getDbTable();
 	    int object_id = dbLog.getObject_id();
 	    if (dbTable.equals(ChineseMedicine.TABLE_NAME))
-		object = chineseMedicineManager.find(object_id);
+		object = new ChineseMedicineVO(chineseMedicineManager.find(object_id));
 	    else if(dbTable.equals(WestMedicine.TABLE_NAME))
-		object = westMedicineManager.find(object_id);
+		object = new WestMedicineVO(westMedicineManager.find(object_id));
 	    else if (dbTable.equals(MedicineType.TABLE_NAME))
 		object = medicineTypeManager.find(object_id);
 	    DBLogEntity dbLogEntity = new DBLogEntity(dbTable,object); 

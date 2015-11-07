@@ -32,7 +32,7 @@ public class EnterpriseMedicineType extends BaseModel {
     public static final String CLASS_NAME = "EnterpriseMedicineType";
     public static final String TABLE_NAME = "enterprise_medicine_type";
     public static final String ENTERPRISE_ID = "enterprise_id";
-    public static final String PARENT_TYPE_ID = "parent_type_id";
+    public static final String GIB_TYPE = "gib_type";
     public static final String BACKGROUND_MEDICINETYPE_ID = "backGroundMedicineType_id";
     public static final String NAME = "name";
     public static final int CHINESE = 1;
@@ -56,18 +56,11 @@ public class EnterpriseMedicineType extends BaseModel {
 //    @OrderBy(value = "id asc")
 //    private Set<EnterWestMedicine> enterWestMedicines = new LinkedHashSet<EnterWestMedicine>();
 
-    // 企业药品类别名称
-    @Column(name = "name", length = 255, nullable = false)
-    private String name;
 
     // 药品所属第一级类型：1=中药，2=西药
     @Column(name = "gib_type", length = 1, nullable = false)
     private Integer gib_type;
     
-    // 父类别id
-    @Column(name = PARENT_TYPE_ID, nullable = false)
-    private Integer parent_type_id;
-
     // 关联企业
     @ManyToOne(fetch = FetchType.LAZY)
     @Cascade(CascadeType.SAVE_UPDATE)
@@ -88,9 +81,7 @@ public class EnterpriseMedicineType extends BaseModel {
 
     public EnterpriseMedicineType(MedicineType medicineType, Enterprise enterprise) {
 	super();
-	this.name = medicineType.getName();
 	this.gib_type = medicineType.getGib_type();
-	this.parent_type_id = medicineType.getParent_type_id();
 	this.enterprise = enterprise;
     }
 
@@ -99,9 +90,7 @@ public class EnterpriseMedicineType extends BaseModel {
 
     @Override
     public String toString() {
-	return "EnterpriseMedicineType [id=" + id + ", name=" + name
-		+ ", gib_type=" + gib_type + ", parent_type_id="
-		+ parent_type_id + "]";
+	return "EnterpriseMedicineType [id=" + id + ", gib_type=" + gib_type  + "]";
     }
 
     public Enterprise getEnterprise() {
@@ -116,9 +105,6 @@ public class EnterpriseMedicineType extends BaseModel {
 	return id;
     }
 
-    public String getName() {
-	return name;
-    }
 
     public void setEnterprise(Enterprise enterprise) {
 	this.enterprise = enterprise;
@@ -130,19 +116,6 @@ public class EnterpriseMedicineType extends BaseModel {
 
     public void setId(Integer id) {
 	this.id = id;
-    }
-
-    public void setName(String name) {
-	this.name = name;
-    }
-
-
-    public Integer getParent_type_id() {
-        return parent_type_id;
-    }
-
-    public void setParent_type_id(Integer parent_type_id) {
-        this.parent_type_id = parent_type_id;
     }
 
     public BackGroundMedicineType getBackGroundMedicineType() {

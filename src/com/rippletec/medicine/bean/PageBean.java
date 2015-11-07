@@ -27,6 +27,8 @@ public class PageBean {
     @NotNull(message="pageSize不能为空")
     @Min(value=1,message="pageSize参数不合法")
     public int pageSize;
+    public PageBean() {
+    }
 
     public PageBean(int offset, int pageSize) {
 	super();

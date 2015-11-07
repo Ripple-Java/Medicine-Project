@@ -1,24 +1,29 @@
 ﻿<!DOCTYPE html>
 <html lang="zh-cn">
 <head>
-    <meta charset="utf-8" />
-    <link href="css/demo.css" rel="stylesheet" />
-    <link href="css/iconfont.css" rel="stylesheet" />
-    <link href="css/common.css" rel="stylesheet" />
-    <link href="modules/header/css/businessIndex_header.css" rel="stylesheet" />
-    <link href="modules/aside/css/businessIndex_aside.css" rel="stylesheet" />
-    <link href="modules/content/css/businessIndex_content.css" rel="stylesheet" />
-    <script src="js/jquery-2.1.0.js"></script>
-    <script src="js/angular.js"></script>
-    <script src="js/businessIndex.js"></script>
-    <script src="modules/content/js/indexContentFunction.js"></script>
-    <title>BusinessIndex</title>
+<meta charset="utf-8" />
+<link href="css/demo.css" rel="stylesheet" />
+<link href="css/iconfont.css" rel="stylesheet" />
+<link href="css/common.css" rel="stylesheet" />
+<link href="css/pagination.css" rel="stylesheet" />
+<link href="modules/header/css/businessIndex_header.css"	rel="stylesheet" />
+<link href="modules/aside/css/businessIndex_aside.css" rel="stylesheet" />
+<link href="modules/content/css/businessIndex_content.css"	rel="stylesheet" />
+<link href="modules/content/css/add.css" rel="stylesheet" />
+<script src="js/jquery-2.1.0.js"></script>
+<script src="js/jquery.pagination.js"></script>
+<script src="js/angular.js"></script>
+<script src="js/businessIndex.js"></script>
+<script src="modules/header/js/businessIndex_header.js"></script>
+<script src="modules/content/js/indexContentFunction.js"></script>
+<script src="modules/content/js/indexContentResource.js"></script>
+<title>BusinessIndex</title>
 </head>
 <body ng-app="doctor_app" ng-controller="my">
-    <header ng-include src="'modules/header/businessIndex_header.html'"></header>
-    <aside ng-include src="'modules/aside/businessIndex_aside.html'"></aside>
-    <div class="index_content">
-        <div ng-include src="pageContent"></div>
-    </div>
+	<header ng-include src="'modules/header/businessIndex_header.html'"></header>
+	<aside ng-include src="'modules/aside/businessIndex_aside.html'"></aside>
+	<div class="index_content">
+		<div ng-include src="pageContent"></div>
+	</div>
 </body>
 </html>
