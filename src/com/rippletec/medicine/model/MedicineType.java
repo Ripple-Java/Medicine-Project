@@ -56,13 +56,16 @@ public class MedicineType extends BaseModel {
     private BackGroundMedicineType backGroundMedicineType;
     
     @OneToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY,mappedBy="medicineType")
-    @OrderBy(value="id asc")
     private Set<ChineseMedicine> chineseMedicines = new LinkedHashSet<ChineseMedicine>();
     
     @OneToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY,mappedBy="medicineType")
-    @OrderBy(value="id asc")
     private Set<WestMedicine> westMedicines = new LinkedHashSet<WestMedicine>();
-
+    
+    @OneToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY,mappedBy="medicineType")
+    private Set<EnterChineseMedicine> enterChineseMedicines = new LinkedHashSet<EnterChineseMedicine>();
+    
+    @OneToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY,mappedBy="medicineType")
+    private Set<EnterWestMedicine> enterWestMedicines = new LinkedHashSet<EnterWestMedicine>();
     // 分类名称
     @Column(name = "name", length = 255, nullable = false)
     private String name;
@@ -74,6 +77,9 @@ public class MedicineType extends BaseModel {
     // 药品所属第一级类型：1=中药，2=西药
     @Column(name = "gib_type", length = 1, nullable = false)
     private Integer gib_type;
+    
+    @Column(name = "flag", length = 1, nullable=true)
+    private Boolean flag;
 
     public MedicineType() {
     }
@@ -83,7 +89,15 @@ public class MedicineType extends BaseModel {
 	this.name = name;
 	this.parent_type_id = parent_type_id;
 	this.gib_type = gib_type;
+	this.flag = false;
     }
+    public MedicineType(String name, Integer parent_type_id, Integer gib_type, Boolean tag) {
+   	super();
+   	this.name = name;
+   	this.parent_type_id = parent_type_id;
+   	this.gib_type = gib_type;
+   	this.flag = tag;
+       }
     
     public MedicineType(String name, MedicineType parent_type) {
 	super();
@@ -150,6 +164,35 @@ public class MedicineType extends BaseModel {
     public void setBackGroundMedicineType(
     	BackGroundMedicineType backGroundMedicineType) {
         this.backGroundMedicineType = backGroundMedicineType;
+    }
+
+    public Set<EnterChineseMedicine> getEnterChineseMedicines() {
+        return enterChineseMedicines;
+    }
+
+    public void setEnterChineseMedicines(
+    	Set<EnterChineseMedicine> enterChineseMedicines) {
+        this.enterChineseMedicines = enterChineseMedicines;
+    }
+
+    public Set<EnterWestMedicine> getEnterWestMedicines() {
+        return enterWestMedicines;
+    }
+
+    public void setEnterWestMedicines(Set<EnterWestMedicine> enterWestMedicines) {
+        this.enterWestMedicines = enterWestMedicines;
+    }
+
+    public Boolean getFlag() {
+        return flag;
+    }
+
+    public void setFlag(Boolean flag) {
+        this.flag = flag;
+    }
+    
+    public boolean hasChild(){
+	return !flag;
     }
 
     @Override

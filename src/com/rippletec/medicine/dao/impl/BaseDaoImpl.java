@@ -7,12 +7,14 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.hibernate.SessionFactory;
+import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.ui.Model;
 
 import com.rippletec.medicine.bean.PageBean;
 import com.rippletec.medicine.dao.Dao;
 import com.rippletec.medicine.dao.IFindByPage;
 import com.rippletec.medicine.dao.ISearchDao;
+import com.rippletec.medicine.model.User;
 import com.rippletec.medicine.support.PlusHibernateSupport;
 import com.rippletec.medicine.utils.StringUtil;
 
@@ -133,6 +135,26 @@ public abstract class BaseDaoImpl<T> extends PlusHibernateSupport<T> implements 
     public List<T> search(String param, Object value) {
 	String hql = StringUtil.getSearchHql(getClassName(), param);
 	return Search(hql, param, value);
+    }
+
+    @Override
+    public int getCount(String tableName) {
+	return getCount(tableName, new String[]{}, new Object[]{});
+    }
+
+    @Override
+    public int getCount(String tableName,String param, Object value) {
+	return getCount(tableName, new String[]{param}, new Object[]{ value});
+    }
+    
+    @Override
+    public int getCount(String tableName,String[] param, Object[] value) {
+	return Integer.valueOf(findCount(StringUtil.getCountSql(tableName, param),param,value).listIterator().next()+"");
+    }
+
+    @Override
+    public HibernateTemplate getDaoHibernateTemplate() {
+	return getHibernateTemplate();
     }
     
     

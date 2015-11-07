@@ -3,11 +3,17 @@ package com.rippletec.medicine.service.impl;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.hibernate3.HibernateTemplate;
+
 import com.rippletec.medicine.bean.PageBean;
 import com.rippletec.medicine.dao.FindAndSearchDao;
 import com.rippletec.medicine.service.IManager;
 
 public abstract class BaseManager<T> implements IManager<T> {
+    
+    public Logger logger = Logger.getLogger("controllerLog");
 
     @Override
     public boolean delete(Integer id) {
@@ -83,4 +89,27 @@ public abstract class BaseManager<T> implements IManager<T> {
 	getDao().update(model);
     }
 
+    @Override
+    public int getCount(String tableName) {
+	return getDao().getCount(tableName);
+    }
+
+    @Override
+    public int getCount(String tableName, String param, Object value) {
+	return getDao().getCount(tableName,param,value);
+    }
+
+    @Override
+    public int getCount(String tableName, String[] param, Object[] value) {
+	return getDao().getCount(tableName, param, value);
+    }
+
+    @Override
+    public HibernateTemplate getDaoHibernateTemplate() {
+	return getDao().getDaoHibernateTemplate();
+    }
+    
+    
+
+    
 }

@@ -1,5 +1,6 @@
 package com.rippletec.medicine.dao.impl;
 
+import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.rippletec.medicine.dao.UserDao;
@@ -15,13 +16,15 @@ public class UserDaoImpl extends BaseDaoImpl<User> implements UserDao {
 	}
 
 	@Override
-	public int getCount() {
-	    return Integer.valueOf(getHibernateTemplate().find(StringUtil.getCountSql(User.CLASS_NAME)).listIterator().next()+"");
-	}
-
-	@Override
 	public Class<User> getPersistClass() {
 		return User.class;
 	}
+
+	@Override
+	public HibernateTemplate getDaoHibernateTemplate() {
+	    return getHibernateTemplate();
+	}
+	
+	
 	
 }

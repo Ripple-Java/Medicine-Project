@@ -1,17 +1,23 @@
-﻿.header_message{
-    float:left;
-    height:100%;
-    display:table;
-    width:100%;
-    text-align:center;
+﻿.header_message {
+	float: left;
+	height: 100%;
+	display: table;
+	width: 100%;
+	text-align: center;
 }
-.header_message div{display:table-cell;vertical-align:middle;}
-.header_home_icon{
-    color:#c0ffb6;
-    font-size:2em;
-    padding-right:10px;
+
+.header_message div {
+	display: table-cell;
+	vertical-align: middle;
 }
-.header_app_name{
-    color:#eaffe6;
-    font-size:1.5em;
+
+.header_home_icon {
+	color: #c0ffb6;
+	font-size: 2em;
+	padding-right: 10px;
+}
+
+.header_app_name {
+	color: #eaffe6;
+	font-size: 1.5em;
 }

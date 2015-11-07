@@ -16,6 +16,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Cascade;
@@ -88,14 +89,6 @@ public class WestMedicine extends BaseModel {
     @Column(name = "pharmacolo", columnDefinition = "TEXT", nullable = true)
     private String pharmacolo;
 
-    // 药效学
-    @Column(name = "pk_pd", columnDefinition = "TEXT", nullable = true)
-    private String pk_pd;
-
-    // 药动学
-    @Column(name = "pharmacokinetics", columnDefinition = "TEXT", nullable = true)
-    private String pharmacokinetics;
-
     // 注意事项
     @Column(name = "warn", columnDefinition = "TEXT", nullable = true)
     private String warn;
@@ -116,24 +109,13 @@ public class WestMedicine extends BaseModel {
     @Column(name = "manual", columnDefinition = "TEXT", nullable = true)
     private String  manual;
 
-    // 成人用量
-    @Column(name = "adult_dose", columnDefinition = "TEXT", nullable = true)
-    private String adult_dose;
-
-    // 国外用法用量参考
-    @Column(name = "foreign_dose", columnDefinition = "TEXT", nullable = true)
-    private String foreign_dose;
-
     // 制剂与规格
     @Column(name = "preparations", columnDefinition = "TEXT", nullable = true)
     private String preparations;
 
-    // 贮法
-    @Column(name = "store", columnDefinition = "TEXT", nullable = true)
-    private String store;
 
     // 药品价格
-    @Column(name = "price", length = 10, nullable = false, precision = 2)
+    @Column(name = "price", length = 10, nullable = true, precision = 2)
     private Double price;
     
     // 药品发布状态
@@ -146,15 +128,22 @@ public class WestMedicine extends BaseModel {
     public WestMedicine() {
     }
     
-   
+    public WestMedicine(Medicine medicine, MedicineType medicineType,String name, String other_name, Integer status,
+	    String sortKey) {
+	super();
+	this.medicine = medicine;
+	this.medicineType = medicineType;
+	this.name = name;
+	this.other_name = other_name;
+	this.status = status;
+	this.sortKey = sortKey;
+    }
 
     public WestMedicine(Medicine medicine, MedicineType medicineType,
 	    String name, String other_name, String content,
-	    String current_application, String pharmacolo, String pk_pd,
-	    String pharmacokinetics, String warn, String aDRS,
-	    String interaction, String dose_explain, String manual,
-	    String adult_dose, String foreign_dose, String preparations,
-	    String store, Double price, Integer status, String sortKey) {
+	    String current_application, String pharmacolo, String warn, String aDRS,
+	    String interaction, String dose_explain, String manual, String preparations,
+	    Double price, Integer status, String sortKey) {
 	super();
 	this.medicine = medicine;
 	this.medicineType = medicineType;
@@ -163,17 +152,12 @@ public class WestMedicine extends BaseModel {
 	this.content = content;
 	this.current_application = current_application;
 	this.pharmacolo = pharmacolo;
-	this.pk_pd = pk_pd;
-	this.pharmacokinetics = pharmacokinetics;
 	this.warn = warn;
 	ADRS = aDRS;
 	this.interaction = interaction;
 	this.dose_explain = dose_explain;
 	this.manual = manual;
-	this.adult_dose = adult_dose;
-	this.foreign_dose = foreign_dose;
 	this.preparations = preparations;
-	this.store = store;
 	this.price = price;
 	this.status = status;
 	this.sortKey = sortKey;
@@ -185,9 +169,6 @@ public class WestMedicine extends BaseModel {
 	return ADRS;
     }
 
-    public String getAdult_dose() {
-	return adult_dose;
-    }
 
     public String getContent() {
 	return content;
@@ -201,10 +182,6 @@ public class WestMedicine extends BaseModel {
 	return dose_explain;
     }
 
-
-    public String getForeign_dose() {
-	return foreign_dose;
-    }
 
     public Integer getId() {
 	return id;
@@ -234,17 +211,11 @@ public class WestMedicine extends BaseModel {
 	return other_name;
     }
 
-    public String getPharmacokinetics() {
-	return pharmacokinetics;
-    }
 
     public String getPharmacolo() {
 	return pharmacolo;
     }
 
-    public String getPk_pd() {
-	return pk_pd;
-    }
 
     public String getPreparations() {
 	return preparations;
@@ -252,10 +223,6 @@ public class WestMedicine extends BaseModel {
 
     public Double getPrice() {
         return price;
-    }
-
-    public String getStore() {
-	return store;
     }
 
     public String getWarn() {
@@ -266,9 +233,6 @@ public class WestMedicine extends BaseModel {
 	ADRS = aDRS;
     }
 
-    public void setAdult_dose(String adult_dose) {
-	this.adult_dose = adult_dose;
-    }
 
     public void setContent(String content) {
 	this.content = content;
@@ -282,9 +246,6 @@ public class WestMedicine extends BaseModel {
 	this.dose_explain = dose_explain;
     }
 
-    public void setForeign_dose(String foreign_dose) {
-	this.foreign_dose = foreign_dose;
-    }
 
     public void setId(Integer id) {
 	this.id = id;
@@ -314,17 +275,11 @@ public class WestMedicine extends BaseModel {
 	this.other_name = other_name;
     }
 
-    public void setPharmacokinetics(String pharmacokinetics) {
-	this.pharmacokinetics = pharmacokinetics;
-    }
 
     public void setPharmacolo(String pharmacolo) {
 	this.pharmacolo = pharmacolo;
     }
 
-    public void setPk_pd(String pk_pd) {
-	this.pk_pd = pk_pd;
-    }
 
     public void setPreparations(String preparations) {
 	this.preparations = preparations;
@@ -334,9 +289,6 @@ public class WestMedicine extends BaseModel {
         this.price = price;
     }
 
-    public void setStore(String store) {
-	this.store = store;
-    }
 
     public void setWarn(String warn) {
 	this.warn = warn;
@@ -372,17 +324,16 @@ public class WestMedicine extends BaseModel {
 
     @Override
     public String toString() {
-	return "WestMedicine [id=" + id + ", name=" + name + ", other_name="
-		+ other_name + ", content=" + content
-		+ ", current_application=" + current_application
-		+ ", pharmacolo=" + pharmacolo + ", pk_pd=" + pk_pd
-		+ ", pharmacokinetics=" + pharmacokinetics + ", warn=" + warn
-		+ ", ADRS=" + ADRS + ", interaction=" + interaction
-		+ ", dose_explain=" + dose_explain + ", manual=" + manual
-		+ ", adult_dose=" + adult_dose + ", foreign_dose="
-		+ foreign_dose + ", preparations=" + preparations + ", store="
-		+ store + ", price=" + price + ", status=" + status + "]";
+	return "WestMedicine [name=" + name + ", other_name=" + other_name
+		+ ", content=" + content + ", current_application="
+		+ current_application + ", pharmacolo=" + pharmacolo
+		+ ", warn=" + warn + ", ADRS=" + ADRS + ", interaction="
+		+ interaction + ", dose_explain=" + dose_explain + ", manual="
+		+ manual + ", preparations=" + preparations + ", price="
+		+ price + ", status=" + status + ", sortKey=" + sortKey + "]";
     }
+
+  
 
     
     

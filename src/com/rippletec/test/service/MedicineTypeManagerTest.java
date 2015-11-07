@@ -11,6 +11,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.rippletec.medicine.model.MedicineType;
 import com.rippletec.medicine.service.MedicineTypeManager;
+import com.rippletec.medicine.utils.JsonUtil;
+import com.rippletec.medicine.vo.web.BackGroundMedicineVO;
 import com.rippletec.test.dao.IBaseDaoTest;
 
 /**
@@ -29,7 +31,13 @@ public class MedicineTypeManagerTest implements IBaseDaoTest {
     }
 
     @Override
+    @Test
     public void testFind() throws Exception {
+	MedicineType medicineType = medicineTypeManager.find(1);
+	List<MedicineType> medicineTypes = medicineTypeManager.getAllChild(medicineType);
+	for (MedicineType medicineType2 : medicineTypes) {
+	    System.out.println(medicineType2.toString());
+	}
     }
 
     @Override
@@ -51,5 +59,13 @@ public class MedicineTypeManagerTest implements IBaseDaoTest {
     @Override
     public void testUpdate() throws Exception {
     }
+    
+    @Test
+    public void testSearch() throws Exception {
+	List<BackGroundMedicineVO> backGroundMedicineVOs = medicineTypeManager.searchBackGroundVO("儿科");
+	JsonUtil jsonUtil = new JsonUtil();
+	System.out.println(jsonUtil.setModelList(backGroundMedicineVOs).toJsonString());
+    }
+
 
 }

@@ -7,7 +7,6 @@ import com.rippletec.medicine.dao.MedicineTypeDao;
 import com.rippletec.medicine.model.MedicineType;
 
 @Repository(MedicineTypeDao.NAME)
-@DBLogModel
 public class MedicineTypeDaoImpl extends BaseDaoImpl<MedicineType> implements MedicineTypeDao {
 
     @Override

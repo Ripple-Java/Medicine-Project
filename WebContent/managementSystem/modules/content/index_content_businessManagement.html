@@ -1,33 +1,36 @@
 ﻿<section>
-    <header class="content_header">
-        <div>
-            <em class="icon iconfont content_content_icon1">&#xe605;</em>
-            <em >首页</em>
-            <em >&gt;</em>
-            <em class=" content_content_address">企业管理</em>
-        </div>
-    </header>
-    <div class="nav">
-        <nav class="businessContent_nav">
-            <a>
-                <ul>
-                    <li class="content_nav_onclick" ng-click="businessContent_nav_click(1,'modules/content/index_modules/button/businessManagementButton_businessList.html');"><em>企业列表</em></li>
-                    <li class="bg_color" ng-click="businessContent_nav_click(2,'modules/content/index_modules/button/businessManagementButton_checkRequest.html');"><em>注册审核</em></li>
-                </ul>
-            </a>
-        </nav>
-        <div class="content_nav_search" >
-            <input type="search" placeholder="企业名称/资本类型" />
-            <button><em class="icon iconfont">&#xe645;</em></button>
-        </div>
-    </div>
-    <div class="content_content">
-        <div class="content_content_header" ng-include src="businesscontentpage"></div>
-        <script>
+	<header class="content_header">
+		<div>
+			<em class="icon iconfont content_content_icon1">&#xe605;</em> <em>首页</em>
+			<em>&gt;</em> <em class=" content_content_address">企业管理</em>
+		</div>
+	</header>
+	<div class="nav">
+		<nav class="businessContent_nav">
+			<a>
+				<ul>
+					<li class="content_nav_onclick"
+						ng-click="businessContent_nav_click(1,'modules/content/index_modules/button/businessManagementButton_businessList.html');"><em>企业列表</em></li>
+					<li class="bg_color"
+						ng-click="businessContent_nav_click(2,'modules/content/index_modules/button/businessManagementButton_checkRequest.html');"><em>注册审核</em></li>
+				</ul>
+			</a>
+		</nav>
+		<div class="content_nav_search">
+			<input type="search" placeholder="企业名称/资本类型" />
+			<button>
+				<em class="icon iconfont">&#xe645;</em>
+			</button>
+		</div>
+	</div>
+	<div class="content_content">
+		<div class="content_content_header" ng-include
+			src="businesscontentpage"></div>
+		<script>
             $(".content_content_content").css({ "height": window.innerHeight - 290 + "px" });
             $(".content_footer").css({ "width": window.innerWidth - 280 + "px" });
         </script>
-        <div class="content_content_content" ng-include src="businessList"></div>
-    </div>
-    <footer class="content_footer" ng-include src=" businesscontentpage"></footer>
+		<div class="content_content_content" ng-include src="businessList"></div>
+	</div>
+	<footer class="content_footer" ng-include src=" businesscontentpage"></footer>
 </section>

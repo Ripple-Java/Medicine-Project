@@ -73,6 +73,12 @@ public class Enterprise extends BaseModel {
     @OrderBy(value="id asc")
     private Set<Video> videos = new LinkedHashSet<Video>();
     
+    // 关联企业审核数据
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "enterprise")
+    @Cascade(CascadeType.ALL)
+    @OrderBy(value="id asc")
+    private Set<CheckData> checkDatas = new LinkedHashSet<CheckData>();
+    
     // 关联企业账号
     @OneToOne(fetch=FetchType.LAZY)
     @Cascade(CascadeType.ALL)
@@ -99,6 +105,9 @@ public class Enterprise extends BaseModel {
     @Column(name = "email", length = 100, nullable = true)
     private String email;
     
+    @Column(name="enterpriseUrl", length=100, nullable=true)
+    private String enterpriseUrl;
+    
     //企业执照号
     @Column(name = "enterpriseNumber", length=15, nullable=false)
     private String enterpriseNumber;
@@ -106,11 +115,22 @@ public class Enterprise extends BaseModel {
     public Enterprise() {
     }
     
-    public Enterprise(Integer type, String name, String enterpriseNumber) {
+    public Enterprise(Integer type, String name, String enterpriseNumber, String enterpriseUrl) {
 	super();
 	this.type = type;
 	this.name = name;
 	this.enterpriseNumber = enterpriseNumber;
+	this.enterpriseUrl = enterpriseUrl;
+    }
+    
+    
+
+    public String getEnterpriseUrl() {
+        return enterpriseUrl;
+    }
+
+    public void setEnterpriseUrl(String enterpriseUrl) {
+        this.enterpriseUrl = enterpriseUrl;
     }
 
     public String getEmail() {
@@ -198,6 +218,16 @@ public class Enterprise extends BaseModel {
 
     public void setUser(User user) {
         this.user = user;
+    }
+    
+    
+
+    public Set<CheckData> getCheckDatas() {
+        return checkDatas;
+    }
+
+    public void setCheckDatas(Set<CheckData> checkDatas) {
+        this.checkDatas = checkDatas;
     }
 
     @Override

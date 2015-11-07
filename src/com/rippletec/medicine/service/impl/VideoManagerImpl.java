@@ -1,5 +1,6 @@
 package com.rippletec.medicine.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -27,6 +28,14 @@ public class VideoManagerImpl extends BaseManager<Video> implements VideoManager
     @Override
     public List<Video> findRecentMeeting(PageBean pageBean, String param, Object value) {
 	return videoDao.findByTime(pageBean,param,value);
+    }
+
+    @Override
+    public void active(int id) {
+	Video video = videoDao.find(id);
+	video.setStatus(Video.ON_PUBLISTH);
+	video.setPassDate(new Date());
+	videoDao.update(video);
     }
     
 

@@ -7,7 +7,6 @@ import com.rippletec.medicine.dao.WestMedicineDao;
 import com.rippletec.medicine.model.WestMedicine;
 
 @Repository(WestMedicineDao.NAME)
-@DBLogModel
 public class WestMedicineDaoImpl extends BaseDaoImpl<WestMedicine> implements
 	WestMedicineDao {
 

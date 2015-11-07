@@ -22,7 +22,7 @@ public class BackGroundMedicineType extends BaseModel{
 
     private static final long serialVersionUID = 6287473661450061632L;
     
-    public static final String ClASS_NAME = "BackGroundMedicineType";
+    public static final String CLASS_NAME = "BackGroundMedicineType";
 
     public static final String TABLE_NAME = "background_medicinetype";
     
@@ -47,20 +47,6 @@ public class BackGroundMedicineType extends BaseModel{
 	this.forthType_id = forthtType.getId();
     }
     
-    public BackGroundMedicineType(EnterpriseMedicineType firsType, EnterpriseMedicineType secondType, EnterpriseMedicineType thirdType, EnterpriseMedicineType forthtType) {
-   	super();
-   	this.type = TYPE_ENTERPRISE;
-   	this.firstType = firsType.getName();
-   	this.firstType_id = firsType.getId();
-   	this.secondType = secondType.getName();
-   	this.secondType_id = secondType.getId();
-   	this.thirdType = thirdType.getName();
-   	this.thirdType_id = thirdType.getId();
-   	this.forthType = forthtType.getName();
-   	this.forthType_id = forthtType.getId();
-       }
-
-
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)

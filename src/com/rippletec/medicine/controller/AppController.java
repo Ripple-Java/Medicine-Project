@@ -2,8 +2,10 @@ package com.rippletec.medicine.controller;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +16,7 @@ import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,6 +27,8 @@ import sun.print.resources.serviceui;
 import com.rippletec.medicine.SMS.SMS;
 import com.rippletec.medicine.bean.DBLogEntity;
 import com.rippletec.medicine.bean.PageBean;
+import com.rippletec.medicine.model.BackGroundMedicineType;
+import com.rippletec.medicine.model.BaseModel;
 import com.rippletec.medicine.model.ChineseMedicine;
 import com.rippletec.medicine.model.DBLog;
 import com.rippletec.medicine.model.EnterChineseMedicine;
@@ -41,7 +46,10 @@ import com.rippletec.medicine.model.Video;
 import com.rippletec.medicine.model.WestMedicine;
 import com.rippletec.medicine.service.DBLoger;
 import com.rippletec.medicine.service.VideoManager;
+import com.rippletec.medicine.utils.FileUtil;
 import com.rippletec.medicine.utils.StringUtil;
+import com.rippletec.medicine.vo.app.EnterTypesVO;
+import com.rippletec.medicine.vo.web.BackGroundMedicineVO;
 
 /**
  * @author Liuyi
@@ -76,14 +84,26 @@ public class AppController extends BaseController {
 		}
     }
     
+    @RequestMapping(value = "/user/deleteFavorite", method = RequestMethod.POST)
+    @ResponseBody
+    public String user_deleteFavorite(int id, HttpSession session){
+	UserFavorite userFavorite = userFavoriteManager.find(id);
+	if(userFavorite == null)
+	    return jsonUtil.setResultFail("此收藏不存在").toJsonString();
+	if(userFavorite.getUser().getAccount() != session.getAttribute(User.ACCOUNT))
+	    return jsonUtil.setResultFail().toJsonString();
+    	if(userFavoriteManager.delete(id))
+    		return jsonUtil.setResultSuccess().toJsonString();
+    	else {
+    		return jsonUtil.setResultFail().toJsonString();
+		}
+    }
+    
     @RequestMapping(value = "/user/getFavorite", method = RequestMethod.POST)
     @ResponseBody
     public String user_addUserFavorite(HttpSession httpSession){
-    	if(userManager.isLogined(httpSession)){
     	    String account = getAccount(httpSession);
-    	    return jsonUtil.setModelList(userFavoriteManager.findByAccount(account)).toJsonString();
-    	}
-    	return jsonUtil.setResultFail().setTip("用户未登录").toJsonString();
+    	    return jsonUtil.setModelList(userFavoriteManager.findByAccount(account)).toJsonString("/user/getFavorite");
     }
     
     
@@ -123,7 +143,7 @@ public class AppController extends BaseController {
 	    @RequestParam(value = "type", required = false, defaultValue = "0") int type,
 	    @RequestParam(value = "size", required = false, defaultValue = "0") int size,
 	    @RequestParam(value = "currentPage", required = false, defaultValue = "0") int currentPage) {
-	if (type > 0 && size > 0 && currentPage > 0) {
+	if (type >= 0 && size > 0 && currentPage > 0) {
 	    List<Enterprise> enterprises = enterpriseManager.getEnterprise(
 		    size, type, currentPage);
 	    return jsonUtil.setResultSuccess().setModelList(enterprises).toJsonString(
@@ -212,8 +232,7 @@ public class AppController extends BaseController {
 	    HttpSession httpSession) {
 	    if (userManager.isLogined(httpSession))
 		return jsonUtil.setJsonObject("User",
-			userManager.findByAccount((String) httpSession.getAttribute(User.ACCOUNT))).toJsonString(
-			"/user/getUserInfo");
+			userManager.findByAccount((String) httpSession.getAttribute(User.ACCOUNT))).setResultSuccess().toJsonString("/user/getUserInfo");
 	    return jsonUtil.setResultFail().setTip("用户未登录").toJsonString();
     }
 
@@ -223,6 +242,8 @@ public class AppController extends BaseController {
 	    HttpSession httpSession,
 	    @RequestParam(value = "phoneNumber", required = false, defaultValue = "") String phoneNumber,
 	    @RequestParam(value = "type", required = false, defaultValue = "0") int type) {
+	if(!allow_number.contains(phoneNumber))
+	    return jsonUtil.setResultFail("此号码未在测试名单中，请和管理员联系").toJsonString();
 	if (StringUtil.isMobile(phoneNumber)) {
 	    if (type<=1 && userManager.isExist(phoneNumber))
 		return jsonUtil.setResultFail("此账号以存在").toJsonString();
@@ -234,18 +255,18 @@ public class AppController extends BaseController {
 	    String res = "";
 	    switch (type) {
 	    case 0:
-		res = sms.send(phoneNumber, VerificationCode, timeLimit);
+		res = sms.sendSMS(phoneNumber, VerificationCode, timeLimit, SMS.RegisterTemplateId);
 		break;
 	    // 待定，可用多种模板
 	    case 1:
-		res = sms.send(phoneNumber, VerificationCode, timeLimit);
+		res = sms.sendSMS(phoneNumber, VerificationCode, timeLimit, SMS.RegisterTemplateId);
 		break;
 		
 	    case 2:
-		res = sms.send(phoneNumber, VerificationCode, timeLimit, "1");
+		res = sms.sendSMS(phoneNumber, VerificationCode, timeLimit, SMS.RegisterTemplateId);
 		break;
 	    default:
-		res = sms.send(phoneNumber, VerificationCode, timeLimit);
+		res = sms.sendSMS(phoneNumber, VerificationCode, timeLimit, SMS.RegisterTemplateId);
 		break;
 	    }
 	    if (res.equals("success")) {
@@ -350,7 +371,7 @@ public class AppController extends BaseController {
 	    HttpSession httpSession,
 	    @RequestParam(value = "password", required = false, defaultValue = "") String password,
 	    @RequestParam(value = "device", required = false, defaultValue = "0") int device) {
-	if (StringUtil.hasText(password) && device>=User.DRVICE_OTHER && device<User.DRVICE_IPHONE) {
+	if (StringUtil.hasText(password) && device>=User.DRVICE_OTHER && device<=User.DRVICE_IPHONE) {
 	    Object phoneAttr = httpSession.getAttribute("phoneNumber");
 	    Object flagAttr = httpSession.getAttribute("verify");
 	    if (phoneAttr == null || flagAttr == null)
@@ -501,7 +522,7 @@ public class AppController extends BaseController {
 	if(size <= 0)
 	    return jsonUtil.setResultFail("参数不合法").toJsonString();
 	List<Meeting> meetings = meetingManager.findRecentMeeting(new PageBean(1, 0, size),Meeting.STATUS,Meeting.ON_PUBLISTH);
-	return jsonUtil.setModelList(meetings).toJsonString("/user/getRecentMeeting");
+	return jsonUtil.setResultSuccess().setModelList(meetings).toJsonString("/user/getRecentMeeting");
     }
     
     @RequestMapping(value = "/user/getMeetings", method = RequestMethod.POST)
@@ -514,8 +535,23 @@ public class AppController extends BaseController {
 	paramMap.put(Meeting.ENTERPRISE_ID, id);
 	paramMap.put(Meeting.STATUS, Meeting.ON_PUBLISTH);
 	List<Meeting> meetings = meetingManager.findBySql(Meeting.TABLE_NAME, paramMap);
-	return jsonUtil.setModelList(meetings).toJsonString("/user/getMeetings");
+	return jsonUtil.setResultSuccess().setModelList(meetings).toJsonString("/user/getMeetings");
     }
+    
+    
+    @RequestMapping(value = "/user/getMeetingById", method = RequestMethod.POST)
+    @ResponseBody
+    public String user_getMeetingById(
+	    @RequestParam(value = "id", required = false, defaultValue = "0") int id) {
+	if(id <= 0)
+	    return jsonUtil.setResultFail("参数不合法").toJsonString();
+	Meeting meeting = meetingManager.find(id);
+	if(meeting == null)
+	    return jsonUtil.setResultFail("此id不存在").toJsonString();
+	return jsonUtil.setJsonObject("meeting", meeting).setResultSuccess().toJsonString("/user/getMeetingById");
+    }
+    
+    
     
     @RequestMapping(value = "/user/getRecentVideo", method = RequestMethod.POST)
     @ResponseBody
@@ -524,7 +560,7 @@ public class AppController extends BaseController {
 	if(size <= 0)
 	    return jsonUtil.setResultFail("参数不合法").toJsonString();
 	List<Video> videos = videoManager.findRecentMeeting(new PageBean(0, size),Video.STATUS,Video.ON_PUBLISTH);
-	return jsonUtil.setModelList(videos).toJsonString("/user/getRecentVideo");
+	return jsonUtil.setResultSuccess().setModelList(videos).toJsonString("/user/getRecentVideo");
     }
     
     @RequestMapping(value = "/user/getVideoes", method = RequestMethod.POST)
@@ -537,10 +573,74 @@ public class AppController extends BaseController {
 	paramMap.put(Video.ENTERPRISE_ID, id);
 	paramMap.put(Video.STATUS, Meeting.ON_PUBLISTH);
 	List<Video> videos = videoManager.findBySql(Video.TABLE_NAME, paramMap);
-	return jsonUtil.setModelList(videos).toJsonString("/user/getVideoes"); 
+	return jsonUtil.setResultSuccess().setModelList(videos).toJsonString("/user/getVideoes"); 
     }
+    
+    @RequestMapping(value = "/user/getVideoById", method = RequestMethod.POST)
+    @ResponseBody
+    public String user_getVideoById(
+	    @RequestParam(value = "id", required = false, defaultValue = "0") int id) {
+	if(id <= 0)
+	    return jsonUtil.setResultFail("参数不合法").toJsonString();
+	 Video video = videoManager.find(id);
+	 if(video == null)
+	     return jsonUtil.setResultFail("此id不存在").toJsonString();
+	 return jsonUtil.setResultSuccess().setJsonObject("video", video).toJsonString("/user/getVideoById");
+    }
+    
+    @RequestMapping(value = "/user/getEnterTypes", method = RequestMethod.POST)
+    @ResponseBody
+    public String user_getEnterTypes(
+	    @RequestParam(value = "enterpriseId", required = false, defaultValue = "0") int enterpriseId, 
+	    @RequestParam(value = "type", required = false, defaultValue = "0") int type) {
+	Map<String, Object> paramMap = new HashMap<String, Object>();
+	paramMap.put(EnterpriseMedicineType.ENTERPRISE_ID, enterpriseId);
+	paramMap.put(EnterpriseMedicineType.GIB_TYPE, type);
+	List<EnterpriseMedicineType> enterpriseMedicineTypes = enterpriseMedicineTypeManager.findBySql(EnterpriseMedicineType.TABLE_NAME, paramMap);
+	List<EnterTypesVO> enterTypesVOs = new LinkedList<EnterTypesVO>();
+	for (EnterpriseMedicineType enterpriseMedicineType : enterpriseMedicineTypes) {
+	    enterTypesVOs.add(new EnterTypesVO(enterpriseMedicineType.getBackGroundMedicineType()));
+	}
+	return jsonUtil.setResultSuccess().setJsonObject("MedicineTypes", enterTypesVOs).toJsonString();
+	
+    }
+    
+    @RequestMapping(value = "/user/getEnterMedicines", method = RequestMethod.POST)
+    @ResponseBody
+    public String user_getEnterMedicineList(
+	    @RequestParam(value = "enterpriseId", required = false, defaultValue = "0") int enterpriseId, 
+	    @RequestParam(value = "medicineTypeId", required = false, defaultValue = "0") int medicineTypeId) {
+	if(enterpriseId <=0 || medicineTypeId <=0 )
+	    return jsonUtil.setResultFail("参数不合法").toJsonString();
+	MedicineType medicineType = medicineTypeManager.find(medicineTypeId);
+	if (medicineType == null)
+	    return jsonUtil.setResultFail("分类id不存在").toJsonString();
+	if(!medicineType.getFlag()){
+	    	List<MedicineType> allTypes = medicineTypeManager.getAllChild(medicineType);
+	    	List<BaseModel> models = new ArrayList<BaseModel>();
+            	Map<String, Object> paramMap = new HashMap<String, Object>();
+	    for (MedicineType allType : allTypes) {
+		paramMap.put(EnterChineseMedicine.MEDICINE_TYPE_ID,allType.getId());
+		paramMap.put(EnterChineseMedicine.ENTERPRISE_ID, enterpriseId);
+		if (medicineType.getGib_type() == EnterpriseMedicineType.WEST) {
+		    models.addAll(enterWestMedicineManager.findBySql(EnterWestMedicine.TABLE_NAME, paramMap));
+		} else if (medicineType.getGib_type() == EnterpriseMedicineType.CHINESE) {
+		    models.addAll(enterChineseMedicineManager.findBySql(EnterChineseMedicine.TABLE_NAME,paramMap));
+		}
+	    }
+            return jsonUtil.setResultSuccess().setModelList(models).toJsonString("/user/getEnterMedicines");
+	}
+	Map<String, Object> paramMap = new HashMap<String, Object>();
+	paramMap.put(EnterChineseMedicine.MEDICINE_TYPE_ID,medicineTypeId);
+	paramMap.put(EnterChineseMedicine.ENTERPRISE_ID, enterpriseId);
+	if (medicineType.getGib_type() == EnterpriseMedicineType.WEST) {
+	    jsonUtil.setResultSuccess().setModelList(enterWestMedicineManager.findBySql(EnterWestMedicine.TABLE_NAME, paramMap));
+	} else if (medicineType.getGib_type() == EnterpriseMedicineType.CHINESE) {
+	    jsonUtil.setResultSuccess().setModelList(enterChineseMedicineManager.findBySql(EnterChineseMedicine.TABLE_NAME,paramMap));
+	}
+	return jsonUtil.toJsonString("/user/getEnterMedicines");
+    }
+    
 
-    
-    
 
 }

@@ -1,0 +1,45 @@
+﻿<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="css/demo.css" rel="stylesheet" />
+    <link href="css/iconfont.css" rel="stylesheet" />
+    <link href="css/index.css" rel="stylesheet" />
+    <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" src="js/jquery.event.drag-1.5.min.js"></script>
+    <script type="text/javascript" src="js/jquery.touchSlider.js"></script>
+    <title>医药汇</title>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".main_image span").hover(function () {
+                $("#btn_prev,#btn_next").fadeIn()
+            }, function () {
+                $("#btn_prev,#btn_next").fadeOut()
+            });
+            var id = $("#meetingID").val();
+            $.get("http://localhost:8080/MedicineProject/Web/user/getPPT", {
+                meetingID: id 
+            }, function (data) {
+                var pptMessage = "";
+                if (data.result.trim() == "success") {
+                    $.each(data.images, function (times, result) {
+                        pptMessage = pptMessage + "<li><span style=\"background: url('.." + result + "') center top no-repeat;  display:block; background-size:100%;\"></span></li>"
+                    });
+                    $(".main_image ul").append(pptMessage);
+                    $(".main_image").touchSlider({
+                        flexible: true,
+                        speed: 200
+                    });
+                }
+            }, "json");
+        });
+    </script>
+</head>
+<body>
+    <header><input type="text" style="display:none;" id="meetingID" value="%value%"/></header>
+    <div class="content main_image">
+        <ul></ul>
+    </div>
+    <footer></footer>
+</body>
+</html>

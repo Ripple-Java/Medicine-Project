@@ -4,8 +4,10 @@ import static org.junit.Assert.*;
 
 import javax.annotation.Resource;
 
+import org.apache.log4j.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
@@ -38,18 +40,29 @@ public class ExcelUtilTest {
     @Resource(name=EnterpriseManager.NAME)
     private EnterpriseManager enterpriseManager;
     
+    private Logger logger = Logger.getLogger("test");
+    
     @Test
-    public void testWestToDB() throws Exception {
-	String excelPath = "E:\\Desktop\\MedicineProject\\西药汇总数据（正确）.xlsx";
-	String sheetName = "Sheet1";
+    public void testWestToDB2() throws Exception {
+	String excelPath = "E:\\Desktop\\MedicineProject\\西药汇总数据.xlsx";
+	String sheetName = "终版汇总";
+	excelUtil.setExcelPath(excelPath)
+		.setSheetName(sheetName);
+	System.out.println(excelUtil.setWestTypeToDatabase());
+    }
+    @Test
+    public void testWestToDB3() throws Exception {
+	String excelPath = "E:\\Desktop\\MedicineProject\\西药 -20151103（2）.xlsx";
+	String sheetName = "终版汇总";
 	excelUtil.setExcelPath(excelPath)
 		.setSheetName(sheetName);
 	System.out.println(excelUtil.setWestTypeToDatabase());
     }
     
+    
     @Test
     public void testChineseToDB() throws Exception {
-	String excelPath = "E:\\Desktop\\MedicineProject\\中药完整.xlsx";
+	String excelPath = "E:\\Desktop\\MedicineProject\\中药-20151030（2）.xlsx";
 	String sheetName = "中药";
 	excelUtil.setExcelPath(excelPath)
 		.setSheetName(sheetName);
@@ -68,7 +81,7 @@ public class ExcelUtilTest {
 	String str3 = "北京协和药厂,扬子江药业集团有限公司,哈药集团三精制药股份有限公司,云南白药集团股份有限公司,浙江新和成股份有限公司,天士力制药集团股份有限公司,齐鲁制药有限公司,修正药业集团股份有限公司,神威药业有限公司,石药集团有限公司";
 	String[] strs  = str.split(",");
 	for (String string : strs) {
-	    Enterprise enterprise = new Enterprise(Enterprise.DOMESTIC, string, "00000000");
+	    Enterprise enterprise = new Enterprise(Enterprise.DOMESTIC, string, "00000000", "enterpriseUrl");
 	    enterprise.setEmail("123456@ripplic.com");
 	    enterprise.setLogo("/images/enter/defaultLogo.png");
 	    enterprise.setPhone("1234567");
@@ -76,7 +89,7 @@ public class ExcelUtilTest {
 	}
 	String[] str2s = str2.split(",");
 	for (String string : str2s) {
-	    Enterprise enterprise = new Enterprise(Enterprise.FOREIGN, string, "00000000");
+	    Enterprise enterprise = new Enterprise(Enterprise.FOREIGN, string, "00000000", "enterpriseUrl");
 	    enterprise.setEmail("123456@ripplic.com");
 	    enterprise.setLogo("/images/enter/defaultLogo.png");
 	    enterprise.setPhone("1234567");
@@ -84,14 +97,18 @@ public class ExcelUtilTest {
 	}
 	String[] str3s = str3.split(",");
 	for (String string : str3s) {
-	    Enterprise enterprise = new Enterprise(Enterprise.JOINT, string, "00000000");
+	    Enterprise enterprise = new Enterprise(Enterprise.JOINT, string, "00000000", "enterpriseUrl");
 	    enterprise.setEmail("123456@ripplic.com");
 	    enterprise.setLogo("/images/enter/defaultLogo.png");
 	    enterprise.setPhone("1234567");
 	    enterpriseManager.save(enterprise);
 	}
 	
-	
+    }
+    
+    @Test
+    public void testName() throws Exception {
+	logger.debug("hello logger!");
     }
 
 }

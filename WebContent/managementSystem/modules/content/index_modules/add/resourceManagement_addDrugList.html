@@ -1,135 +1,264 @@
 ﻿<div class="bg"></div>
 <div class="add_drug_ChinaOrWestaside">
-    <ul>
-        <li class="add_drug_ChinaOrWestaside_unActive add_drug_ChinaOrWestaside_hadActive " onclick="add_drug_ChinaOrWestaside_action(1)">通用中药</li>
-        <li class="add_drug_ChinaOrWestaside_unActive" onclick="add_drug_ChinaOrWestaside_action(2)">通用西药</li>
-    </ul>
+	<ul>
+		<li
+			class="add_drug_ChinaOrWestaside_unActive add_drug_ChinaOrWestaside_hadActive "
+			onclick="add_drug_ChinaOrWestaside_action(1)">通用中药</li>
+		<li class="add_drug_ChinaOrWestaside_unActive"
+			onclick="add_drug_ChinaOrWestaside_action(2)">通用西药</li>
+	</ul>
 </div>
 <div class="addDrug">
-    <div class="addCommonChinaDrug">
-        <form>
-        <ul>
-        <li><label>通用中药添加</label></li>
-        <li>            
-            <p><label>药品名称：</label></p>
-            <p><input type="text" placeholder="请输入药品名称" maxlength="20"  required class="CommonChinaDrug_name" /></p>
-        </li>
-        <li>
-            <p><label>药品成分：</label></p>
-            <p><input type="text" placeholder="请输入药品成分" maxlength="20" required class="CommonChinaDrug_content" /></p>
-        </li>
-        <li>
-            <p><label>功效主治：</label></p>
-            <p><input type="text" placeholder="请输入功效主治" maxlength="20" required class="CommonChinaDrug_efficacy"/></p>
-        </li>
-        <li>
-            <p><label>用药监护：</label></p>
-            <p><input type="text" placeholder="请输入用药监护" maxlength="20" required class="CommonChinaDrug_annouce"/></p>
-        </li>
-        <li>
-            <p><label>制剂规格：</label></p>
-            <p><input type="text" placeholder="请输入制剂规格" maxlength="20" required class="CommonChinaDrug_preparations"/></p>
-        </li>
-        <li>
-            <p><label>用法用量：</label></p>
-            <p><input type="text" placeholder="请输入用法用量" maxlength="20" required class="CommonChinaDrug_manual"/></p>
-        </li>
-        <li>
-            <p><label>存储方法：</label></p>
-            <p><input type="text" placeholder="请输入存储方法" maxlength="20" required class="CommonChinaDrug_store"/></p>
-        </li>
-        <li>
-            <p><label>管理分类：</label></p>
-            <p><input type="text" placeholder="请输入管理分类" maxlength="20" required class="CommonChinaDrug_category"/></p>
-        </li>
-        <li>
-            <p><label>药品价格：</label></p>
-            <p><input type="text" placeholder="请输入药品价格" maxlength="20" required class="CommonChinaDrug_price"/></p>
-        </li>
-        <li>           
-            <input type="button"  value="取消" ng-click="addDrug(0);"/>
-            <button  onclick="addCommonChinaDrugButtonFunction();">保存</button>
-        </li>
-    </ul>
-    </form> 
-</div>
-    <div class="addCommonWestDrug" >
-    <form>
-        <ul>
-        <li><label>通用西药添加</label></li>
-        <li>            
-            <p><label>药品名称：</label></p>
-            <p><input type="text" placeholder="请输入药品名称" maxlength="20" required class="CommonWestDrug_name"/></p>
-        </li>
-        <li>            
-            <p><label>药品别名：</label></p>
-            <p><input type="text" placeholder="请输入药品别名" maxlength="20" required class="CommonWestDrug_othername"/></p>
-        </li>
-        <li>
-            <p><label>药品成分：</label></p>
-            <p><input type="text" placeholder="请输入药品成分" maxlength="20" required class="CommonWestDrug_content"/></p>
-        </li>
-        <li>
-            <p><label>临床运用：</label></p>
-            <p><input type="text" placeholder="请输入临床运用" maxlength="20" required class="CommonWestDrug_current_application"/></p>
-        </li>
-        <li>
-            <p><label>药理学：</label></p>
-            <p><input type="text" placeholder="请输入药理学" maxlength="20" required class="CommonWestDrug_pharmacolo"/></p>
-        </li>
-        <li>
-            <p><label>药效学：</label></p>
-            <p><input type="text" placeholder="请输入药效学" maxlength="20" required class="CommonWestDrug_pk_pd"/></p>
-        </li>
-        <li>
-            <p><label>药动学：</label></p>
-            <p><input type="text" placeholder="请输入药动学" maxlength="20" required class="CommonWestDrug_pharmacokinetics"/></p>
-        </li>
-        <li>
-            <p><label>注意事项：</label></p>
-            <p><input type="text" placeholder="请输入注意事项" maxlength="20" required class="CommonWestDrug_warn"/></p>
-        </li>
-        <li>
-            <p><label>不良反应：</label></p>
-            <p><input type="text" placeholder="请输入不良反应" maxlength="20" required class="CommonWestDrug_ADRS"/></p>
-        </li>
-        <li>
-            <p><label>药物相互作用：</label></p>
-            <p><input type="text" placeholder="请输入药物相互作用" maxlength="20" required class="CommonWestDrug_interaction"/></p>
-        </li>
-        <li>
-            <p><label>给药说明：</label></p>
-            <p><input type="text" placeholder="请输入给药说明" maxlength="20" required class="CommonWestDrug_dose_explain"/></p>
-        </li>
-        <li>
-            <p><label>用法用量：</label></p>
-            <p><input type="text" placeholder="请输入用法用量" maxlength="20" required class="CommonWestDrug_manual"/></p>
-        </li>
-        <li>
-            <p><label>成人用量：</label></p>
-            <p><input type="text" placeholder="请输入成人用量" maxlength="20" required class="CommonWestDrug_adult_dose"/></p>
-        </li>
-        <li>
-            <p><label>国外用法用量说明：</label></p>
-            <p><input type="text" placeholder="请输入国外用法用量说明" maxlength="20" required class="CommonWestDrug_foreign_dose"/></p>
-        </li>
-        <li>
-            <p><label>制剂规格：</label></p>
-            <p><input type="text" placeholder="请输入制剂规格" maxlength="20" required class="CommonWestDrug_preparations"/></p>
-        </li>
-        <li>
-            <p><label>存储方法：</label></p>
-            <p><input type="text" placeholder="请输入存储方法" maxlength="20" required class="CommonWestDrug_store"/></p>
-        </li>
-        <li>
-            <p><label>药品价格：</label></p>
-            <p><input type="text" placeholder="请输入药品价格" maxlength="20" required class="CommonWestDrug_price"/></p>
-        </li>
-        <li>           
-            <input type="button"  value="取消" ng-click="addDrug(0);"/>
-            <button onclick="addCommonWestDrugButtonFunction();">保存</button>
-        </li>
-    </ul>
-    </form>   
-</div>
+	<div class="addCommonChinaDrug">
+		<form>
+			<ul>
+				<li><label>通用中药添加</label></li>
+				<li>
+					<p>
+						<label>药品名称：</label>
+					</p>
+					<p>
+						<input type="text" placeholder="请输入药品名称" maxlength="20" required
+							class="CommonChinaDrug_name" />
+					</p>
+				</li>
+				<li>
+					<p>
+						<label>药品成分：</label>
+					</p>
+					<p>
+						<input type="text" placeholder="请输入药品成分" maxlength="20" required
+							class="CommonChinaDrug_content" />
+					</p>
+				</li>
+				<li>
+					<p>
+						<label>功效主治：</label>
+					</p>
+					<p>
+						<input type="text" placeholder="请输入功效主治" maxlength="20" required
+							class="CommonChinaDrug_efficacy" />
+					</p>
+				</li>
+				<li>
+					<p>
+						<label>用药监护：</label>
+					</p>
+					<p>
+						<input type="text" placeholder="请输入用药监护" maxlength="20" required
+							class="CommonChinaDrug_annouce" />
+					</p>
+				</li>
+				<li>
+					<p>
+						<label>制剂规格：</label>
+					</p>
+					<p>
+						<input type="text" placeholder="请输入制剂规格" maxlength="20" required
+							class="CommonChinaDrug_preparations" />
+					</p>
+				</li>
+				<li>
+					<p>
+						<label>用法用量：</label>
+					</p>
+					<p>
+						<input type="text" placeholder="请输入用法用量" maxlength="20" required
+							class="CommonChinaDrug_manual" />
+					</p>
+				</li>
+				<li>
+					<p>
+						<label>存储方法：</label>
+					</p>
+					<p>
+						<input type="text" placeholder="请输入存储方法" maxlength="20" required
+							class="CommonChinaDrug_store" />
+					</p>
+				</li>
+				<li>
+					<p>
+						<label>管理分类：</label>
+					</p>
+					<p>
+						<input type="text" placeholder="请输入管理分类" maxlength="20" required
+							class="CommonChinaDrug_category" />
+					</p>
+				</li>
+				<li>
+					<p>
+						<label>药品价格：</label>
+					</p>
+					<p>
+						<input type="text" placeholder="请输入药品价格" maxlength="20" required
+							class="CommonChinaDrug_price" />
+					</p>
+				</li>
+				<li><input type="button" value="取消" ng-click="addDrug(0);" />
+					<button onclick="addCommonChinaDrugButtonFunction();">保存</button></li>
+			</ul>
+		</form>
+	</div>
+	<div class="addCommonWestDrug">
+		<form>
+			<ul>
+				<li><label>通用西药添加</label></li>
+				<li>
+					<p>
+						<label>药品名称：</label>
+					</p>
+					<p>
+						<input type="text" placeholder="请输入药品名称" maxlength="20" required
+							class="CommonWestDrug_name" />
+					</p>
+				</li>
+				<li>
+					<p>
+						<label>药品别名：</label>
+					</p>
+					<p>
+						<input type="text" placeholder="请输入药品别名" maxlength="20" required
+							class="CommonWestDrug_othername" />
+					</p>
+				</li>
+				<li>
+					<p>
+						<label>药品成分：</label>
+					</p>
+					<p>
+						<input type="text" placeholder="请输入药品成分" maxlength="20" required
+							class="CommonWestDrug_content" />
+					</p>
+				</li>
+				<li>
+					<p>
+						<label>临床运用：</label>
+					</p>
+					<p>
+						<input type="text" placeholder="请输入临床运用" maxlength="20" required
+							class="CommonWestDrug_current_application" />
+					</p>
+				</li>
+				<li>
+					<p>
+						<label>药理学：</label>
+					</p>
+					<p>
+						<input type="text" placeholder="请输入药理学" maxlength="20" required
+							class="CommonWestDrug_pharmacolo" />
+					</p>
+				</li>
+				<li>
+					<p>
+						<label>药效学：</label>
+					</p>
+					<p>
+						<input type="text" placeholder="请输入药效学" maxlength="20" required
+							class="CommonWestDrug_pk_pd" />
+					</p>
+				</li>
+				<li>
+					<p>
+						<label>药动学：</label>
+					</p>
+					<p>
+						<input type="text" placeholder="请输入药动学" maxlength="20" required
+							class="CommonWestDrug_pharmacokinetics" />
+					</p>
+				</li>
+				<li>
+					<p>
+						<label>注意事项：</label>
+					</p>
+					<p>
+						<input type="text" placeholder="请输入注意事项" maxlength="20" required
+							class="CommonWestDrug_warn" />
+					</p>
+				</li>
+				<li>
+					<p>
+						<label>不良反应：</label>
+					</p>
+					<p>
+						<input type="text" placeholder="请输入不良反应" maxlength="20" required
+							class="CommonWestDrug_ADRS" />
+					</p>
+				</li>
+				<li>
+					<p>
+						<label>药物相互作用：</label>
+					</p>
+					<p>
+						<input type="text" placeholder="请输入药物相互作用" maxlength="20" required
+							class="CommonWestDrug_interaction" />
+					</p>
+				</li>
+				<li>
+					<p>
+						<label>给药说明：</label>
+					</p>
+					<p>
+						<input type="text" placeholder="请输入给药说明" maxlength="20" required
+							class="CommonWestDrug_dose_explain" />
+					</p>
+				</li>
+				<li>
+					<p>
+						<label>用法用量：</label>
+					</p>
+					<p>
+						<input type="text" placeholder="请输入用法用量" maxlength="20" required
+							class="CommonWestDrug_manual" />
+					</p>
+				</li>
+				<li>
+					<p>
+						<label>成人用量：</label>
+					</p>
+					<p>
+						<input type="text" placeholder="请输入成人用量" maxlength="20" required
+							class="CommonWestDrug_adult_dose" />
+					</p>
+				</li>
+				<li>
+					<p>
+						<label>国外用法用量说明：</label>
+					</p>
+					<p>
+						<input type="text" placeholder="请输入国外用法用量说明" maxlength="20"
+							required class="CommonWestDrug_foreign_dose" />
+					</p>
+				</li>
+				<li>
+					<p>
+						<label>制剂规格：</label>
+					</p>
+					<p>
+						<input type="text" placeholder="请输入制剂规格" maxlength="20" required
+							class="CommonWestDrug_preparations" />
+					</p>
+				</li>
+				<li>
+					<p>
+						<label>存储方法：</label>
+					</p>
+					<p>
+						<input type="text" placeholder="请输入存储方法" maxlength="20" required
+							class="CommonWestDrug_store" />
+					</p>
+				</li>
+				<li>
+					<p>
+						<label>药品价格：</label>
+					</p>
+					<p>
+						<input type="text" placeholder="请输入药品价格" maxlength="20" required
+							class="CommonWestDrug_price" />
+					</p>
+				</li>
+				<li><input type="button" value="取消" ng-click="addDrug(0);" />
+					<button onclick="addCommonWestDrugButtonFunction();">保存</button></li>
+			</ul>
+		</form>
+	</div>
 </div>

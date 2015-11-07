@@ -34,6 +34,9 @@ public class EnterWestMedicine extends BaseModel {
     public static final String WEST_MEDICINE_ID = "west_medicine_id";
     public static final String MEDICINE_TYPE_ID = "medicine_type_id";
     public static final String NAME = "name";
+    public static final String ENTERPRISE_ID = "enterpriese_id";
+    public static final String STATUS = "status";
+    
 
     public static final int ON_PUBLISTH = 1;
     public static final int ON_CHECKING = 2;
@@ -61,6 +64,12 @@ public class EnterWestMedicine extends BaseModel {
     @JoinColumn(name = WEST_MEDICINE_ID)
     private WestMedicine westMedicine;
     
+    // 关联企业
+    @ManyToOne(fetch = FetchType.LAZY)
+    @Cascade(CascadeType.SAVE_UPDATE)
+    @JoinColumn(name = ENTERPRISE_ID)
+    private Enterprise enterprise;
+    
     
 
     // 企业名称
@@ -70,7 +79,7 @@ public class EnterWestMedicine extends BaseModel {
     // 西药药品名称
     @Column(name = "name", length = 255, nullable = false)
     private String name;
-
+    
     // 别名
     @Column(name = "other_name", columnDefinition = "TEXT", nullable = false)
     private String other_name;
@@ -86,14 +95,6 @@ public class EnterWestMedicine extends BaseModel {
     // 药理学
     @Column(name = "pharmacolo", columnDefinition = "TEXT", nullable = true)
     private String pharmacolo;
-
-    // 药效学
-    @Column(name = "pk_pd", columnDefinition = "TEXT", nullable = true)
-    private String pk_pd;
-
-    // 药动学
-    @Column(name = "pharmacokinetics", columnDefinition = "TEXT", nullable = true)
-    private String pharmacokinetics;
 
     // 注意事项
     @Column(name = "warn", columnDefinition = "TEXT", nullable = true)
@@ -113,23 +114,11 @@ public class EnterWestMedicine extends BaseModel {
 
     // 用法用量
     @Column(name = "manual", columnDefinition = "TEXT", nullable = true)
-    private String manual;
-
-    // 成人用量
-    @Column(name = "adult_dose", columnDefinition = "TEXT", nullable = true)
-    private String adult_dose;
-
-    // 国外用法用量参考
-    @Column(name = "foreign_dose", columnDefinition = "TEXT", nullable = true)
-    private String foreign_dose;
+    private String  manual;
 
     // 制剂与规格
     @Column(name = "preparations", columnDefinition = "TEXT", nullable = true)
     private String preparations;
-
-    // 贮法
-    @Column(name = "store", columnDefinition = "TEXT", nullable = true)
-    private String store;
 
     // 药品价格
     @Column(name = "price", length = 10, nullable = false, precision = 2)
@@ -148,11 +137,8 @@ public class EnterWestMedicine extends BaseModel {
     public EnterWestMedicine(Medicine medicine,
 	    MedicineType medicineType,
 	    String enterprise_name, String name, String other_name,
-	    String content, String current_application, String pharmacolo,
-	    String pk_pd, String pharmacokinetics, String warn, String aDRS,
-	    String interaction, String dose_explain, String manual,
-	    String adult_dose, String foreign_dose, String preparations,
-	    String store, Double price, Integer status) {
+	    String content, String current_application, String pharmacolo, String warn, String aDRS,
+	    String interaction, String dose_explain, String manual, String preparations, Double price, Integer status) {
 	super();
 	this.medicine = medicine;
 	this.medicineType = medicineType;
@@ -162,17 +148,12 @@ public class EnterWestMedicine extends BaseModel {
 	this.content = content;
 	this.current_application = current_application;
 	this.pharmacolo = pharmacolo;
-	this.pk_pd = pk_pd;
-	this.pharmacokinetics = pharmacokinetics;
 	this.warn = warn;
 	ADRS = aDRS;
 	this.interaction = interaction;
 	this.dose_explain = dose_explain;
 	this.manual = manual;
-	this.adult_dose = adult_dose;
-	this.foreign_dose = foreign_dose;
 	this.preparations = preparations;
-	this.store = store;
 	this.price = price;
 	this.status = status;
     }
@@ -187,46 +168,24 @@ public class EnterWestMedicine extends BaseModel {
 	this.content = enterWestVO.getContent();
 	this.current_application = enterWestVO.getCurrent_application();
 	this.pharmacolo = enterWestVO.getPharmacolo();
-	this.pk_pd = enterWestVO.getPk_pd();
-	this.pharmacokinetics = enterWestVO.getPharmacokinetics();
 	this.warn = enterWestVO.getWarn();
 	ADRS = enterWestVO.getADRS();
 	this.interaction = enterWestVO.getInteraction();
 	this.dose_explain = enterWestVO.getDose_explain();
 	this.manual = enterWestVO.getManual();
-	this.adult_dose = enterWestVO.getAdult_dose();
-	this.foreign_dose = enterWestVO.getForeign_dose();
 	this.preparations = enterWestVO.getPreparations();
-	this.store = enterWestVO.getStore();
 	this.price = enterWestVO.getPrice();
 	this.status = ON_CHECKING;
 	this.sortKey = sortKey;
+	this.enterprise = enterprise;
     }
     
     
-
-    @Override
-    public String toString() {
-	return "EnterWestMedicine [id=" + id + ", enterprise_name="
-		+ enterprise_name + ", name=" + name + ", other_name="
-		+ other_name + ", content=" + content
-		+ ", current_application=" + current_application
-		+ ", pharmacolo=" + pharmacolo + ", pk_pd=" + pk_pd
-		+ ", pharmacokinetics=" + pharmacokinetics + ", warn=" + warn
-		+ ", ADRS=" + ADRS + ", interaction=" + interaction
-		+ ", dose_explain=" + dose_explain + ", manual=" + manual
-		+ ", adult_dose=" + adult_dose + ", foreign_dose="
-		+ foreign_dose + ", preparations=" + preparations + ", store="
-		+ store + ", price=" + price + ", status=" + status + "]";
-    }
 
     public String getADRS() {
 	return ADRS;
     }
 
-    public String getAdult_dose() {
-	return adult_dose;
-    }
 
     public String getContent() {
 	return content;
@@ -240,9 +199,6 @@ public class EnterWestMedicine extends BaseModel {
 	return dose_explain;
     }
 
-    public String getForeign_dose() {
-	return foreign_dose;
-    }
 
     public Integer getId() {
 	return id;
@@ -264,17 +220,12 @@ public class EnterWestMedicine extends BaseModel {
 	return other_name;
     }
 
-    public String getPharmacokinetics() {
-	return pharmacokinetics;
-    }
+
 
     public String getPharmacolo() {
 	return pharmacolo;
     }
 
-    public String getPk_pd() {
-	return pk_pd;
-    }
 
     public String getPreparations() {
 	return preparations;
@@ -284,9 +235,6 @@ public class EnterWestMedicine extends BaseModel {
 	return price;
     }
 
-    public String getStore() {
-	return store;
-    }
 
     public String getWarn() {
 	return warn;
@@ -296,9 +244,6 @@ public class EnterWestMedicine extends BaseModel {
 	ADRS = aDRS;
     }
 
-    public void setAdult_dose(String adult_dose) {
-	this.adult_dose = adult_dose;
-    }
 
     public void setContent(String content) {
 	this.content = content;
@@ -310,10 +255,6 @@ public class EnterWestMedicine extends BaseModel {
 
     public void setDose_explain(String dose_explain) {
 	this.dose_explain = dose_explain;
-    }
-
-    public void setForeign_dose(String foreign_dose) {
-	this.foreign_dose = foreign_dose;
     }
 
     public void setId(Integer id) {
@@ -336,16 +277,9 @@ public class EnterWestMedicine extends BaseModel {
 	this.other_name = other_name;
     }
 
-    public void setPharmacokinetics(String pharmacokinetics) {
-	this.pharmacokinetics = pharmacokinetics;
-    }
 
     public void setPharmacolo(String pharmacolo) {
 	this.pharmacolo = pharmacolo;
-    }
-
-    public void setPk_pd(String pk_pd) {
-	this.pk_pd = pk_pd;
     }
 
     public void setPreparations(String preparations) {
@@ -356,9 +290,6 @@ public class EnterWestMedicine extends BaseModel {
 	this.price = price;
     }
 
-    public void setStore(String store) {
-	this.store = store;
-    }
 
     public void setWarn(String warn) {
 	this.warn = warn;
@@ -410,6 +341,14 @@ public class EnterWestMedicine extends BaseModel {
 
     public void setMedicineType(MedicineType medicineType) {
         this.medicineType = medicineType;
+    }
+
+    public Enterprise getEnterprise() {
+        return enterprise;
+    }
+
+    public void setEnterprise(Enterprise enterprise) {
+        this.enterprise = enterprise;
     }
     
     

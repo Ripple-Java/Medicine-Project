@@ -1,20 +1,42 @@
 package com.rippletec.medicine.SMS;
 
 import java.util.HashMap;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.cloopen.rest.sdk.CCPRestSmsSDK;
+import com.rippletec.medicine.SMS.client.JsonReqClient;
 
 public class SMS {
 
-    private String serverUrl = "sandboxapp.cloopen.com";
+    private String serverUrl = "app.cloopen.com";
     private String port = "8883";
     private String ACCOUNT_SID = "aaf98f894fac945e014fafeb506801b5";
     private String AUTH_TOKEN = "3ce26f81c1c8428593d6e17ad2d0ed66";
-    private String APP_ID = "8a48b5514fac9535014fafeba2690515";
+    private String APP_ID = "8a48b55150c7e45c0150c80a9bb10101";
     private String SMS_Template = "1";
     private String[] templateArray = new String[] { "00000", "1" };
     
-    public String send(String phoneNumber, String VerificationCode, String timeLimit){
-	return send(phoneNumber, VerificationCode, timeLimit, "1");
+    private String accountSid = "c76945aef05a3af729b7fffd725fde47";
+    private String authToken = "471cece0f1876416386a690af9413dbd";
+    private String appId = "0b1b1aee07ce46e3a643db3ae6cf6e66";
+    public static String RegisterTemplateId = "15725";
+    
+    private JsonReqClient client = new JsonReqClient();
+    
+    public String sendSMS(String phoneNumber, String VerificationCode, String timeLimit, String template){
+	String res =  client.templateSMS(accountSid, authToken, appId, template, phoneNumber, VerificationCode+","+timeLimit);
+	JSONObject jsonObject =  JSON.parseObject(res);
+	JSONObject resObject = jsonObject.getJSONObject("resp");
+	if("000000".equals(resObject.get("respCode"))){
+	    // 正常返回输出data包体信息（map）
+	    return "success";
+	} else {
+	    // 异常返回输出错误码和错误信息
+	    System.out.println("错误码=" + resObject.get("respCode") + " 错误信息= "
+		    + resObject.get("templateSMS").toString());
+	    return resObject.get("templateSMS").toString();
+	}
     }
 
     public String send(String phoneNumber, String VerificationCode, String timeLimit, String template) {

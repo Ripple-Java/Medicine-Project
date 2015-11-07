@@ -16,7 +16,7 @@ public class BackGroundMedicineTypeDaoImpl extends BaseDaoImpl<BackGroundMedicin
 
     @Override
     public String getClassName() {
-	return BackGroundMedicineType.ClASS_NAME;
+	return BackGroundMedicineType.CLASS_NAME;
     }
 
     @Override

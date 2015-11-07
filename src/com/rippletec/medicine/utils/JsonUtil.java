@@ -126,7 +126,7 @@ public class JsonUtil {
     }
     
     public String toJsonString() {
-	String jssonString =  JSON.toJSONString(jsonObjectMap,SerializerFeature.WriteMapNullValue);
+	String jssonString =  JSON.toJSONString(jsonObjectMap,SerializerFeature.DisableCircularReferenceDetect,SerializerFeature.WriteMapNullValue);
 	clear();
 	return jssonString;
     }
@@ -167,9 +167,7 @@ public class JsonUtil {
 	    
 	    @Override
 	    public boolean apply(JSONSerializer arg0, Object object, String name) {
-		if(isConllection(object))
-		    return true;
-		if (isModel(object))
+		if (object instanceof Set || isModel(object))
 		    return !jsonMap.get(url).contains(name);
 		else
 		    return true;

@@ -8,13 +8,14 @@ public class DBLogEntity {
     
     private Object entity;
     
+    
     DBLogEntity(){};
     
 
     public DBLogEntity(String tableName, Object entity) {
 	super();
 	this.tableName = tableName;
-	this.entity = entity;
+	this.entity = entity;	
     }
     
 
@@ -40,6 +41,9 @@ public class DBLogEntity {
     public void setEntity(Object entity) {
         this.entity = entity;
     }
+
+
+    
     
     
 

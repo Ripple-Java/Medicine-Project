@@ -2,11 +2,25 @@ package com.rippletec.medicine.utils;
 
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import net.sourceforge.pinyin4j.PinyinHelper;
+import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
+import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
+import net.sourceforge.pinyin4j.format.HanyuPinyinToneType;
+import net.sourceforge.pinyin4j.format.HanyuPinyinVCharType;
+import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
+
+import com.rippletec.medicine.model.ChineseMedicine;
+import com.rippletec.medicine.model.EnterChineseMedicine;
+import com.rippletec.medicine.model.EnterWestMedicine;
 import com.rippletec.medicine.model.Enterprise;
+import com.rippletec.medicine.model.WestMedicine;
 
 /**
  * @author Liuyi
@@ -51,6 +65,9 @@ public class StringUtil {
      */
     public static final String REGEX_NUMBER = "^[0-9]*$";
     
+  //从当前系统中获取换行符，默认是"\n"  
+  public static final  String lineSeparator = "\n";
+    
     
 
     public static String generateCode(int charCount) {
@@ -88,8 +105,22 @@ public class StringUtil {
 	return (System.currentTimeMillis() + "").substring(3);
     }
 
-    public static String getCountSql(String className) {
-	return "select count(*) from " + className + " as c";
+    public static String getCountSql(String tableName) {
+	return getCountSql(tableName, new String[]{});
+    }
+    
+    public static String getCountSql(String tableName, String param){
+	return getCountSql(tableName, new String[]{param});
+    }
+    
+    public static String getCountSql(String tableName, String[] param){
+	if(param.length == 0)
+	    return "select count(*) from " + tableName;
+	String sql = "select count(*) from " + tableName + "  where ";
+	for (int i = 0; i < param.length; i++) {
+	    sql += param[i]+"=? and ";
+	}
+	return sql.substring(0,sql.length()-4);
     }
 
     public static String getSearchHql(String className, String param) {
@@ -127,16 +158,16 @@ public class StringUtil {
      * @return 返回实例 from Enterprise q where q.type=:type and q.phone=:phone
      */
     public static String getSelectHql(String Name, String[] params) {
-	String hql = "from " + Name;
+	String hql = "from " + Name +" q";
 	if (params == null || params.length == 0)
-	    return hql;
-	hql += " q where ";
+	    return getOrderBy(Name, hql);
+	hql += " where ";
 	for (int i = 0; i < params.length; i++) {
 	    String param = params[i];
 	    hql += "q." + param + "=:" + param + " and ";
 	}
 	hql = hql.substring(0, hql.length() - 4);
-	return hql;
+	return getOrderBy(Name, hql);
     }
 
     public static String getSelectSql(String tableName, String param) {
@@ -146,14 +177,14 @@ public class StringUtil {
     public static String getSelectSql(String tableName, String[] params) {
 	String hql = "select * from " + tableName;
 	if (params == null || params.length == 0)
-	    return hql;
+	    return getOrderBy(tableName, hql);
 	hql += " where ";
 	for (int i = 0; i < params.length; i++) {
 	    String param = params[i];
 	    hql += param + "=? and ";
 	}
 	hql = hql.substring(0, hql.length() - 4);
-	return hql;
+	return getOrderBy(tableName,hql);
     }
 
 
@@ -165,6 +196,15 @@ public class StringUtil {
 	return true;
     }
     
+    public static boolean isPositive(int ...strs) {
+  	if(strs.length < 1)
+  	    return false;
+  	for (int i : strs) {
+	    if(i < 1)
+		return false;
+	}
+  	return true;
+      }
     
 
     public static boolean hasText(String[] strs) {
@@ -175,6 +215,15 @@ public class StringUtil {
 		return false;
 	}
 	return true;
+    }
+    
+    public static String getOrderBy(String name, String hql) {
+	if(name.equals(ChineseMedicine.CLASS_NAME) || name.equals(WestMedicine.CLASS_NAME) || name.equals(EnterChineseMedicine.CLASS_NAME) || name.equals(EnterWestMedicine.CLASS_NAME))
+	    hql += " ORDER BY q.sortKey asc";
+	else if(name.equals(ChineseMedicine.TABLE_NAME) || name.equals(WestMedicine.TABLE_NAME) || name.equals(EnterChineseMedicine.CLASS_NAME) || name.equals(EnterWestMedicine.TABLE_NAME))
+	    hql += " ORDER BY sortKey asc";
+	System.out.println(hql);
+	return hql;
     }
 
     /**
@@ -261,7 +310,86 @@ public class StringUtil {
 	    return true;
 	return false;
     }
-
     
+    
+    public static String formatData(String data){
+	List<String> resStr = new ArrayList<String>();
+	List<String> firStrings = matcherData(data, 1);
+	if(firStrings == null || firStrings.size()<1)
+	    resStr =  matcherData(data, 2);
+	else {
+	    for (String string : firStrings) {
+		    List<String> secondList = matcherData(string, 2);
+		    if(secondList != null && secondList.size() >0){
+			resStr.addAll(secondList);
+			continue;
+		    }
+		    resStr.add(string);
+		}
+	}
+	String outString = "";
+	for (String string : resStr) {
+	    outString += string+lineSeparator;
+	}
+	String reg = "贮法：[^\\x00-\\xff]+。";
+	Matcher matcher = Pattern.compile(reg).matcher(outString);
+	int last = 0;
+	StringBuilder stringBuilder = new StringBuilder();
+	while (matcher.find()) {
+	    String findStr = matcher.group();
+	    String tempString = outString.substring(last,matcher.end());
+	    stringBuilder.append(tempString.replaceAll(findStr, "\n"+findStr+"\n"));
+	    last = matcher.end();
+	}
+	stringBuilder.append(outString.substring(last, outString.length()));
+	return stringBuilder.toString();
+    }
+    
+    public static List<String> matcherData(String data , int type) {
+	String firstReg = "[0-9][\\.][^\\d]";
+	String secondReg = "[(][0-9][)]";
+	Matcher matcher;
+	List<String> res = new ArrayList<String>();
+	if(type == 1)
+	    matcher = Pattern.compile(firstReg).matcher(data);
+	else {
+	    matcher = Pattern.compile(secondReg).matcher(data);
+	}
+	int lastIndex = 0;
+	while(matcher.find()){
+	    res.add(data.substring(lastIndex,matcher.start()));
+	    lastIndex = matcher.start();
+	}
+	res.add(data.substring(lastIndex,data.length()));
+	return res;
+    }
+    
+
+    public static String toPinYin(String words) {
+	HanyuPinyinOutputFormat format = new HanyuPinyinOutputFormat();
+	format.setCaseType(HanyuPinyinCaseType.LOWERCASE);
+	format.setToneType(HanyuPinyinToneType.WITHOUT_TONE);
+	format.setVCharType(HanyuPinyinVCharType.WITH_V);
+
+	char[] inputs = words.trim().toCharArray();
+	String outPut = "";
+	try {
+	    for (char c : inputs) {
+		if (Character.toString(c).matches(REGEX_CHINESE))
+		{
+		    String[] tamp = PinyinHelper.toHanyuPinyinStringArray(c,
+			    format);
+			outPut += tamp[0];
+
+		}
+		else {
+		    outPut += Character.toString(c);
+		}
+	    }
+	} catch (BadHanyuPinyinOutputFormatCombination e) {
+	    e.printStackTrace();
+	}
+	return outPut;
+    }
 
 }

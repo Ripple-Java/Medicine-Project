@@ -51,8 +51,14 @@ public class Video extends BaseModel {
     @Column(name = "speaker", length = 40, nullable = true)
     private String speaker;
     
+    @Column(name = "pageUrl", length = 100, nullable = true)
+    private String pageUrl;
+    
     @Column(name = "subject", length = 40, nullable = true)
     private String subject;
+    
+    @Column(name = "imgUrl", length = 100, nullable = true)
+    private String imgUrl;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @Cascade(CascadeType.ALL)
@@ -72,7 +78,7 @@ public class Video extends BaseModel {
     }
  
     public Video(String name, String path, String speaker, String subject,
-	    Enterprise enterprise, Integer length, Integer status, Date passDate) {
+	    Enterprise enterprise, Integer length, Integer status, Date passDate, String pageUrl, String imgUrl) {
 	super();
 	this.name = name;
 	this.path = path;
@@ -82,6 +88,8 @@ public class Video extends BaseModel {
 	this.length = length;
 	this.status = status;
 	this.passDate = passDate;
+	this.pageUrl = pageUrl;
+	this.imgUrl = imgUrl;
     }
 
 
@@ -89,6 +97,24 @@ public class Video extends BaseModel {
     public String toString() {
 	return "Video [id=" + id + ", name=" + name + ", path=" + path
 		+ ", length=" + length + "]";
+    }
+    
+    
+
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
+    }
+
+    public String getPageUrl() {
+        return pageUrl;
+    }
+
+    public void setPageUrl(String pageUrl) {
+        this.pageUrl = pageUrl;
     }
 
     public Integer getId() {
