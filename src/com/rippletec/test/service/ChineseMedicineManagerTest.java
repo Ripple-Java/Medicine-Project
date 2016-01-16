@@ -1,5 +1,6 @@
 package com.rippletec.test.service;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -59,10 +60,10 @@ public class ChineseMedicineManagerTest implements IBaseDaoTest{
     @Override
     @Test
     public void testSave() throws Exception {
-	Medicine medicine = new Medicine(-1);
-	MedicineType medicineType = new MedicineType("测试typename", -1, Medicine.CHINESE);
-	ChineseMedicine chineseMedicine = new ChineseMedicine(medicine, medicineType, "中药", "中药组成", "efficacy", "annouce", "preparations", "manual", "store", "category", 0.0, ChineseMedicine.ON_PUBLISTH, "sortKey");
-	chineseMedicineManager.save(chineseMedicine);
+//	Medicine medicine = new Medicine(Medicine.CHINESE ,null );
+//	MedicineType medicineType = new MedicineType("测试typename", -1, Medicine.CHINESE);
+//	ChineseMedicine chineseMedicine = new ChineseMedicine(medicine, medicineType, "中药", "中药组成", "efficacy", "annouce", "preparations", "manual", "store", "category", ChineseMedicine.ON_PUBLISTH, "sortKey");
+//	chineseMedicineManager.save(chineseMedicine);
     }
 
     @Override

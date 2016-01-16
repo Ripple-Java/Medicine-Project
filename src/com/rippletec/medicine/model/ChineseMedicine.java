@@ -3,6 +3,7 @@
  */
 package com.rippletec.medicine.model;
 
+import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -16,14 +17,20 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.OrderBy;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.springframework.stereotype.Repository;
 
+import com.rippletec.medicine.utils.StringUtil;
+import com.rippletec.medicine.vo.web.ChMedicineVO;
+
+
 /**
+ * 通用中药Model类
  * @author Liuyi
  *
  */
@@ -32,7 +39,7 @@ import org.springframework.stereotype.Repository;
 @Table(name = "chinese_medicine")
 public class ChineseMedicine extends BaseModel {
 
-    private static final long serialVersionUID = -7463751072679829110L;
+    protected static final long serialVersionUID = -7463751072679829110L;
 
     public static final String CLASS_NAME = "ChineseMedicine";
     public static final String TABLE_NAME = "chinese_medicine";
@@ -49,81 +56,75 @@ public class ChineseMedicine extends BaseModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    protected Integer id;
 
     // 关联药品表
     @OneToOne(fetch = FetchType.LAZY)
     @Cascade(CascadeType.ALL)
     @JoinColumn(name = MEDICINE_ID)
-    private Medicine medicine;
+    protected Medicine medicine;
 
     // 关联所属类别
     @ManyToOne(fetch = FetchType.LAZY)
     @Cascade(CascadeType.SAVE_UPDATE)
     @JoinColumn(name = MEDICINE_TYPE_ID)
-    private MedicineType medicineType;
+    protected MedicineType medicineType;
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "chineseMedicine")
     @Cascade(CascadeType.ALL)
-    private Set<EnterChineseMedicine> enterChineseMedicines = new LinkedHashSet<EnterChineseMedicine>();
+    protected Set<EnterChineseMedicine> enterChineseMedicines = new LinkedHashSet<EnterChineseMedicine>();
 
     // 中药药品名称
     @Column(name = "name", length = 50, nullable = false)
-    private String name;
+    protected String name;
 
     // 药物成分
     @Column(name = "content", columnDefinition = "TEXT", nullable = false)
-    private String content;
+    protected String content;
 
     // 功效主治
     @Column(name = "efficacy", columnDefinition = "TEXT", nullable = true)
-    private String efficacy;
+    protected String efficacy;
 
     // 用药监护
     @Column(name = "annouce", columnDefinition = "TEXT", nullable = true)
-    private String annouce;
+    protected String annouce;
 
     // 制剂规格
     @Column(name = "preparations", columnDefinition = "TEXT", nullable = true)
-    private String preparations;
+    protected String preparations;
 
     // 用法用量
     @Column(name = "manual", columnDefinition = "TEXT", nullable = true)
-    private String manual;
+    protected String manual;
 
     // 贮法
     @Column(name = "store", columnDefinition = "TEXT", nullable = true)
-    private String store;
+    protected String store;
 
     // 管理分类
     @Column(name = "category", columnDefinition = "TEXT", nullable = true)
-    private String category;
+    protected String category;
 
-    // 药品价格
-    @Column(name = "price", length = 10, nullable = true, precision = 2)
-    private Double price;
 
     // 药品发布状态
     @Column(name = "status", length = 1, nullable = false)
-    private Integer status;
+    protected Integer status;
+    
     
     //排序关键字
     @Column(name = "sortKey", length = 255, nullable =false)
-    private String sortKey;
+    protected String sortKey;
 
     public ChineseMedicine() {
     }
-    
-    
 
-
-    public ChineseMedicine(Medicine medicine, MedicineType medicineType,
-	    String name, String content, String efficacy, String annouce,
-	    String preparations, String manual, String store, String category,
-	    Double price, Integer status, String sortKey) {
+    public ChineseMedicine(Integer id, String name, String content,
+	    String efficacy, String annouce, String preparations,
+	    String manual, String store, String category, Integer status,
+	    String sortKey) {
 	super();
-	this.medicine = medicine;
-	this.medicineType = medicineType;
+	this.id = id;
 	this.name = name;
 	this.content = content;
 	this.efficacy = efficacy;
@@ -132,12 +133,44 @@ public class ChineseMedicine extends BaseModel {
 	this.manual = manual;
 	this.store = store;
 	this.category = category;
-	this.price = price;
 	this.status = status;
 	this.sortKey = sortKey;
     }
+
+
+
+
+
+
+    public ChineseMedicine(ChMedicineVO chMedicineVO, Medicine medicine, MedicineType medicineType) {
+	this.medicine = medicine;
+	this.medicineType = medicineType;
+	this.name = chMedicineVO.name;
+	this.content = chMedicineVO.content;
+	this.efficacy = chMedicineVO.efficacy;
+	this.annouce = chMedicineVO.annouce;
+	this.preparations = chMedicineVO.preparations;
+	this.manual = chMedicineVO.manual;
+	this.store = chMedicineVO.store;
+	this.category = chMedicineVO.category;
+	this.status = ChineseMedicine.ON_PUBLISTH;
+	this.sortKey = StringUtil.toPinYin(chMedicineVO.name);
+    }
     
-    
+
+    public void setUpdate(ChMedicineVO chMedicineVO, MedicineType medicineType) {
+	this.medicineType = medicineType;
+	this.name = chMedicineVO.name;
+	this.content = chMedicineVO.content;
+	this.efficacy = chMedicineVO.efficacy;
+	this.annouce = chMedicineVO.annouce;
+	this.preparations = chMedicineVO.preparations;
+	this.manual = chMedicineVO.manual;
+	this.store = chMedicineVO.store;
+	this.category = chMedicineVO.category;
+	this.status = ChineseMedicine.ON_PUBLISTH;
+	this.sortKey = StringUtil.toPinYin(chMedicineVO.name);
+    }
 
 
 
@@ -147,8 +180,7 @@ public class ChineseMedicine extends BaseModel {
 	return "ChineseMedicine [id=" + id + ", name=" + name + ", content="
 		+ content + ", efficacy=" + efficacy + ", annouce=" + annouce
 		+ ", preparations=" + preparations + ", manual=" + manual
-		+ ", store=" + store + ", category=" + category + ", price="
-		+ price + ", status=" + status + "]";
+		+ ", store=" + store + ", category=" + category  + ", status=" + status + "]";
     }
 
     public String getAnnouce() {
@@ -191,9 +223,7 @@ public class ChineseMedicine extends BaseModel {
 	return preparations;
     }
 
-    public Double getPrice() {
-	return price;
-    }
+
 
     public String getStore() {
 	return store;
@@ -239,9 +269,6 @@ public class ChineseMedicine extends BaseModel {
 	this.preparations = preparations;
     }
 
-    public void setPrice(Double price) {
-	this.price = price;
-    }
 
     public void setStore(String store) {
 	this.store = store;
@@ -271,6 +298,14 @@ public class ChineseMedicine extends BaseModel {
     	Set<EnterChineseMedicine> enterChineseMedicines) {
         this.enterChineseMedicines = enterChineseMedicines;
     }
+
+
+
+
+
+
+
+    
     
     
     

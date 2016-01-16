@@ -1,0 +1,65 @@
+<script>getSubject();</script>
+<div class="bg" ng-click="resoure_add(0);"></div>
+<div class="addMeeting">
+	<form>
+		<ul>
+			<li><label>企业会议添加</label></li>
+			<li>
+				<p>
+					<label>会议名称：</label>
+				</p>
+				<p>
+					<input type="text" placeholder="请输入会议名称" required
+						class="BusinessMeeting_name" />
+				</p>
+			</li>
+			<li>
+				<p>
+					<label>会议主讲人：</label>
+				</p>
+				<p>
+					<input type="text" placeholder="请输入会议主讲人名称" required
+						class="BusinessMeeting_speaker"/>
+				</p>
+			</li>
+			<li>
+				<p>
+					<label>会议日期：</label>
+				</p>
+				<p>
+					<input type="date"  required
+						class="BusinessMeeting_date">
+				</p>
+			</li>
+			<li>
+				<p>
+					<label>会议网址：</label>
+				</p>
+				<p>
+                    <input type="text" placeholder="请输入会议网址" required
+                           class="BusinessMeeting_URL"/>
+				</p>
+			</li>
+			<li>
+				<p>
+					<label>会议内容：</label>
+				</p>
+				<p>
+					<textarea placeholder="请输入会议内容" 
+						class="BusinessChinaDrug_content"></textarea>
+				</p>
+			</li>
+			<li class="BusinessMeeting_subject">
+				<p>
+					<label>会议所属科目：</label>
+				</p>
+				<p>
+                    <select id="first"  size="1" style="width:44.8%;"></select> - <select id="second" style="width:44.8%;" ></select> 
+				</p>
+			</li>
+			<li><input type="button" value="取消" ng-click="resoure_add(0);" />
+			    <span class="updateMeeting"><button onclick="addMeeting();">保存</button></span>				
+			</li>
+		</ul>
+	</form>
+</div>

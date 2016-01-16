@@ -13,7 +13,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Cascade;
@@ -21,6 +20,7 @@ import org.hibernate.annotations.CascadeType;
 import org.springframework.stereotype.Repository;
 
 /**
+ * 企业药品分类关联Model
  * @author Liuyi
  *
  */
@@ -44,17 +44,15 @@ public class EnterpriseMedicineType extends BaseModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-//    // 关联药物
-//    @OneToMany(fetch = FetchType.LAZY, mappedBy = "enterpriseMedicineType")
-//    @Cascade(CascadeType.ALL)
-//    @OrderBy(value = "id asc")
-//    private Set<EnterChineseMedicine> enterChineseMedicines = new LinkedHashSet<EnterChineseMedicine>();
-//
-//    // 关联药物
-//    @OneToMany(fetch = FetchType.LAZY, mappedBy = "enterpriseMedicineType")
-//    @Cascade(CascadeType.ALL)
-//    @OrderBy(value = "id asc")
-//    private Set<EnterWestMedicine> enterWestMedicines = new LinkedHashSet<EnterWestMedicine>();
+    // 关联药物
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "enterpriseMedicineType")
+    @Cascade(CascadeType.ALL)
+    private Set<EnterChineseMedicine> enterChineseMedicines = new LinkedHashSet<EnterChineseMedicine>();
+
+    // 关联药物
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "enterpriseMedicineType")
+    @Cascade(CascadeType.ALL)
+    private Set<EnterWestMedicine> enterWestMedicines = new LinkedHashSet<EnterWestMedicine>();
 
 
     // 药品所属第一级类型：1=中药，2=西药
@@ -69,7 +67,7 @@ public class EnterpriseMedicineType extends BaseModel {
     
     // 后台分类格式表
     @OneToOne(fetch=FetchType.LAZY)
-    @Cascade(CascadeType.ALL)
+    @Cascade(CascadeType.SAVE_UPDATE)
     @JoinColumn(name = BACKGROUND_MEDICINETYPE_ID)
     private BackGroundMedicineType backGroundMedicineType;
 
@@ -81,8 +79,13 @@ public class EnterpriseMedicineType extends BaseModel {
 
     public EnterpriseMedicineType(MedicineType medicineType, Enterprise enterprise) {
 	super();
-	this.gib_type = medicineType.getGib_type();
+	if( MedicineType.CHINESE == medicineType.getGib_type() )
+	    this.gib_type = Medicine.ENTER_CHINESE;
+	else if (MedicineType.WEST == medicineType.getGib_type()) {
+	    this.gib_type = Medicine.ENTER_WEST;
+	}
 	this.enterprise = enterprise;
+	this.backGroundMedicineType = medicineType.getBackGroundMedicineType();
     }
 
 
@@ -126,6 +129,36 @@ public class EnterpriseMedicineType extends BaseModel {
     	BackGroundMedicineType backGroundMedicineType) {
         this.backGroundMedicineType = backGroundMedicineType;
     }
+
+
+
+
+    public Set<EnterChineseMedicine> getEnterChineseMedicines() {
+        return enterChineseMedicines;
+    }
+
+
+
+
+    public void setEnterChineseMedicines(
+    	Set<EnterChineseMedicine> enterChineseMedicines) {
+        this.enterChineseMedicines = enterChineseMedicines;
+    }
+
+
+
+
+    public Set<EnterWestMedicine> getEnterWestMedicines() {
+        return enterWestMedicines;
+    }
+
+
+
+
+    public void setEnterWestMedicines(Set<EnterWestMedicine> enterWestMedicines) {
+        this.enterWestMedicines = enterWestMedicines;
+    }
+    
     
   
 

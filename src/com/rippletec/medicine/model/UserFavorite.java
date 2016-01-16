@@ -1,6 +1,5 @@
 package com.rippletec.medicine.model;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -13,6 +12,11 @@ import javax.persistence.Table;
 
 import org.springframework.stereotype.Repository;
 
+/**
+ * 用户收藏Model
+ * @author Liuyi
+ *
+ */
 @Repository
 @Entity
 @Table(name=UserFavorite.TABLE_NAME)
@@ -23,8 +27,13 @@ public class UserFavorite extends BaseModel{
     public static final String TABLE_NAME = "userfavorite";
     
     public static final String USER_ID = "user_id";
+    public static final String ID = "id";
     public static final String OBJECT_ID = "object_Id";
     public static final String TYPE = "type";
+    public static final String INFO = "info";
+    public static final String NAME = "name";
+    
+    
     
     public static final int MEDICINE_CHINESE = 1;	//中药
     public static final int MEDICINE_WEST = 2;		//西药
@@ -40,9 +49,12 @@ public class UserFavorite extends BaseModel{
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Integer id;
     
-    @ManyToOne(cascade=CascadeType.ALL, fetch=FetchType.LAZY)
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name=USER_ID)
     private User user;
+    
+    @Column(name = NAME)
+    private String name;
     
     @Column(name=OBJECT_ID,length=1,nullable=false)
     private Integer objectId;
@@ -50,14 +62,18 @@ public class UserFavorite extends BaseModel{
     @Column(name=TYPE,length = 1, nullable=false)
     private Integer type;
     
+    @Column(name = INFO, columnDefinition = "TEXT", nullable = true)
+    private String info;
+    
     public UserFavorite() {
     }
    
-    public UserFavorite(User user, Integer objectId, Integer type) {
+    public UserFavorite(User user, Integer objectId, Integer type, String info) {
 	super();
 	this.user = user;
 	this.objectId = objectId;
 	this.type = type;
+	this.info = info;
     }
 
    
@@ -99,6 +115,23 @@ public class UserFavorite extends BaseModel{
     public void setObjectId(Integer objectId) {
         this.objectId = objectId;
     }
+
+    public String getInfo() {
+        return info;
+    }
+
+    public void setInfo(String info) {
+        this.info = info;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+    
     
     
     

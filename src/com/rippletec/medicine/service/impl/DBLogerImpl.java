@@ -4,7 +4,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -16,6 +15,7 @@ import org.springframework.stereotype.Repository;
 import com.rippletec.medicine.bean.DBLogEntity;
 import com.rippletec.medicine.dao.DBLogDao;
 import com.rippletec.medicine.dao.FindAndSearchDao;
+import com.rippletec.medicine.exception.DaoException;
 import com.rippletec.medicine.model.ChineseMedicine;
 import com.rippletec.medicine.model.DBLog;
 import com.rippletec.medicine.model.MedicineType;
@@ -26,8 +26,6 @@ import com.rippletec.medicine.service.MedicineTypeManager;
 import com.rippletec.medicine.service.WestMedicineManager;
 import com.rippletec.medicine.vo.app.ChineseMedicineVO;
 import com.rippletec.medicine.vo.app.WestMedicineVO;
-import com.sun.org.apache.bcel.internal.generic.NEW;
-import com.sun.swing.internal.plaf.basic.resources.basic;
 
 @Repository(DBLoger.NAME)
 public class DBLogerImpl extends BaseManager<DBLog> implements DBLoger{
@@ -90,7 +88,7 @@ public class DBLogerImpl extends BaseManager<DBLog> implements DBLoger{
     }
 
     @Override
-    public List<DBLogEntity> getUpdates(int version, int serverVersion) {
+    public List<DBLogEntity> getUpdates(int version, int serverVersion) throws DaoException {
 	List<DBLog> logs = dbLogDao.getModifiedData(DBLog.ACTION_UPDATE, version, serverVersion);
 	List<DBLogEntity> dbLogEntities = new ArrayList<DBLogEntity>();
 	for (DBLog dbLog : logs) {
@@ -121,7 +119,7 @@ public class DBLogerImpl extends BaseManager<DBLog> implements DBLoger{
     }
 
     @Override
-    public List<DBLogEntity> getSaves(int version, int serverVersion) {
+    public List<DBLogEntity> getSaves(int version, int serverVersion) throws DaoException {
 	List<DBLog> logs = dbLogDao.getModifiedData(DBLog.ACTION_SAVE, version, serverVersion);
 	List<DBLogEntity> dbLogEntities = new ArrayList<DBLogEntity>();
 	for (DBLog dbLog : logs) {

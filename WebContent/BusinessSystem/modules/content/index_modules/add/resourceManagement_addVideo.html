@@ -1,0 +1,47 @@
+<script>getSubject();</script>
+<div class="bg" ng-click="resoure_add(0);"></div>
+<div class="addVideo">
+	<form>
+		<ul>
+			<li><label>企业视频添加</label></li>
+			<li>
+				<p>
+					<label>视频名称：</label>
+				</p>
+				<p>
+					<input type="text" placeholder="请输入视频名称" required
+						class="BusinessVideo_name" />
+				</p>
+			</li>
+			<li>
+				<p>
+					<label>视频演讲人：</label>
+				</p>
+				<p>
+					<input type="text" placeholder="请输入视频演讲人名称" required
+						class="BusinessVideo_speaker"/>
+				</p>
+			</li>
+			<li>
+				<p>
+					<label>视频网址：</label>
+				</p>
+				<p>
+                    <input type="text" placeholder="请输入视频网址" required
+                           class="BusinessVideo_URL"/>
+				</p>
+			</li>
+			<li class="BusinessVideo_subject">
+				<p>
+					<label>视频所属科目：</label>
+				</p>
+				<p>
+                    <select id="first"  size="1" style="width:44.8%;"></select> - <select id="second" style="width:44.8%;" ></select> 
+				</p>
+			</li>
+			<li><input type="button" value="取消" ng-click="resoure_add(0);" />
+				<span class="updateVideo"><button onclick="addVideo();">保存</button></span>
+			</li>
+		</ul>
+	</form>
+</div>

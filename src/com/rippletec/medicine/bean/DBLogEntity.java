@@ -42,9 +42,4 @@ public class DBLogEntity {
         this.entity = entity;
     }
 
-
-    
-    
-    
-
 }

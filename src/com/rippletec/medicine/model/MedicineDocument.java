@@ -22,6 +22,7 @@ import org.hibernate.annotations.CascadeType;
 import org.springframework.stereotype.Repository;
 
 /**
+ * 药品文档Model（未启用）
  * @author Liuyi
  *
  */

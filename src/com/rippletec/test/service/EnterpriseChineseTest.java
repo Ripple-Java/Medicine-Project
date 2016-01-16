@@ -10,7 +10,6 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.rippletec.medicine.model.ChineseMedicine;
-import com.rippletec.medicine.model.EnterChineseMedicine;
 import com.rippletec.medicine.model.Enterprise;
 import com.rippletec.medicine.service.ChineseMedicineManager;
 import com.rippletec.medicine.service.EnterChineseMedicineManager;

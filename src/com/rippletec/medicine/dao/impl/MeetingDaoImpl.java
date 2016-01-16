@@ -8,6 +8,7 @@ import com.rippletec.medicine.bean.PageBean;
 import com.rippletec.medicine.dao.MeetingDao;
 import com.rippletec.medicine.model.Meeting;
 import com.rippletec.medicine.utils.StringUtil;
+import com.sun.org.apache.bcel.internal.generic.NEW;
 
 
 @Repository(MeetingDao.NAME)
@@ -25,6 +26,9 @@ public class MeetingDaoImpl extends BaseDaoImpl<Meeting> implements MeetingDao{
 
     @Override
     public List<Meeting> findByTime(PageBean page, String param, Object value) {
+	if(page == null){
+	    return findByParam(StringUtil.getSearchHql(Meeting.CLASS_NAME, param)+" order by commitDate desc",new String[]{param} ,new Object[]{value});
+	}
 	return findByPage(StringUtil.getSearchHql(Meeting.CLASS_NAME, param)+" order by commitDate desc", param ,value, page.getOffset(), page.getMaxSize());
     }
     

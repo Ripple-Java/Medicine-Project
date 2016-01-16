@@ -1,7 +1,10 @@
 ﻿<script type="text/javascript">
 $(function(){
 	var initPagination = function() {
-		$("#Pagination").pagination(100, {
+		var maxPage=getCount(11)+getCount(12);
+		if(maxPage%8!=0){maxPage=parseInt(maxPage/8)+1;}
+		else (maxPage==0)?maxPage=1:maxPage=maxPage/8;
+		$("#Pagination").pagination(maxPage, {
 	        num_edge_entries: 0, //边缘页数
 	        num_display_entries: 4, //主体页数
 	        callback: pageselectCallback,//回调函数
@@ -9,40 +12,40 @@ $(function(){
 	        ellipse_text: "",
 	        prev_show_always:"<"
 	    });
-	 }();	 
-	 function pageselectCallback(page_index, jq){
-			$(".pagination a").removeClass("content_content_pageNum_hadSelect");
-			if($(".current").length>1)
-			$(".current:nth-child(2)").addClass("content_content_pageNum_hadSelect");
-			else $(".current").addClass("content_content_pageNum_hadSelect");
-		    return false;
-		}
+	 }();	
 });
 </script>
-<div class="content_content_function">
-	<button class="content_content_function_all">
+<div class="content_content_function"> 
+    <button class="content_content_function_all" onclick="allSelect(1);">
 		<em>全选</em>
 	</button>
-	<button class="content_content_function_delete">
-		<em class="icon iconfont">&#xe61f;</em><em>删除</em>
+	<button class="content_content_function_notAll" onclick="allSelect(2);">
+		<em>不全选</em>
 	</button>
-	<em class="cut_off_rule"></em> <select>
-		<option selected="selected">用户类型</option>
-		<option>普通</option>
-		<option>专业</option>
-	</select> <select>
-		<option selected="selected">排序方式</option>
-		<option>注册时间</option>
-		<option>最后登录时间</option>
-		<option>用户名</option>
+	<button class="content_content_function_freeze" onclick="blockUser(1);">
+		<em class="icon iconfont">&#xe647;</em><em>冻结</em>
+	</button>
+	<button class="content_content_function_notfreeze" onclick="blockUser(0);">
+		<em class="icon iconfont">&#8635;</em><em> 恢复</em>
+	</button>
+	<em class="cut_off_rule"></em>
+	<select class="userFilter" onchange="firstPageClick(4);">
+		<option selected="selected" value="1">用户类型</option>
+		<option value="3">企业</option>
+		<option value="0">普通</option>
+	</select> 
+	<select class="userSort" onchange="firstPageClick(4);">
+		<option  value="1" selected="selected">注册时间</option>
+		<option value="2">最后登录时间</option>
+		<option value="3">用户名</option>
 	</select>
 </div>
 <div class="content_content_pageNum">
 	<a>
-		<ul>
-			<li >&lt;&lt;</li>
+		<ul class="userListPage">
+			<li class="firstPage" onclick="firstPageClick(4);">&lt;&lt;</li>
             <li  id="Pagination" class="pagination page"></li>
-			<li >&gt;&gt;</li>
+			<li class="endPage" onclick="endPageClick(4);">&gt;&gt;</li>
 		</ul>
 	</a>
 </div>

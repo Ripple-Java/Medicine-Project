@@ -1,5 +1,6 @@
 package com.rippletec.test.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -77,6 +78,10 @@ public class WestMedicineDaoTest implements IBaseDaoTest {
     @Override
     @Test
     public void testUpdate() throws Exception {
+	List<WestMedicine> westMedicines = westMedicineDao.findAll();
+	for (WestMedicine westMedicine : westMedicines) {
+	    westMedicineDao.update(westMedicine);
+	}
     }
 
 }

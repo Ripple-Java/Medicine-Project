@@ -1,9 +1,13 @@
 package com.rippletec.medicine.service;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
+import com.rippletec.medicine.bean.PageBean;
+import com.rippletec.medicine.bean.Result;
+import com.rippletec.medicine.exception.DaoException;
 import com.rippletec.medicine.model.User;
 
 public interface UserManager extends IManager<User> {
@@ -15,11 +19,11 @@ public interface UserManager extends IManager<User> {
 
     boolean isLogined( HttpSession httpSession);
 
-    boolean register(String phoneNumber, String password);
+    boolean register(String phoneNumber, String password) throws DaoException;
 
     boolean updatePassword(String account, String oldpassword, String newPassword);
 
-    void updateUserInfo(String account, int sex, Date birthday, int degree,
+    void updateUserInfo(String account, String name, int sex, Date birthday, int degree,
 	    String email);
 
 
@@ -30,7 +34,7 @@ public interface UserManager extends IManager<User> {
 
     boolean getBackPassword(String account, String newPassword);
 
-    boolean adminLogin(String account, String password, HttpSession httpSession);
+    Result adminLogin(String account, String password, HttpSession httpSession);
 
     boolean verifyPassword(String account, String oldPassword);
 
@@ -42,6 +46,17 @@ public interface UserManager extends IManager<User> {
     boolean initPassword(String account);
 
     void validUser(String account);
+
+    Result appUserLogin(String account, String password, int device,
+	    String deviceId, HttpSession httpSession);
+    
+    List<User> getNormalUser(final String param, final List<Object> values, final PageBean pBean, String orderStr);
+
+    Result block(int id) throws DaoException;
+
+    Result unblock(int id) throws DaoException;
+
+    boolean loginOutEnterprise(String account, HttpSession httpSession);
 
 
 }

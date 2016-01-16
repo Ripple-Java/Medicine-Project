@@ -1,0 +1,79 @@
+﻿body {
+	overflow: hidden;
+	cursor: default;
+	position:absolute;
+	top:0px;
+	left:0px;
+	width:100%;
+	height:100%;
+	background: url(../img/bg.gif) repeat;
+}
+
+header {
+	background-color: #333333;
+	height: 4.5em;
+	width: 100%;
+}
+
+footer {
+	position: absolute;
+	bottom: 1em;
+	width: 100%;
+	text-align: center;
+	color: #c5c5c5;
+}
+.header_message {
+	float: left;
+	height: 100%;
+	display: table;
+	width: 100%;
+	text-align: center;
+}
+
+.header_message div {
+	display: table-cell;
+	vertical-align: middle;
+}
+
+.header_home_icon {
+	color: #c0ffb6;
+	font-size: 2.2em;
+	padding-right: 10px;
+}
+
+.header_app_name {
+	color: #eaffe6;
+	font-size: 1.7em;
+}
+.content{
+	margin:auto;
+	height:80%;
+	display:table;
+	text-align:center;
+}
+.content ul{
+	vertical-align:middle;
+	display:table-cell;
+}
+.content li{
+	margin-top:1em;
+	width:13em;
+}
+.content li img{
+	width:100%;
+}
+.content li button{
+	width:95%;
+	height:2.8em;
+	border:none;
+	border-radius:0.5em;
+	font-size:1.2em;
+	color:white;
+}
+.content_downloadAndroid button{
+	background-color:#DB8D13;
+	margin-top:1em;
+}
+.content_downloadIos button{
+	background-color:#4696d0;
+}

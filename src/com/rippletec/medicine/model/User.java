@@ -19,12 +19,19 @@ import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.springframework.stereotype.Repository;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
+/**
+ * 用户Model,包括普通用户，管理员，和企业用户
+ * @author Liuyi
+ *
+ */
 @Repository
 @Entity
 @Table(name = "user")
 public class User extends BaseModel {
 
-    private static final long serialVersionUID = -1649785273161092567L;
+    protected static final long serialVersionUID = -1649785273161092567L;
 
     public static final String CLASS_NAME = "User";
     public static final String TABLE_NAME = "user";
@@ -42,6 +49,10 @@ public class User extends BaseModel {
     public static final String ACCOUNT = "account";
     public static final String TYPE = "type";
     public static final String STATUS = "status";
+    public static final String REGEDITTIME = "regeditTime";
+    public static final String LASTLOGIN = "lastLogin";
+    public static final String NAME = "name";
+    public static final String IS_LOGINED = "is_logined";
 
     public static final int DRVICE_ANDROID = 1;
     public static final int DRVICE_IPHONE = 2;
@@ -56,107 +67,124 @@ public class User extends BaseModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    protected int id;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     @Cascade(CascadeType.ALL)
-    private Set<Student> students = new HashSet<Student>();
+    protected Set<Student> students = new HashSet<Student>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     @Cascade(CascadeType.ALL)
-    private Set<Doctor> doctors = new HashSet<Doctor>();
+    protected Set<Doctor> doctors = new HashSet<Doctor>();
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     @Cascade(CascadeType.ALL)
-    private Set<Liveness> livenesses = new HashSet<Liveness>();
+    protected Set<Liveness> livenesses = new HashSet<Liveness>();
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     @Cascade(CascadeType.ALL)
-    private Set<FeedBackMass> feedBackMasses = new HashSet<FeedBackMass>();
+    protected Set<FeedBackMass> feedBackMasses = new HashSet<FeedBackMass>();
 
     // 用户密码
     @Column(name = "password", length = 65, nullable = false)
-    private String password;
+    protected String password;
 
     // 用户账号
     @Column(name = "account", length = 30, nullable = false)
-    private String account;
+    protected String account;
+    
+    @Column(name = "name", length = 256, nullable = false)
+    protected String name;
 
 
     // 用户类型（0代表普通用户，1代表学生，2代表医师，3代表企业，4代表管理员）
     @Column(name = "type", length = 10, nullable = false)
-    private int type;
+    protected int type;
 
     // 性别（0代表女，1代表男）
     @Column(name = "sex", length = 1, nullable = true)
-    private int sex;
+    protected int sex;
 
     // 生日
     @Column(name = "birthday", nullable = true)
     @Temporal(TemporalType.DATE)
-    private Date birthday;
+    protected Date birthday;
 
     // 电话
     @Column(name = "phone", length = 50, nullable = true)
-    private String cellphone;
+    protected String cellphone;
 
     // 邮箱
     @Column(name = "email", length = 255, nullable = true)
-    private String email;
+    protected String email;
 
     // 学历（0空，1小学，2初中，3高中，4专科，5本科，6硕士，7博士）
     @Column(name = "degree", length = 1, nullable = true)
-    private int degree;
+    protected int degree;
 
 
     // 用户头像
     @Column(name = "certificateImg", length = 255, nullable = true)
-    private String certificateImg;
+    protected String certificateImg;
 
     // 注册时间
     @Column(name = "regeditTime", nullable = false)
     @Temporal(TemporalType.DATE)
-    private Date regeditTime;
+    protected Date regeditTime;
 
     // 最后一次登录设备
     @Column(name = "device", length = 1, nullable = true)
-    private Integer device;
+    protected Integer device;
+    
+    // 最后一次登录设备标识
+    @Column(name = "deviceId", length = 100, nullable = true)
+    protected String deviceId;
 
     // 最后一次登录时间
     @Column(name = "lastLogin", nullable = true)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date lastLogin;
+    protected Date lastLogin;
     
     // 用户状态
     @Column(length=1, nullable=false)
-    private int status;
+    protected int status;
+    
+    // 最后一次修改用户信息的时间
+    @Column(name = "updateTime", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    @JSONField (format="yyyy-MM-dd HH:mm:ss")  
+    protected Date updateTime;
 
     public User() {
 	super();
     }
 
-    public User(String password, String account, int type,
-	    String cellphone, String certificateImg, Date regeditTime) {
+    public User(String password, String account, String name,int type,
+	    String cellphone, String certificateImg, Date regeditTime, Date updateTime) {
 	super();
 	this.password = password;
 	this.account = account;
+	this.name = name;
 	this.type = type;
 	this.cellphone = cellphone;
 	this.certificateImg = certificateImg;
 	this.regeditTime = regeditTime;
+	this.updateTime = updateTime;
     }
     
     
 
-    public User(String password, String account, int type, String email,
-	    Date regeditTime, int status) {
+    public User(String password, String account, String name,int type, String email,
+	    Date regeditTime,Date updateTime, int status) {
 	super();
+	this.name = name;
 	this.password = password;
 	this.account = account;
 	this.type = type;
 	this.email = email;
 	this.regeditTime = regeditTime;
 	this.status = status;
+	this.updateTime = updateTime;
     }
 
     public String getAccount() {
@@ -300,6 +328,25 @@ public class User extends BaseModel {
     }
     
     
+    
+    
+    
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDeviceId() {
+        return deviceId;
+    }
+
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
+    }
 
     public int getStatus() {
         return status;
@@ -307,6 +354,16 @@ public class User extends BaseModel {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+    
+    
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 
     @Override

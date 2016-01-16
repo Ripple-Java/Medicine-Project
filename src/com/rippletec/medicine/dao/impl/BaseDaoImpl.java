@@ -8,13 +8,11 @@ import javax.annotation.Resource;
 
 import org.hibernate.SessionFactory;
 import org.springframework.orm.hibernate3.HibernateTemplate;
-import org.springframework.ui.Model;
 
 import com.rippletec.medicine.bean.PageBean;
 import com.rippletec.medicine.dao.Dao;
 import com.rippletec.medicine.dao.IFindByPage;
 import com.rippletec.medicine.dao.ISearchDao;
-import com.rippletec.medicine.model.User;
 import com.rippletec.medicine.support.PlusHibernateSupport;
 import com.rippletec.medicine.utils.StringUtil;
 
@@ -50,6 +48,11 @@ public abstract class BaseDaoImpl<T> extends PlusHibernateSupport<T> implements 
     }
 
     @Override
+    public List<T> findAll() {
+        return getHibernateTemplate().find(StringUtil.getSelectHql(getClassName()));
+    }
+
+    @Override
     public List<T> findByPage(Map<String, Object> paramMap,
 	    PageBean page) {
 	String[] params = paramMap.keySet().toArray(new String[]{});
@@ -60,6 +63,8 @@ public abstract class BaseDaoImpl<T> extends PlusHibernateSupport<T> implements 
     
     @Override
     public List<T> findByPage(PageBean page) {
+	if(page == null)
+	    findAll();
 	return findByPage(StringUtil.getSelectHql(getClassName()), page.offset, page.pageSize);
     }
     
@@ -106,6 +111,8 @@ public abstract class BaseDaoImpl<T> extends PlusHibernateSupport<T> implements 
 	if(param == null || value == null)
 	    return findByPage(page);
 	String sql = StringUtil.getSelectSql(tableName,param);
+	if(page == null)
+	    return findBySql(getPersistClass(), sql, value);
 	return findBySql(getPersistClass(), sql, value, page.offset, page.pageSize);
     }
    
@@ -120,8 +127,7 @@ public abstract class BaseDaoImpl<T> extends PlusHibernateSupport<T> implements 
      * @return 持久化类class
      */
     public abstract Class<T> getPersistClass();
-
-  
+    
 
     @Override
     public List<T> search(Map<String, Object> paramMap) {
@@ -135,6 +141,22 @@ public abstract class BaseDaoImpl<T> extends PlusHibernateSupport<T> implements 
     public List<T> search(String param, Object value) {
 	String hql = StringUtil.getSearchHql(getClassName(), param);
 	return Search(hql, param, value);
+    }
+    
+    @Override
+    public List<T> search(String tableName, Map<String, Object> fieldMap, Map<String, Object> paramMap) {
+	String[] fields = fieldMap.keySet().toArray(new String[]{});
+	Object[] keyworlds = fieldMap.values().toArray();
+	String[] params = paramMap.keySet().toArray(new String[]{});
+	Object[] values = paramMap.values().toArray();
+	String hql = StringUtil.getSearchSql(tableName, fields ,params);
+	return Search(getPersistClass(),hql, fields, keyworlds, params, values);
+    }
+    
+    @Override
+    public List<T> search(String tableName, String field, Object keyword, String param , Object value) {
+	String hql = StringUtil.getSearchSql(tableName, field , param);
+	return Search(getPersistClass(), hql, field, keyword,param, value);
     }
 
     @Override
@@ -151,13 +173,15 @@ public abstract class BaseDaoImpl<T> extends PlusHibernateSupport<T> implements 
     public int getCount(String tableName,String[] param, Object[] value) {
 	return Integer.valueOf(findCount(StringUtil.getCountSql(tableName, param),param,value).listIterator().next()+"");
     }
+    
+    @Override
+    public int getCount(String tableName,String whereParam, Object whereValue,String inParam, Object[] inValue) {
+	return Integer.valueOf(findCount(StringUtil.getCountInSql(tableName, whereParam,inParam, inValue),whereParam,whereValue, inParam, inValue).listIterator().next()+"");
+    }
 
     @Override
     public HibernateTemplate getDaoHibernateTemplate() {
 	return getHibernateTemplate();
     }
-    
-    
-   
 
 }

@@ -1,4 +1,18 @@
 ﻿/*公用样式*/
+.pagination a {/*分页样式*/
+    text-decoration: none;
+    color:#737373;
+}
+.pagination a, .pagination span {
+    float:left;
+	width: 30px;
+	font-size: 1.1em;
+	text-align: center;
+	line-height: 2em;
+	height: 2em;
+}
+.pagination .current {}
+.pagination .current.prev, .pagination .current.next{}
 .content_header {
 	height: 2.7em;
 	background-color: #f8f8f8;
@@ -63,13 +77,43 @@ input[type=checkbox] {
 	display: none;
 }
 
-label {
+td label {
 	width: 1em;
 	height: 1em;
 	display: inline-block;
 	background-image: url(../../../images/checkbox_unchecked.png);
 	background-size: 100%;
 }
+/*企业修改信息*/
+.changeInformation_nav{
+	margin:auto;
+	margin-top:7em;
+	font-size:1.2em;
+	width:30em;
+}
+.changeInformation_nav li{
+	height:2em;	
+	margin-top:0.3em;	
+}
+.changeInformation_nav li input{
+	width:70%;
+	border-radius:5px;
+	border:1px solid #e5e5e5;
+	padding-left:0.5em;
+	
+}
+.changeInformation_nav li:last-child{
+	text-align:center;
+	height:1.5em;	
+	margin-top:2em;
+}
+.errorMessage{
+	color:red;
+	margin-top:0.5em;
+	font-size:0.9em;
+	display:none;
+}
+
 /*资源管理样式*/
 .content_header div {
 	display: table-cell;
@@ -140,7 +184,11 @@ label {
 	border: 1px solid #e5e5e5;
 	width: 50px;
 }
-
+.content_content_function_notAll{
+	background-color: #f8f8f8;
+	border: 1px solid #e5e5e5;
+	width: 70px;
+}
 .content_content_function_all:hover {
 	background-color: #ffffff;
 }
@@ -214,9 +262,8 @@ label {
 .content_content_pageNum {
 	float: right;
 }
-
-.content_content_pageNum ul li {
-	float: left;
+.content_content_pageNum ul li{float: left;}
+.content_content_pageNum ul li:nth-last-child(1),.content_content_pageNum ul li:nth-child(1) {
 	width: 30px;
 	font-size: 1.1em;
 	text-align: center;
@@ -224,10 +271,11 @@ label {
 	height: 2em;
 }
 
-.content_content_pageNum ul li:hover {
+.content_content_pageNum_hadSelect {
 	border: 1px solid #e5e5e5;
 	border-radius: 5px;
 }
+
 
 .content_content_content {
 	margin-top: 0.8333em;
@@ -292,14 +340,22 @@ label {
 
 .businessManagementContent_logoImgSubmitButton,.businessManagementContent_aboutSaveButton
 	{
-	width: 100px;
+	width: 9em;
 	border-radius: 5px;
 	background-color: #e5e5e5;
 	height: 1.5em;
 	border: none;
 	color: #808080;
 }
-
+.businessManagementContent_logo{
+	position: relative;
+}
+.uploadImgButton{
+	position: absolute;
+	opacity: 0;
+	width:9em;
+	left:1.26em;
+}
 .businessManagementContent ul li textarea {
 	width: 50%;
 	height: 10em;

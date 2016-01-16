@@ -3,7 +3,6 @@ package com.rippletec.medicine.utils;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import java.util.regex.Matcher;
@@ -20,6 +19,7 @@ import com.rippletec.medicine.model.ChineseMedicine;
 import com.rippletec.medicine.model.EnterChineseMedicine;
 import com.rippletec.medicine.model.EnterWestMedicine;
 import com.rippletec.medicine.model.Enterprise;
+import com.rippletec.medicine.model.Meeting;
 import com.rippletec.medicine.model.WestMedicine;
 
 /**
@@ -139,6 +139,29 @@ public class StringUtil {
 	hql = hql.substring(0, hql.length() - 4);
 	return hql;
     }
+    
+    public static String getSearchSql(String className, String field, String param) {
+  	return getSearchSql(className, new String[] { field }, new String[] { param } );
+      }
+
+    
+    public static String getSearchSql(String tableName, String[] fields, String[] params) {
+   	String hql = "select * from " + tableName;
+   	if (fields == null || fields.length == 0)
+   	    return hql;
+   	hql += " where ";
+   	for (int i = 0; i < fields.length; i++) {
+   	    String fieldtemp = fields[i];
+   	    hql += fieldtemp + " like ? and ";
+   	}
+   	for (int i = 0; i < params.length; i++) {
+   	    String param = params[i];
+
+   	    hql += param + " =? and ";
+   	}
+   	hql = hql.substring(0, hql.length() - 4);
+   	return hql;
+       }
 
     public static String getSelectHql(String Name) {
 	return getSelectHql(Name, new String[] {});
@@ -313,55 +336,53 @@ public class StringUtil {
     
     
     public static String formatData(String data){
-	List<String> resStr = new ArrayList<String>();
-	List<String> firStrings = matcherData(data, 1);
-	if(firStrings == null || firStrings.size()<1)
-	    resStr =  matcherData(data, 2);
-	else {
-	    for (String string : firStrings) {
-		    List<String> secondList = matcherData(string, 2);
-		    if(secondList != null && secondList.size() >0){
-			resStr.addAll(secondList);
-			continue;
-		    }
-		    resStr.add(string);
-		}
-	}
-	String outString = "";
-	for (String string : resStr) {
-	    outString += string+lineSeparator;
-	}
-	String reg = "贮法：[^\\x00-\\xff]+。";
-	Matcher matcher = Pattern.compile(reg).matcher(outString);
-	int last = 0;
-	StringBuilder stringBuilder = new StringBuilder();
-	while (matcher.find()) {
-	    String findStr = matcher.group();
-	    String tempString = outString.substring(last,matcher.end());
-	    stringBuilder.append(tempString.replaceAll(findStr, "\n"+findStr+"\n"));
-	    last = matcher.end();
-	}
-	stringBuilder.append(outString.substring(last, outString.length()));
-	return stringBuilder.toString();
+	data = data.trim();
+	String res_1 = matcherData(data, 1);
+	String res_2 = matcherData(res_1, 2);
+	String res_3 = matcherData(res_2, 3);
+	String res_4 = matcherData(res_3, 4);
+	return res_4;
     }
     
-    public static List<String> matcherData(String data , int type) {
+    public static String matcherData(String data , int type) {
 	String firstReg = "[0-9][\\.][^\\d]";
 	String secondReg = "[(][0-9][)]";
+	String thirdReg = "贮法：[\u4e00-\u9fa5，\\d℃]+。";
+	String forthReg = "\\[国外用法用量参考\\]";
+	String resStr = "";
 	Matcher matcher;
-	List<String> res = new ArrayList<String>();
 	if(type == 1)
 	    matcher = Pattern.compile(firstReg).matcher(data);
-	else {
+	else if(type == 2){
 	    matcher = Pattern.compile(secondReg).matcher(data);
+	}
+	else if(type == 3){
+	    matcher = Pattern.compile(thirdReg).matcher(data);
+	}
+	else {
+	    matcher = Pattern.compile(forthReg).matcher(data);
 	}
 	int lastIndex = 0;
 	while(matcher.find()){
-	    res.add(data.substring(lastIndex,matcher.start()));
-	    lastIndex = matcher.start();
+	    if(type == 3){		
+		resStr = resStr+data.substring(lastIndex,matcher.start()) + lineSeparator + data.substring(matcher.start(), matcher.end()) + lineSeparator;
+		lastIndex = matcher.end();
+	    }
+	    else {
+		resStr = resStr +data.substring(lastIndex,matcher.start()) + lineSeparator;	
+		lastIndex = matcher.start();
+	    }
+	    
 	}
-	res.add(data.substring(lastIndex,data.length()));
-	return res;
+	resStr += data.substring(lastIndex,data.length());
+	resStr = resStr.trim();
+	if(resStr.startsWith(lineSeparator)){
+	    resStr = resStr.substring(1);	    
+	}
+	if(resStr.endsWith(lineSeparator)){
+	    resStr = resStr.substring(0,resStr.length());	    
+	}
+	return resStr;
     }
     
 
@@ -390,6 +411,24 @@ public class StringUtil {
 	    e.printStackTrace();
 	}
 	return outPut;
+    }
+
+    public static boolean isEmpty(List<?> list) {
+	if(list == null || list.size() < 1)
+	    return true;
+	return false;
+    }
+
+
+    public static String getCountInSql(String tableName, String whereParam, String inParam, Object[] inValue) {
+	String sql = "select count(*) from " + tableName + "  where "+inParam+" in (";
+	for (int i = 0; i < inValue.length; i++) {
+	    sql += "?,";
+	}
+	sql = sql.substring(0,sql.length()-1)+")";
+	if(whereParam != null)
+	    sql += " and "+whereParam+" = ?";
+	return sql;
     }
 
 }

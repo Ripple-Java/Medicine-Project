@@ -39,6 +39,11 @@ aside {
 	color: #c5c5c5;
 }
 
+.loginFailAlert{
+	display:none;
+	color:red;
+	padding-top:0.5em;
+}
 .register_content {
 	display: none;
 }

@@ -2,8 +2,6 @@ package com.rippletec.medicine.service.impl;
 
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Map;
-
 import javax.annotation.Resource;
 
 import org.hibernate.HibernateException;
@@ -48,7 +46,11 @@ public class CheckDataManagerImpl extends BaseManager<CheckData> implements Chec
 		for (int i = 0; i < values.size(); i++) {
 		    query.setParameter(i, values.get(i));
 		}
+		if(pBean == null){
+		    return query.list();
+		}
 		return query.setMaxResults(pBean.offset).setMaxResults(pBean.offset+pBean.pageSize).list();
+		
 	    }
 	});
     } 

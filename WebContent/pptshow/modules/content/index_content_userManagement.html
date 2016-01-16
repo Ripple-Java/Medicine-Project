@@ -1,0 +1,32 @@
+﻿<section>
+	<header class="content_header">
+		<div>
+			<em class=" iconfont content_content_icon1">&#xe605;</em> <em>首页</em>
+			<em>&gt;</em> <em class=" content_content_address">用户管理</em>
+		</div>
+	</header>
+	<div class="nav">
+		<nav class="userContent_nav">
+			<a>
+				<ul>
+					<li class="content_nav_onclick" onclick="userContent_nav_click(1);"><em>用户列表</em></li>
+				</ul>
+			</a>
+		</nav>
+		<div class="content_nav_search">
+			<input type="search" placeholder="用户名" />
+			<button>
+				<em class="icon iconfont">&#xe645;</em>
+			</button>
+		</div>
+	</div>
+	<div class="content_content">
+		<div class="content_content_header" ng-include
+			src="'modules/content/index_modules/button/userManagementButton.html'"></div>
+		<script>
+            $(".content_content_content").css({ "height": window.innerHeight - 230 + "px" });
+        </script>
+		<div class="content_content_content" ng-include
+			src="'modules/content/index_modules/list/userlist.html'"></div>
+	</div>
+</section>

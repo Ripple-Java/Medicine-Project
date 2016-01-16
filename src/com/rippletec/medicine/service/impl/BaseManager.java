@@ -3,17 +3,23 @@ package com.rippletec.medicine.service.impl;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
+
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 
 import com.rippletec.medicine.bean.PageBean;
 import com.rippletec.medicine.dao.FindAndSearchDao;
+import com.rippletec.medicine.exception.DaoException;
 import com.rippletec.medicine.service.IManager;
+import com.rippletec.medicine.utils.ErrorCode;
 
 public abstract class BaseManager<T> implements IManager<T> {
     
     public Logger logger = Logger.getLogger("controllerLog");
+    
+    @Resource(name = ErrorCode.CLASS_NAME)
+    public ErrorCode errorCode;
 
     @Override
     public boolean delete(Integer id) {
@@ -21,8 +27,16 @@ public abstract class BaseManager<T> implements IManager<T> {
     }
 
     @Override
-    public T find(Integer id) {
-	return getDao().find(id);
+    public T find(Integer id) throws DaoException {
+	T object =  getDao().find(id);
+	if(object == null)
+	    throw new DaoException(ErrorCode.DB_NO_ENITY_ERROR);
+	return object;
+    }
+
+    @Override
+    public List<T> findAll() {
+        return getDao().findAll();
     }
 
     @Override
@@ -103,10 +117,29 @@ public abstract class BaseManager<T> implements IManager<T> {
     public int getCount(String tableName, String[] param, Object[] value) {
 	return getDao().getCount(tableName, param, value);
     }
+   
+
+    @Override
+    public int getCount(String tableName, String whereParam, Object whereValue,
+	    String inParam, Object[] inValue) {
+	return getDao().getCount(tableName, whereParam, whereValue, inParam, inValue);
+    }
 
     @Override
     public HibernateTemplate getDaoHibernateTemplate() {
 	return getDao().getDaoHibernateTemplate();
+    }
+
+    @Override
+    public List<T> search(String tableName, String field, Object keyword, String param,
+	    Object value) {
+	return getDao().search(tableName,field, keyword, param, value);
+    }
+
+    @Override
+    public List<T> search(String tableName, Map<String, Object> fieldMap,
+	    Map<String, Object> paramMap) {
+	return getDao().search(tableName,fieldMap, paramMap);
     }
     
     

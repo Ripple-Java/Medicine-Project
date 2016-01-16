@@ -1,23 +1,12 @@
 package com.rippletec.medicine.controller;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
 import javax.annotation.Resource;
 
-import org.apache.poi.hslf.examples.PPT2PNG;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import com.rippletec.medicine.model.ChineseMedicine;
-import com.rippletec.medicine.model.Enterprise;
-import com.rippletec.medicine.model.Medicine;
-import com.rippletec.medicine.model.MedicineType;
 import com.rippletec.medicine.service.EnterpriseManager;
 import com.rippletec.medicine.utils.FileUtil;
 import com.rippletec.medicine.utils.PPTUtil;

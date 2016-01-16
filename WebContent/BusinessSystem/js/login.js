@@ -3,25 +3,27 @@
 }).controller('login', ['$scope', function (scope) {
     $(".loginBox_button").click(function (e) {//登录按钮
         if ($('.loginBox_user').val().trim() != "" && $('.loginBox_password').val().trim() != "")
-            $.post('http://localhost:8080/MedicineProject/Web/enteruser/login',
+            $.post('http://112.74.131.194:8080/MedicineProject/Web/enteruser/login',
                 {
-                    account: $('.loginBox_user').val(),
-                    password: $.md5($('.loginBox_password').val())
+                    account:$('.loginBox_user').val(),
+                    password: $('.loginBox_password').val()
                 },
                 function (data) {
-                    console.log(data);
                     if(data.result.trim()=="success"){
-                    	document.cookie = "businesshadLogin";
+                    	document.cookie = $('.loginBox_user').val();
                         location.href = "./BusinessIndex.html";
+                    }else{
+                    	$(".loginFailAlert").css('display','block');
                     }
                 },"json").error(function (data, status) {
-                    alert("error");
+                	console.log(data+"123");
+                	$(".loginFailAlert").css('display','block');
                 });
     });
     $(".forgetPassword").click(function () {//找回密码
         if ($('.loginBox_user').val().trim() == "") alert("请输入账户");
         else
-        $.post('http://localhost:8080/MedicineProject/Web/enteruser/getBackPassword',
+        $.post('http://112.74.131.194:8080/MedicineProject/Web/enteruser/getBackPassword',
                 {
                     account: $('.loginBox_user').val()
                 },
@@ -35,7 +37,7 @@
     $(".register_page2_footer_completeButton").click(function () {//完成注册
         if ($('.register_page2_content_loginMail').val().trim() != "" && $('.register_page2_content_loginPassword').val().trim() != "" && $('.register_page2_content_repeatPassword').val().trim() != "")
             if($('.register_page2_content_loginPassword').val().trim() == $('.register_page2_content_repeatPassword').val().trim() )
-        	$.post('http://localhost:8080/MedicineProject/Web/enteruser/register',
+        	$.post('http://112.74.131.194:8080/MedicineProject/Web/enteruser/register',
                     {
                         email: $('.register_page2_content_loginMail').val(),
                         password: $.md5($('.register_page2_content_loginPassword').val())
@@ -65,17 +67,28 @@ function resize() {
 }
 function registerNextButton() {//注册下一步按钮
     if ($(".register_page1_content_businessName input").val() != "" && $(".register_page1_content_businessRegisterNumber input").val() != "" && $("input[type=\"file\"]").val() != "") {
-        $.post("http://localhost:8080/MedicineProject/Web/enteruser/setInfo", {
-            name: $(".register_page1_content_businessName input").val(),
-            type:parseInt($(".register_page1_content_businessStyle select").val()),
-            number:$(".register_page1_content_businessRegisterNumber input").val(),
-            imgUrl: window.URL.createObjectURL(document.getElementById("file").files[0])
-        }, function (data) {
-            if (data.result.trim() == "success") {
-                $(".register_page1").css("display", "none");
-                $(".register_page2").css("display", "block");
-            }
-        },"json");
+    	$(".registerImg").ajaxSubmit({
+	        type: "POST",  //提交方式  
+	        dataType: "json", //数据类型  
+	        contentType: "multipart/form-data",
+	        url: "http://112.74.131.194:8080/MedicineProject/upload/image/enterCheckImg",  
+	        success: function (data) { //提交成功的回调函数
+	        	console.log(data);
+	        	if(data.result.trim()=="success")
+	        	$.post("http://112.74.131.194:8080/MedicineProject/Web/enteruser/setInfo", {
+	                name: $(".register_page1_content_businessName input").val(),
+	                type:parseInt($(".register_page1_content_businessStyle select").val()),
+	                number:$(".register_page1_content_businessRegisterNumber input").val(),
+	                imgUrl: data.imgUrl
+	            }, function (setInfoData) {
+	                if (setInfoData.result.trim() == "success") {
+	                    $(".register_page1").css("display", "none");
+	                    $(".register_page2").css("display", "block");
+	                }
+	            },"json");
+	        },
+	        error: function (data) { console.log(data); }
+	    });
     } else if ($(".register_page1_content_businessName input").val() != "" && $(".register_page1_content_businessRegisterNumber input").val() != "" && $("input[type=\"file\"]").val() == "") alert("请上传执照！");
 }
 function registerResetButton() {//注册重置按钮
@@ -91,21 +104,6 @@ function gotoRegister() {//去注册
 function registerUploadImgButtonFunction() {//实时显示上传图片
 	if (document.getElementById("file").files &&document.getElementById("file").files[0]) {
 		$(".img_uploadImg img").attr("src", window.URL.createObjectURL(document.getElementById("file").files[0]));
-		$(".registerImg").ajaxSubmit({
-	        type: "POST",  //提交方式  
-	        dataType: "json", //数据类型  
-	        contentType: "multipart/form-data",
-	        url: "http://localhost:8080/MedicineProject/upload/image/enterCheckImg",  
-	        data:{
-	        	img:"imgFile"
-	        },
-	        success: function (data) { //提交成功的回调函数  
-	            alert(data.result);
-	        },
-	        error: function (data) { console.log(data); }
-	    });
-	}else{
-		alert("上传错误");
 	}
    
 }

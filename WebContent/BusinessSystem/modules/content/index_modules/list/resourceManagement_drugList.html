@@ -9,20 +9,8 @@
 			<td>操作</td>
 		</tr>
 	</thead>
-	<tbody class="list_list">
-		<tr>
-			<td><input type="checkbox" id="checkbox-1"
-				onclick="checkboxFunction(1);" /> <label for="checkbox-1"></label>
-			</td>
-			<td>云南白药</td>
-			<td>中成药-外用药-铁打损伤制剂</td>
-			<td>2015/08/15</td>
-			<td class="list_button">
-				<ul class="iconfont">
-					<li class="drugList_list_editButton iconfont"><a>&#xe630;</a></li>
-					<li class="drugList_list_deleteButton  iconfont"><a>&#xe61f;</a></li>
-				</ul>
-			</td>
-		</tr>
+	<tbody class="list_list drugList">
 	</tbody>
 </table>
+<div ng-include src="addDrugForm"></div>
+<input type="text" style="display:none;" class="saveID"  />

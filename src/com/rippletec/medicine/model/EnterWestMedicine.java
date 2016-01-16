@@ -1,6 +1,7 @@
 package com.rippletec.medicine.model;
 
-import javax.naming.ldap.SortKey;
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,22 +12,27 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.springframework.stereotype.Repository;
 
+import com.rippletec.medicine.utils.StringUtil;
 import com.rippletec.medicine.vo.web.EnterWestVO;
 
+/**
+ * 企业西药Model
+ * @author Liuyi
+ *
+ */
 @Repository
 @Entity
 @Table(name = "enter_west_medicine")
 public class EnterWestMedicine extends BaseModel {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 7475276297003606075L;
+    protected static final long serialVersionUID = 7475276297003606075L;
     public static final String CLASS_NAME = "EnterWestMedicine";
     public static final String TABLE_NAME = "enter_west_medicine";
     public static final String ENTER_MEDICINE_TYPE_ID = "enter_medicine_type_id";
@@ -36,112 +42,124 @@ public class EnterWestMedicine extends BaseModel {
     public static final String NAME = "name";
     public static final String ENTERPRISE_ID = "enterpriese_id";
     public static final String STATUS = "status";
+    public static final String ENTERPRISE_NAME = "enterprise_name";
     
 
     public static final int ON_PUBLISTH = 1;
     public static final int ON_CHECKING = 2;
     public static final int ON_RECHECKING = 3;
     public static final int ON_CLOSE = 4;
+    public static final String ID = "id";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    protected Integer id;
 
     // 关联药品表
     @OneToOne(fetch = FetchType.LAZY)
     @Cascade(CascadeType.ALL)
     @JoinColumn(name = MEDICINE_ID)
-    private Medicine medicine;
+    protected Medicine medicine;
 
     // 关联所属类别
     @ManyToOne(fetch = FetchType.LAZY)
     @Cascade(CascadeType.SAVE_UPDATE)
     @JoinColumn(name = MEDICINE_TYPE_ID)
-    private MedicineType medicineType;
+    protected MedicineType medicineType;
+    
+    // 关联所属类别
+    @ManyToOne(fetch = FetchType.LAZY)
+    @Cascade(CascadeType.SAVE_UPDATE)
+    @JoinColumn(name = ENTER_MEDICINE_TYPE_ID)
+    protected EnterpriseMedicineType enterpriseMedicineType;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @Cascade(CascadeType.SAVE_UPDATE)
     @JoinColumn(name = WEST_MEDICINE_ID)
-    private WestMedicine westMedicine;
+    protected WestMedicine westMedicine;
     
     // 关联企业
     @ManyToOne(fetch = FetchType.LAZY)
     @Cascade(CascadeType.SAVE_UPDATE)
     @JoinColumn(name = ENTERPRISE_ID)
-    private Enterprise enterprise;
+    protected Enterprise enterprise;
     
     
 
     // 企业名称
     @Column(name = "enterprise_name", length = 50, nullable = false)
-    private String enterprise_name;
+    protected String enterprise_name;
 
     // 西药药品名称
     @Column(name = "name", length = 255, nullable = false)
-    private String name;
+    protected String name;
     
     // 别名
     @Column(name = "other_name", columnDefinition = "TEXT", nullable = false)
-    private String other_name;
+    protected String other_name;
 
     // 组成成分
     @Column(name = "content", columnDefinition = "TEXT", nullable = true)
-    private String content;
+    protected String content;
 
     // 临床运用
     @Column(name = "current_application", columnDefinition = "TEXT", nullable = true)
-    private String current_application;
+    protected String current_application;
 
     // 药理学
     @Column(name = "pharmacolo", columnDefinition = "TEXT", nullable = true)
-    private String pharmacolo;
+    protected String pharmacolo;
 
     // 注意事项
     @Column(name = "warn", columnDefinition = "TEXT", nullable = true)
-    private String warn;
+    protected String warn;
 
     // 不良反应
     @Column(name = "ADRS", columnDefinition = "TEXT", nullable = true)
-    private String ADRS;
+    protected String adrs;
 
     // 药物相互作用
     @Column(name = "interaction", columnDefinition = "TEXT", nullable = true)
-    private String interaction;
+    protected String interaction;
 
     // 给药说明
     @Column(name = "dose_explain", columnDefinition = "TEXT", nullable = true)
-    private String dose_explain;
+    protected String dose_explain;
 
     // 用法用量
     @Column(name = "manual", columnDefinition = "TEXT", nullable = true)
-    private String  manual;
+    protected String  manual;
 
     // 制剂与规格
     @Column(name = "preparations", columnDefinition = "TEXT", nullable = true)
-    private String preparations;
+    protected String preparations;
 
     // 药品价格
     @Column(name = "price", length = 10, nullable = false, precision = 2)
-    private Double price;
+    protected Double price;
 
     // 药品发布状态
     @Column(name = "status", length = 1, nullable = false)
-    private Integer status;
+    protected Integer status;
     
     @Column(name="sortKey", length = 255, nullable=false)
-    private String sortKey;
+    protected String sortKey;
+    
+    // 最后一次修改时间
+    @Temporal(TemporalType.DATE)
+    @Column(name = "updateTime", nullable = false)
+    protected Date updateTime;
 
     public EnterWestMedicine() {
     }
-
-    public EnterWestMedicine(Medicine medicine,
-	    MedicineType medicineType,
-	    String enterprise_name, String name, String other_name,
-	    String content, String current_application, String pharmacolo, String warn, String aDRS,
-	    String interaction, String dose_explain, String manual, String preparations, Double price, Integer status) {
+    
+    public EnterWestMedicine(Integer id, String enterprise_name, String name,
+	    String other_name, String content, String current_application,
+	    String pharmacolo, String warn, String adrs, String interaction,
+	    String dose_explain, String manual, String preparations,
+	    Double price, Integer status, String sortKey, Date updateTime) {
 	super();
-	this.medicine = medicine;
-	this.medicineType = medicineType;
+	this.id = id;
 	this.enterprise_name = enterprise_name;
 	this.name = name;
 	this.other_name = other_name;
@@ -149,16 +167,22 @@ public class EnterWestMedicine extends BaseModel {
 	this.current_application = current_application;
 	this.pharmacolo = pharmacolo;
 	this.warn = warn;
-	ADRS = aDRS;
+	this.adrs = adrs;
 	this.interaction = interaction;
 	this.dose_explain = dose_explain;
 	this.manual = manual;
 	this.preparations = preparations;
 	this.price = price;
 	this.status = status;
+	this.sortKey = sortKey;
+	this.updateTime = updateTime;
     }
+
+
+
+
     public EnterWestMedicine(Medicine medicine,
-	    MedicineType medicineType,Enterprise enterprise , EnterWestVO enterWestVO, String sortKey) {
+	    MedicineType medicineType,Enterprise enterprise , EnterWestVO enterWestVO, String sortKey, Date updateTime) {
 	super();
 	this.medicine = medicine;
 	this.medicineType = medicineType;
@@ -169,24 +193,37 @@ public class EnterWestMedicine extends BaseModel {
 	this.current_application = enterWestVO.getCurrent_application();
 	this.pharmacolo = enterWestVO.getPharmacolo();
 	this.warn = enterWestVO.getWarn();
-	ADRS = enterWestVO.getADRS();
+	this.adrs = enterWestVO.getAdrs();
 	this.interaction = enterWestVO.getInteraction();
 	this.dose_explain = enterWestVO.getDose_explain();
 	this.manual = enterWestVO.getManual();
 	this.preparations = enterWestVO.getPreparations();
 	this.price = enterWestVO.getPrice();
-	this.status = ON_CHECKING;
+	this.status = ON_PUBLISTH;
 	this.sortKey = sortKey;
 	this.enterprise = enterprise;
+	this.updateTime = updateTime;
     }
     
-    
-
-    public String getADRS() {
-	return ADRS;
+    public void setUpdate(EnterWestVO enterWestVO, WestMedicine westMedicine) {
+	this.adrs = enterWestVO.getAdrs();
+	this.content = enterWestVO.getContent();
+	this.current_application = enterWestVO.getCurrent_application();
+	this.dose_explain = enterWestVO.getDose_explain();
+	this.interaction = enterWestVO.getInteraction();
+	this.manual = enterWestVO.getManual();
+	this.name = enterWestVO.getName();
+	this.other_name = enterWestVO.getOther_name();
+	this.pharmacolo = enterWestVO.getPharmacolo();
+	this.preparations = enterWestVO.getPreparations();
+	this.price = enterWestVO.getPrice();
+	this.warn = enterWestVO.getWarn();
+	this.westMedicine = westMedicine;
+	this.medicineType = westMedicine.getMedicineType();
+	this.updateTime = new Date();
     }
 
-
+    
     public String getContent() {
 	return content;
     }
@@ -240,10 +277,7 @@ public class EnterWestMedicine extends BaseModel {
 	return warn;
     }
 
-    public void setADRS(String aDRS) {
-	ADRS = aDRS;
-    }
-
+    
 
     public void setContent(String content) {
 	this.content = content;
@@ -350,6 +384,33 @@ public class EnterWestMedicine extends BaseModel {
     public void setEnterprise(Enterprise enterprise) {
         this.enterprise = enterprise;
     }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public EnterpriseMedicineType getEnterpriseMedicineType() {
+        return enterpriseMedicineType;
+    }
+
+    public void setEnterpriseMedicineType(
+    	EnterpriseMedicineType enterpriseMedicineType) {
+        this.enterpriseMedicineType = enterpriseMedicineType;
+    }
+
+    public String getAdrs() {
+        return adrs;
+    }
+
+    public void setAdrs(String adrs) {
+        this.adrs = adrs;
+    }
+
+
     
     
     

@@ -1,4 +1,9 @@
 ﻿/*公用样式*/
+.content_content_function_notAll{
+	background-color: #f8f8f8;
+	border: 1px solid #e5e5e5;
+	width: 70px;
+}
 .pagination a {/*分页样式*/
     text-decoration: none;
     color:#737373;
@@ -97,6 +102,35 @@ td label {
 	float: left;
 	height: 2.2em;
 }
+/*管理员修改信息*/
+.changeInformation_nav{
+	margin:auto;
+	margin-top:7em;
+	font-size:1.2em;
+	width:30em;
+}
+.changeInformation_nav li{
+	height:2em;	
+	margin-top:0.3em;	
+}
+.changeInformation_nav li input{
+	width:70%;
+	border-radius:5px;
+	border:1px solid #e5e5e5;
+	padding-left:0.5em;
+	
+}
+.changeInformation_nav li:last-child{
+	text-align:center;
+	height:1.5em;	
+	margin-top:2em;
+}
+.errorMessage{
+	color:red;
+	margin-top:0.5em;
+	font-size:0.9em;
+	display:none;
+}
 /*资源管理样式*/
 .content_header div {
 	display: table-cell;
@@ -168,24 +202,23 @@ td label {
 	background-color: #ffffff;
 }
 
-.content_content_function_add {
+.content_content_function_add,.content_content_function_solve {
 	color: #5ebf49;
 	border: 1px solid #5ebf49;
 	background-color: #ffffff;
 	width: 90px;
 }
 
-.content_content_function_add:hover {
+.content_content_function_add:hover,.content_content_function_solve:hover {
 	background-color: #5ebf49;
 	color: #ffffff;
 }
 
-.content_content_function_add .icon {
+.content_content_function_add .icon ,.content_content_function_solve .icon{
 	margin-right: 0.3em;
 	font-weight: bolder;
 	font-size: 1.3em;
 }
-
 .content_content_function_delete {
 	color: #c57d62;
 	border: 1px solid #c57d62;
@@ -201,6 +234,31 @@ td label {
 .content_content_function_delete .icon {
 	margin-right: 0.3em;
 	font-weight: bolder;
+	font-size: 1.3em;
+}
+
+.content_content_function_freeze {
+	color: #5f9ea0;
+	border: 1px solid #5f9ea0;
+	background-color: #ffffff;
+	width: 90px;
+}
+.content_content_function_notfreeze{
+	color: darkkhaki;
+	border: 1px solid darkkhaki;
+	background-color: #ffffff;
+	width: 90px;
+}
+.content_content_function_notfreeze:hover {
+	background-color: darkkhaki;
+	color: #ffffff;
+}
+.content_content_function_freeze:hover {
+	background-color: #5f9ea0;
+	color: #ffffff;
+}
+.content_content_function_freeze .icon {
+	margin-right: 0.3em;
 	font-size: 1.3em;
 }
 
@@ -264,7 +322,7 @@ td label {
 	float: left;
 }
 
-.statisticalContent_nav li,.businessContent_nav li,.userContent_nav li {
+.statisticalContent_nav li,.businessContent_nav li,.userContent_nav li,.feedbackContent_nav li {
 	float: left;
 	width: 110px;
 	font-size: 1.2em;
@@ -283,8 +341,9 @@ td label {
 	text-align: center;
 	float: left;
 }
+
 /*用户管理样式*/
-.userContent_nav li {
+.userContent_nav li,.feedbackContent_nav li {
 	border: 1px solid #e5e5e5;
 	border-radius: 5px;
 	text-align: center;
@@ -296,6 +355,13 @@ td label {
 	border-radius: 5px;
 	font-size: 1.1em;
 	border: solid 1px #e5e5e5;
+}
+/*反馈管理*/
+.feedbackContent{
+	max-width:10em;
+	text-overflow:ellipsis;
+	white-space:nowrap;
+	overflow:hidden;
 }
 
 /*list_test*/
@@ -315,6 +381,7 @@ td label {
 	text-align: center;
 	text-indent: 0em;
 }
+
 
 .list_list {
 	color: #555555;
@@ -350,14 +417,25 @@ td label {
 	color: #ffffff;
 }
 
-.userList_button li:last-child:hover,.businessList_button li:last-child:hover,.businessList_registerCheck li:last-child:hover,.requestList_list_button li:nth-child(3):hover,.resourceList li:last-child:hover
+.userList_button li:last-child:hover,.businessList_registerCheck li:last-child:hover,.requestList_list_button li:nth-child(3):hover,.resourceList li:last-child:hover
 	{
 	background-color: #e26335;
 	color: #ffffff;
 }
-
-.businessList_registerCheck li:first-child:hover,.requestList_list_button li:nth-child(2):hover
+.businessList_button li:last-child:hover{
+	background-color:  #5f9ea0;
+	color: #ffffff;
+}
+.businessList_registerCheck li:first-child:hover
 	{
 	background-color: #5ebf49;
+	color: #ffffff;
+}
+.feedbackList_button li:first-child:hover{
+	background-color: #5ebf49;
+	color: #ffffff;
+}
+.resourceMeetingList li:hover,.resourceVideoList li:hover{
+	background-color: #5f9ea0;
 	color: #ffffff;
 }

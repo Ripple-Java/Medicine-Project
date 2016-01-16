@@ -1,0 +1,28 @@
+<script>
+$(".changeUserName").val(document.cookie); 
+</script>
+<section>
+	<header class="content_header">
+		<div>
+			<em class=" iconfont content_content_icon1">&#xe605;</em> <em>首页</em>
+			<em>&gt;</em> <em class=" content_content_address">修改信息</em>
+		</div>
+	</header>
+	<div class="nav">
+		<div class="changeInformation_nav">
+		<form>
+		<ul>
+		<li><label>用户名：</label></li>
+		<li><input type="text" placeholder="用户名" class="changeUserName" disabled/></li>
+		<li><label>原始密码：</label></li>
+		<li><input type="password" class="changeOldPassword" required/></li>
+		<li><label>重置密码：</label></li>
+		<li><input type="password" class="changeNewPassword" required/></li>
+		<li><label>确认密码：</label> </li>
+		<li><input type="password" class="checkChangeNewPassword" required/><label class="errorMessage "></label></li> 
+		<li style="width:70%;"><button onclick="changeAdminPassword();">保存</button></li>
+		</ul>		
+		</form>
+		</div>
+	</div>
+</section>

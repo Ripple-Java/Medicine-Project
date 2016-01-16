@@ -13,11 +13,19 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.Min;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.springframework.stereotype.Repository;
 
+
+
+/**
+ * 审核信息Model类
+ * @author Liuyi
+ *
+ */
 @Repository
 @Entity
 @Table(name = CheckData.TABLE_NAME)
@@ -46,6 +54,7 @@ public class CheckData extends BaseModel {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Min(0)
     private Integer id;
     
     @Column(name = "objectName", nullable = false)

@@ -18,6 +18,11 @@ import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.springframework.stereotype.Repository;
 
+/**
+ * 用户活跃度Model
+ * @author Liuyi
+ *
+ */
 @Entity
 @Repository
 @Table(name=Liveness.TABLE_NAME)

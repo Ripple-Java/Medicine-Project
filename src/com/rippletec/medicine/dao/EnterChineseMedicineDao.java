@@ -10,4 +10,6 @@ import com.rippletec.medicine.model.EnterChineseMedicine;
 public interface EnterChineseMedicineDao extends FindAndSearchDao<EnterChineseMedicine>{
     public static final String NAME = "EnterChineseMedicineDao";
 
+    EnterChineseMedicine findByMedicineId(Integer id);
+
 }

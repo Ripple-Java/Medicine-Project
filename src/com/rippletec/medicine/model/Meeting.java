@@ -18,6 +18,7 @@ import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.springframework.stereotype.Repository;
 
+import com.rippletec.medicine.utils.StringUtil;
 import com.rippletec.medicine.vo.web.MeetingVo;
 
 
@@ -33,10 +34,13 @@ public class Meeting extends BaseModel {
     
     public static final String ENTERPRISE_ID = "enterprise_id";
     public static final String MEDICINE_ID = "medicine_id";
-    
+    public static final String ID = "id";
+
+
     public static final String NAME = "name";
     public static final String STATUS = "status";
-    public static final String SUBJECT = "subject";
+    public static final String SUBJECT_ID = "subject_id";
+    public static final String MODIFYTIME = "modifyTime";
     
     public static final int ON_PUBLISTH = 1;
     public static final int ON_CHECKING = 2;
@@ -57,21 +61,24 @@ public class Meeting extends BaseModel {
     @JoinColumn(name = MEDICINE_ID)
     protected Medicine medicine;
     
+    @ManyToOne(fetch = FetchType.LAZY)
+    @Cascade(CascadeType.SAVE_UPDATE)
+    @JoinColumn(name = SUBJECT_ID)
+    protected Subject subject;
+    
     @Column(name = "name", length = 50, nullable = false)
     protected String name;
     
     @Column(name = "speaker", length = 20, nullable =true)
     protected String speaker;
     
-    @Column(name = "tag", length = 255, nullable = true)
-    protected String tag;
     
     @Column(name = "date",nullable = false)
     @Temporal(TemporalType.DATE)
     protected Date date;
     
     @Column(name = "commitDate",nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     protected Date commitDate;
     
     @Column(name = "PPT", length = 200, nullable = true)
@@ -83,8 +90,6 @@ public class Meeting extends BaseModel {
     @Column(name = "content", columnDefinition= "TEXT", nullable =true)
     protected String content;
     
-    @Column(name = "subject", length=50, nullable = true)
-    protected String subject;
     
     @Column(name = STATUS, length=1, nullable = false)
     protected Integer status;
@@ -95,40 +100,52 @@ public class Meeting extends BaseModel {
     @Column(name = "pageUrl", length= 100, nullable=true)
     protected String pageUrl;
     
+    @Column(name = MODIFYTIME, nullable=false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date modifyTime;
+    
     public Meeting() {
     }
 
-    public Meeting(Enterprise enterprise, String name, String speaker,
-	    String tag, Date date, String pPT, String video) {
+    public Meeting(Enterprise enterprise, String name, String speaker, Date date, String pPT, String video) {
 	super();
 	this.enterprise = enterprise;
 	this.name = name;
 	this.speaker = speaker;
-	this.tag = tag;
 	this.date = date;
 	PPT = pPT;
 	this.video = video;
     }
     
-    public Meeting(Enterprise enterprise, MeetingVo vo) {
+    public Meeting(Enterprise enterprise, MeetingVo vo, Subject subject) {
 	super();
 	this.enterprise = enterprise;
 	this.name = vo.getName();
 	this.speaker = vo.getSpeaker();
-	this.tag = vo.getTag();
+	this.date = vo.getDate();
+	this.content = vo.getContent();
+	this.subject = subject;
+	this.enterpriseName = enterprise.getName();
+	this.pageUrl = vo.getPageUrl();
+	this.modifyTime = new Date();
+    }
+    
+    public void setUpdate(MeetingVo vo, Subject subject) {
+	this.name = vo.getName();
+	this.speaker = vo.getSpeaker();
 	this.date = vo.getDate();
 	PPT = vo.getPPT();
 	this.video = vo.getVideo();
 	this.content = vo.getContent();
-	this.subject = vo.getSubject();
-	this.enterpriseName = enterprise.getName();
 	this.pageUrl = vo.getPageUrl();
+	this.subject = subject;
     }
+    
 
     @Override
     public String toString() {
 	return "Meeting [id=" + id + ", name=" + name + ", speaker=" + speaker
-		+ ", tag=" + tag + ", date=" + date + ", PPT=" + PPT
+		+ ", date=" + date + ", PPT=" + PPT
 		+ ", video=" + video + "]";
     }
     
@@ -156,10 +173,6 @@ public class Meeting extends BaseModel {
 
     public String getSpeaker() {
         return speaker;
-    }
-
-    public String getTag() {
-        return tag;
     }
 
     public Date getDate() {
@@ -190,9 +203,6 @@ public class Meeting extends BaseModel {
         this.speaker = speaker;
     }
 
-    public void setTag(String tag) {
-        this.tag = tag;
-    }
 
     public void setDate(Date date) {
         this.date = date;
@@ -214,9 +224,6 @@ public class Meeting extends BaseModel {
         return content;
     }
 
-    public String getSubject() {
-        return subject;
-    }
 
     public Integer getStatus() {
         return status;
@@ -230,9 +237,6 @@ public class Meeting extends BaseModel {
         this.content = content;
     }
 
-    public void setSubject(String subject) {
-        this.subject = subject;
-    }
 
     public void setStatus(Integer status) {
         this.status = status;
@@ -253,6 +257,23 @@ public class Meeting extends BaseModel {
     public void setEnterpriseName(String enterpriseName) {
         this.enterpriseName = enterpriseName;
     }
+
+    public Subject getSubject() {
+        return subject;
+    }
+
+    public void setSubject(Subject subject) {
+        this.subject = subject;
+    }
+
+    public Date getModifyTime() {
+        return modifyTime;
+    }
+
+    public void setModifyTime(Date modifyTime) {
+        this.modifyTime = modifyTime;
+    }
+
     
     
     

@@ -1,5 +1,7 @@
 package com.rippletec.medicine.model;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -10,13 +12,21 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.springframework.stereotype.Repository;
 
+import com.rippletec.medicine.utils.StringUtil;
 import com.rippletec.medicine.vo.web.EnterChineseVO;
 
+/**
+ * 企业中药Model
+ * @author Liuyi
+ *
+ */
 @Repository
 @Entity
 @Table(name="enter_chinese_medicine")
@@ -32,6 +42,8 @@ public class EnterChineseMedicine extends BaseModel{
     public static final String MEDICINE_TYPE_ID = "medicine_type_id";
     public static final String ENTERPRISE_ID = "enterpriese_id";
     public static final String STATUS = "status";
+    public static final String ENTERPRISE_NAME = "enterprise_name";
+    public static final String ID = "id";
     
     public static final int ON_PUBLISTH = 1;
     public static final int ON_CHECKING = 2;
@@ -55,6 +67,13 @@ public class EnterChineseMedicine extends BaseModel{
     @Cascade(CascadeType.SAVE_UPDATE)
     @JoinColumn(name = MEDICINE_TYPE_ID)
     private MedicineType medicineType;
+    
+    
+    // 关联所属企业类别
+    @ManyToOne(fetch = FetchType.LAZY)
+    @Cascade(CascadeType.SAVE_UPDATE)
+    @JoinColumn(name = ENTER_MEDICINE_TYPE_ID)
+    private EnterpriseMedicineType enterpriseMedicineType;
     
     // 关联通用中药
     @ManyToOne(fetch = FetchType.LAZY)
@@ -113,19 +132,31 @@ public class EnterChineseMedicine extends BaseModel{
     private Integer status;
     
     @Column(name = "sortKey", length=255, nullable=false)
-    private String sortkey;
+    private String sortKey;
+    
+    // 最后一次修改时间
+    @Temporal(TemporalType.DATE)
+    @Column(name = "updateTime", nullable = false)
+    private Date updateTime;
     
     public EnterChineseMedicine() {
     }
-    public EnterChineseMedicine(Medicine medicine,
+       
+    public EnterChineseMedicine(Integer id, Medicine medicine,
 	    MedicineType medicineType,
+	    EnterpriseMedicineType enterpriseMedicineType,
+	    ChineseMedicine chineseMedicine, Enterprise enterprise,
 	    String enterprise_name, String name, String content,
 	    String efficacy, String annouce, String preparations,
 	    String manual, String store, String category, Double price,
-	    Integer status) {
+	    Integer status, String sortKey, Date updateTime) {
 	super();
+	this.id = id;
 	this.medicine = medicine;
 	this.medicineType = medicineType;
+	this.enterpriseMedicineType = enterpriseMedicineType;
+	this.chineseMedicine = chineseMedicine;
+	this.enterprise = enterprise;
 	this.enterprise_name = enterprise_name;
 	this.name = name;
 	this.content = content;
@@ -137,10 +168,15 @@ public class EnterChineseMedicine extends BaseModel{
 	this.category = category;
 	this.price = price;
 	this.status = status;
+	this.sortKey = sortKey;
+	this.updateTime = updateTime;
     }
-    
+
+
+
+
     public EnterChineseMedicine(Medicine medicine,
-	    MedicineType medicineType,Enterprise enterprise, EnterChineseVO enterChineseVO, String sortKey) {
+	    MedicineType medicineType,Enterprise enterprise, EnterChineseVO enterChineseVO, String sortKey, Date updateTime) {
 	super();
 	this.medicine = medicine;
 	this.medicineType = medicineType;
@@ -155,9 +191,29 @@ public class EnterChineseMedicine extends BaseModel{
 	this.category = enterChineseVO.getCategory();
 	this.price = enterChineseVO.getPrice();
 	this.status = ON_CHECKING;
-	this.sortkey = sortKey;
+	this.sortKey = sortKey;
 	this.enterprise = enterprise;
+	this.updateTime = updateTime;
     }
+    
+    public void setUpdate(EnterChineseVO entChineseVO, ChineseMedicine chineseMedicine) {
+	this.annouce = entChineseVO.getAnnouce();
+	this.category = entChineseVO.getCategory();
+	this.content = entChineseVO.getContent();
+	this.efficacy = entChineseVO.getEfficacy();
+	this.manual = entChineseVO.getManual();
+	this.name = entChineseVO.getName();
+	this.preparations = entChineseVO.getPreparations();
+	this.price = entChineseVO.getPrice();
+	this.store = entChineseVO.getStore();
+	this.chineseMedicine = chineseMedicine;
+	this.medicineType = chineseMedicine.getMedicineType();
+	this.updateTime = new Date();
+
+    }
+    
+    
+    
     
     
 
@@ -276,12 +332,6 @@ public class EnterChineseMedicine extends BaseModel{
     public void setMedicine(Medicine medicine) {
         this.medicine = medicine;
     }
-    public String getSortkey() {
-        return sortkey;
-    }
-    public void setSortkey(String sortkey) {
-        this.sortkey = sortkey;
-    }
     public ChineseMedicine getChineseMedicine() {
         return chineseMedicine;
     }
@@ -300,14 +350,28 @@ public class EnterChineseMedicine extends BaseModel{
     public void setEnterprise(Enterprise enterprise) {
         this.enterprise = enterprise;
     }
-    
-    
-    
-    
-    
-    
 
+    public String getSortKey() {
+        return sortKey;
+    }
 
+    public void setSortKey(String sortKey) {
+        this.sortKey = sortKey;
+    }
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+    public EnterpriseMedicineType getEnterpriseMedicineType() {
+        return enterpriseMedicineType;
+    }
+    public void setEnterpriseMedicineType(
+    	EnterpriseMedicineType enterpriseMedicineType) {
+        this.enterpriseMedicineType = enterpriseMedicineType;
+    }
+    
+    
   
-   
 }

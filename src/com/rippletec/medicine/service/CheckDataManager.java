@@ -1,8 +1,6 @@
 package com.rippletec.medicine.service;
 
 import java.util.List;
-import java.util.Map;
-
 import com.rippletec.medicine.bean.PageBean;
 import com.rippletec.medicine.model.CheckData;
 public interface CheckDataManager extends IManager<CheckData> {

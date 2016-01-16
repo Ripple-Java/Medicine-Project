@@ -2,17 +2,23 @@
     if (document.cookie == "") { alert("用户未登录！"); location.href = "./backgroundLogin.html"; }
     resize();
 }).controller('my', ['$scope', function (scope) {
-    scope.pageContent = 'modules/content/index_content_statisticalHome.html';//左侧导航栏按钮功能
+    scope.pageContent = 'modules/content/index_content_resourceManagement.html';//左侧导航栏按钮功能
+    scope.resourceManagementList = 'modules/content/index_modules/list/resourceManagement_drugList.html';
+    scope.resourceMangementPageHtml = 'modules/content/index_modules/button/resourceManagement_drugListButton.html';
+    scope.searchKeyword="药品名称/分类名称/企业名称";
+	scope.resourceManagement_seach=function(){searchDrug();};
     scope.sidebarClick = function (value, pageName) {
         $(".aside_sidebar li").removeClass("sidebar_click");
         $(".aside_sidebar li:nth-child(" + value + ")").addClass("sidebar_click");
         $(".aside_sidebar li .aside_sidebar_icon").removeClass("aside_sidebar_click");
         $(".aside_sidebar li:nth-child(" + value + ") .aside_sidebar_icon").addClass("aside_sidebar_click");
         scope.pageContent = pageName;
-        if (value == 2) {
+        if (value == 1) {
+        	scope.searchKeyword="药品名称/分类名称/企业名称";
+        	scope.resourceManagement_seach=function(){searchDrug();};
+        	scope.resourceManagementList = 'modules/content/index_modules/list/resourceManagement_drugList.html';
             scope.resourceMangementPageHtml = 'modules/content/index_modules/button/resourceManagement_drugListButton.html';
-            scope.resourceManagementList = 'modules/content/index_modules/list/resourceManagement_drugList.html';
-        } else if (value == 3) {
+        } else if (value == 2) {
             scope.businesscontentpage = 'modules/content/index_modules/button/businessManagementButton_businessList.html';
             scope.businessList = 'modules/content/index_modules/list/business_list.html';
         }
@@ -24,12 +30,13 @@
         scope.resourceMangementPageHtml = pageName;
         scope.resourceManagementList = pageList;
         if(value==1){
-        	loadingResourceManagement_drugList(8, 1);//取药品列表
-        }
-        if (value == 1||value==2||value==3) {
-            $(".content_nav_search").css("display", "block");
-        } else {
-            $(".content_nav_search").css("display", "none");
+        	scope.searchKeyword="药品名称/分类名称/企业名称";
+        	scope.resourceManagement_seach=function(){searchDrug();};
+        }else if(value==2){
+        	scope.searchKeyword="会议名称/科目名称";
+        	scope.resourceManagement_seach=function(){searchMeeting();};
+        }else if(value==3){
+        	scope.searchKeyword="视频名称/科目名称";
         }
     };
     scope.businessContent_nav_click = function (value, pageName) {//企业管理菜单导航栏功能
@@ -40,6 +47,7 @@
         if (value == 1) {
             $(".content_nav_search").css("display", "block");
             scope.businessList = 'modules/content/index_modules/list/business_list.html';
+            loadingBusinessManagement_businessList(1, 8);
         } else {
             $(".content_nav_search").css("display", "none");
             scope.businessList = 'modules/content/index_modules/list/businessList_registerCheck.html';
@@ -49,7 +57,12 @@
     scope.addDrug = function (isAdd) {
         if (isAdd == 1)
             scope.addDrugForm = 'modules/content/index_modules/add/resourceManagement_addDrugList.html';
-        else scope.addDrugForm = "";
+        else {scope.addDrugForm = "";}
+    };
+    
+    scope.changeInformatinFunction=function(){//修改用户信息
+    	scope.pageContent='modules/content/index_changeInformation.html';
+    	close_header_userFunction();
     };
 }]);
 window.onresize = function () {
@@ -57,7 +70,7 @@ window.onresize = function () {
     $(".content_content_content").css({
         "height": window.innerHeight - 290 + "px"
     });
-}
+};
 function resize() {
     $("aside").css({
         "height": window.innerHeight - 55 + "px"

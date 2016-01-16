@@ -48,7 +48,7 @@ public class StudentDaoTest implements IBaseDaoTest {
     @Override
     @Test
     public void testSave() throws Exception {
-	User user  = new User("password", "account", User.TYPE_STU, "cellphone", "certificateImg", new Date());
+	User user  = new User("password", "account", "name", User.TYPE_STU, "cellphone", "certificateImg", new Date(), new Date());
 	Student student = new Student(user, "name", "school", "major");
 	student.setUser(user);
 	studentDao.save(student);

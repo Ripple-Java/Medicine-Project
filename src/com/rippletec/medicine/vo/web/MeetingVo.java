@@ -4,8 +4,6 @@ import java.util.Date;
 
 import javax.validation.constraints.NotNull;
 
-import org.springframework.stereotype.Component;
-
 import com.rippletec.medicine.model.Meeting;
 
 public class MeetingVo {
@@ -18,8 +16,6 @@ public class MeetingVo {
     private String speaker;
     
     public Integer medicineID;
-
-    private String tag;
     
     @NotNull(message="日期不能为空")
     private Date date;
@@ -32,8 +28,9 @@ public class MeetingVo {
     private String content;
     
     @NotNull(message="所属科目不能为空")
-    private String subject;
+    private Integer subject_id;
     
+    @NotNull(message="会议地址不能为空")
     private String pageUrl;
     
     public String medicineName;
@@ -48,12 +45,11 @@ public class MeetingVo {
 	this.name = meeting.getName();
 	this.speaker = meeting.getSpeaker();
 	this.medicineID = meeting.getMedicine().getId();
-	this.tag = meeting.getTag();
 	this.date = meeting.getCommitDate();
 	PPT = meeting.getPPT();
 	this.video = meeting.getVideo();
 	this.content = meeting.getContent();
-	this.subject = meeting.getSubject();
+	this.subject_id = meeting.getSubject().getId();
 	this.pageUrl = meeting.getPageUrl();
     }
 
@@ -61,9 +57,8 @@ public class MeetingVo {
 
     @Override
     public String toString() {
-	return "MeetingVo [name=" + name + ", speaker=" + speaker + ", tag="
-		+ tag + ", date=" + date + ", PPT=" + PPT + ", video=" + video
-		+ ", content=" + content + ", subject=" + subject + "]";
+	return "MeetingVo [name=" + name + ", speaker=" + speaker + ", date=" + date + ", PPT=" + PPT + ", video=" + video
+		+ ", content=" + content + ", subject=" + subject_id + "]";
     }
 
 
@@ -89,10 +84,6 @@ public class MeetingVo {
         return speaker;
     }
 
-    public String getTag() {
-        return tag;
-    }
-
     public Date getDate() {
         return date;
     }
@@ -109,9 +100,6 @@ public class MeetingVo {
         return content;
     }
 
-    public String getSubject() {
-        return subject;
-    }
 
     public void setName(String name) {
         this.name = name;
@@ -121,9 +109,6 @@ public class MeetingVo {
         this.speaker = speaker;
     }
 
-    public void setTag(String tag) {
-        this.tag = tag;
-    }
 
     public void setDate(Date date) {
         this.date = date;
@@ -139,10 +124,6 @@ public class MeetingVo {
 
     public void setContent(String content) {
         this.content = content;
-    }
-
-    public void setSubject(String subject) {
-        this.subject = subject;
     }
 
 
@@ -167,6 +148,18 @@ public class MeetingVo {
 
     public void setMedicineName(String medicineName) {
         this.medicineName = medicineName;
+    }
+
+
+
+    public Integer getSubject_id() {
+        return subject_id;
+    }
+
+
+
+    public void setSubject_id(Integer subject_id) {
+        this.subject_id = subject_id;
     }
     
     
