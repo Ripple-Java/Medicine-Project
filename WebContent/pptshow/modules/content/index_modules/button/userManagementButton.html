@@ -1,0 +1,42 @@
+﻿<script type="text/javascript">
+$(function(){
+	var initPagination = function() {
+		$("#Pagination").pagination(100, {
+	        num_edge_entries: 0, //边缘页数
+	        num_display_entries: 4, //主体页数
+	        callback: pageselectCallback,//回调函数
+	        items_per_page:1, //每页显示1项
+	        ellipse_text: "",
+	        prev_show_always:"<"
+	    });
+	 }();	 
+	 function pageselectCallback(page_index, jq){
+			$(".pagination a").removeClass("content_content_pageNum_hadSelect");
+			$(".current").addClass("content_content_pageNum_hadSelect");
+			$("span.next").removeClass("content_content_pageNum_hadSelect");
+			$("span.prev").removeClass("content_content_pageNum_hadSelect");
+		    return false;
+		}
+});
+</script>
+<div class="content_content_function"> 
+	<select>
+		<option selected="selected">用户类型</option>
+		<option>普通</option>
+		<option>专业</option>
+	</select> <select>
+		<option selected="selected">排序方式</option>
+		<option>注册时间</option>
+		<option>最后登录时间</option>
+		<option>用户名</option>
+	</select>
+</div>
+<div class="content_content_pageNum">
+	<a>
+		<ul>
+			<li >&lt;&lt;</li>
+            <li  id="Pagination" class="pagination page"></li>
+			<li >&gt;&gt;</li>
+		</ul>
+	</a>
+</div>

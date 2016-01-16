@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import com.rippletec.medicine.dao.BackGroundMedicineTypeDao;
 import com.rippletec.medicine.dao.FindAndSearchDao;
 import com.rippletec.medicine.model.BackGroundMedicineType;
-import com.rippletec.medicine.model.MedicineType;
 import com.rippletec.medicine.service.BackGroundMedicineTypeManager;
 
 

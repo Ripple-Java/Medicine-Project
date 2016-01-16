@@ -13,6 +13,11 @@ import com.rippletec.medicine.service.ChineseMedicineManager;
 import com.rippletec.medicine.service.MedicineTypeManager;
 import com.rippletec.medicine.service.WestMedicineManager;
 
+/**
+ * 初始化数据库工具
+ * @author Liuyi
+ *
+ */
 @Repository(InitDBUtil.NAME)
 public class InitDBUtil {
     
@@ -31,11 +36,13 @@ public class InitDBUtil {
     private BackGroundMedicineTypeManager backGroundMedicineTypeManager;
     
     
-    
+    /**
+     * 根据分类信息，生成用于后台管理的层级分类
+     * @return
+     */
     public  boolean setBackGroundVoToDatabase() {
    	List<MedicineType> medicineTypes = medicineTypeManager.findByParam(MedicineType.PARENT_TYPE_ID, MedicineType.DEFAULT_PARENT_ID);
    	for (MedicineType medicineType : medicineTypes) {
-   	    System.out.println(medicineType.toString());
    	    List<MedicineType> firstTypes = medicineTypeManager.findByParam(MedicineType.PARENT_TYPE_ID, medicineType.getId());
    	    for (MedicineType medicineType1 : firstTypes) {
    		List<MedicineType> secondTypes = medicineTypeManager.findByParam(MedicineType.PARENT_TYPE_ID, medicineType1.getId());

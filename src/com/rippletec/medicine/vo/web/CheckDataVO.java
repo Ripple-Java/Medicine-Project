@@ -1,9 +1,5 @@
 package com.rippletec.medicine.vo.web;
 
-import java.util.Date;
-
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
@@ -27,7 +23,11 @@ public class CheckDataVO {
     
     public String enterprise;
     
+    public String enterpriseNumber;
+    
     public String commitDate;
+    
+    public String imgUrl;
     
     public CheckDataVO() {
     }
@@ -52,7 +52,9 @@ public class CheckDataVO {
 	this.name = checkData.getObjectName();
 	this.commitDate = DateUtil.getDate(checkData.getUploadDate());
 	this.type = checkData.getType();
+	this.enterpriseNumber = checkData.getEnterprise().getEnterpriseNumber();
 	this.enterprise = checkData.getEnterprise().getName();
+	this.imgUrl = checkData.getPath();
     }
 
 
@@ -114,6 +116,31 @@ public class CheckDataVO {
     }
 
 
+
+    public String getEnterpriseNumber() {
+        return enterpriseNumber;
+    }
+
+
+
+    public void setEnterpriseNumber(String enterpriseNumber) {
+        this.enterpriseNumber = enterpriseNumber;
+    }
+
+
+
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
+    }
+
+
+    
     
     
     

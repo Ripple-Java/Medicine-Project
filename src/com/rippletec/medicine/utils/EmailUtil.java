@@ -11,7 +11,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 public class EmailUtil {
     
     public static final String HOST = "112.74.131.194";
-    public static  String user_email = "liuyi@ripple.medicine.com";
+    public static  String user_email = "liuyi@ripple.medicinehub.com";
     public static  String user_name = "liuyi";
     public static  String user_password = "19941213";
     

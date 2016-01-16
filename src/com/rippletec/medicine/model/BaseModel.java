@@ -8,6 +8,7 @@ import java.io.Serializable;
 import org.springframework.stereotype.Repository;
 
 /**
+ * 所有Model层的基类
  * @author Liuyi
  *
  */

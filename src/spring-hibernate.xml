@@ -14,7 +14,6 @@ http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
 ">
 
 	<!-- 数据库连接c3p0配置 -->
-	<!-- 数据库名称为 ripp_medicine 用户名root 密码123456 请自行修改 -->
 	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
 		destroy-method="close" 
 		p:driverClass="${jdbc.driverClassName}"
@@ -32,6 +31,8 @@ http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
 		<property name="automaticTestTable" value="${c3p0.automaticTestTable}"/>
 		<property name="idleConnectionTestPeriod" value="${c3p0.idleConnectionTestPeriod}"/>
 		<property name="checkoutTimeout" value="${c3p0.checkoutTimeout}"/>
+		<property name="maxStatements" value="${c3p0.maxStatements}"/>
+		<property name="maxStatementsPerConnection" value="${c3p0.maxStatementsPerConnection}"/>
 		</bean>
 		
 

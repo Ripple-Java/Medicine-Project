@@ -15,15 +15,17 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
-import org.omg.CORBA.PRIVATE_MEMBER;
 import org.springframework.stereotype.Repository;
 
+import com.rippletec.medicine.utils.StringUtil;
+import com.rippletec.medicine.vo.web.EnterpriseInfoVO;
+
 /**
+ * 企业信息Model
  * @author Liuyi
  *
  */
@@ -32,7 +34,7 @@ import org.springframework.stereotype.Repository;
 @Table(name = Enterprise.TABLE_NAME)
 public class Enterprise extends BaseModel {
 
-    private static final long serialVersionUID = -2404813734314317948L;
+    protected static final long serialVersionUID = -2404813734314317948L;
     
     public static final String CLASS_NAME = "Enterprise";
     public static final String TABLE_NAME = "enterprise";
@@ -41,8 +43,16 @@ public class Enterprise extends BaseModel {
     public static final String PHONE = "phone";
     public static final String EMAIL = "email";
     public static final String TYPE = "type";
+    public static final String ID = "id";
+    
+    public static final int ON_PUBLISTH = 1;
+    public static final int ON_CHECKING = 2;
+    public static final int ON_RECHECKING = 3;
+    public static final int ON_CLOSE = 4;
+    public static final int ON_VAlIDATING = 5;
     
     public static final String USER_ID = "user_id";
+    public static final String STATUS = "status";
     
     /**
      * 外资
@@ -59,68 +69,93 @@ public class Enterprise extends BaseModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    protected Integer id;
 
     // 关联企业分类表
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "enterprise")
     @Cascade(CascadeType.ALL)
-    @OrderBy(value="id asc")
-    private Set<EnterpriseMedicineType> medicineTypeEnterprises = new LinkedHashSet<EnterpriseMedicineType>();
+    protected Set<EnterpriseMedicineType> medicineTypeEnterprises = new LinkedHashSet<EnterpriseMedicineType>();
     
     // 关联企业视频
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "enterprise")
     @Cascade(CascadeType.ALL)
-    @OrderBy(value="id asc")
-    private Set<Video> videos = new LinkedHashSet<Video>();
+    protected Set<Video> videos = new LinkedHashSet<Video>();
+    
+    // 关联企业视频
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "enterprise")
+    @Cascade(CascadeType.ALL)
+    protected Set<Meeting> meetings = new LinkedHashSet<Meeting>();
     
     // 关联企业审核数据
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "enterprise")
     @Cascade(CascadeType.ALL)
-    @OrderBy(value="id asc")
-    private Set<CheckData> checkDatas = new LinkedHashSet<CheckData>();
+    protected Set<CheckData> checkDatas = new LinkedHashSet<CheckData>();
     
     // 关联企业账号
     @OneToOne(fetch=FetchType.LAZY)
     @Cascade(CascadeType.ALL)
     @JoinColumn(name = USER_ID)
-    private User user;
+    protected User user;
 
-    // 企业类型type：1表示外资，2表示合资，3表示内资
+    // 企业类型type：1表示外资，2表示合资，0表示内资
     @Column(name = "type", length = 1, nullable = false)
-    private Integer type;
+    protected Integer type;
 
     // 企业名称
     @Column(name = "name", length = 100, nullable = false)
-    private String name;
+    protected String name;
 
     // 企业logo
     @Column(name = "logo", length = 255, nullable = true)
-    private String logo;
+    protected String logo;
 
     // 企业联系电话,可为null
     @Column(name = "phone", length = 100, nullable = true)
-    private String phone;
+    protected String phone;
 
     // 企业邮箱,可为null
     @Column(name = "email", length = 100, nullable = true)
-    private String email;
+    protected String email;
     
+    // 企业主页
     @Column(name="enterpriseUrl", length=100, nullable=true)
-    private String enterpriseUrl;
+    protected String enterpriseUrl;
     
     //企业执照号
     @Column(name = "enterpriseNumber", length=15, nullable=false)
-    private String enterpriseNumber;
+    protected String enterpriseNumber;
+    
+    //企业简介
+    @Column(name = "content", columnDefinition="TEXT", nullable=true)
+    protected String content;
+    
+    //企业执照审核图片
+    @Column(name = "checkImg", length=200 , nullable=false)
+    protected String checkImg;
+    
+    @Column(name = STATUS, length = 1, nullable=false)
+    protected Integer status;
+    
 
     public Enterprise() {
     }
     
-    public Enterprise(Integer type, String name, String enterpriseNumber, String enterpriseUrl) {
+    public Enterprise(Integer type, String name, String enterpriseNumber, String enterpriseUrl, String checkImg, Integer status) {
 	super();
 	this.type = type;
 	this.name = name;
 	this.enterpriseNumber = enterpriseNumber;
 	this.enterpriseUrl = enterpriseUrl;
+	this.checkImg = checkImg;
+	this.status = status;
+    }
+    
+    
+
+    public void setUpdate(EnterpriseInfoVO vo) {
+	    this.content = vo.getContent();
+	    this.enterpriseUrl = vo.getEnterpriseUrl();
+	    this.phone = vo.getPhone();
     }
     
     
@@ -221,6 +256,32 @@ public class Enterprise extends BaseModel {
     }
     
     
+    
+    
+
+    public Set<Meeting> getMeetings() {
+        return meetings;
+    }
+
+    public void setMeetings(Set<Meeting> meetings) {
+        this.meetings = meetings;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
 
     public Set<CheckData> getCheckDatas() {
         return checkDatas;
@@ -229,6 +290,18 @@ public class Enterprise extends BaseModel {
     public void setCheckDatas(Set<CheckData> checkDatas) {
         this.checkDatas = checkDatas;
     }
+    
+    
+    
+    
+
+    public String getCheckImg() {
+        return checkImg;
+    }
+
+    public void setCheckImg(String checkImg) {
+        this.checkImg = checkImg;
+    }
 
     @Override
     public String toString() {
@@ -236,5 +309,7 @@ public class Enterprise extends BaseModel {
 		+ ", logo=" + logo + ", phone=" + phone + ", email=" + email
 		+ "]";
     }
+
+ 
 
 }

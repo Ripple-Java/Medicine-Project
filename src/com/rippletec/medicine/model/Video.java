@@ -11,13 +11,20 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.security.auth.Subject;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.springframework.stereotype.Repository;
 
+import com.rippletec.medicine.utils.StringUtil;
+import com.rippletec.medicine.vo.web.VideoVO;
 
+
+/**
+ * 医药视频信息Mdoel
+ * @author Liuyi
+ *
+ */
 @Entity
 @Repository
 @Table(name = Video.TABLE_NAME)
@@ -31,11 +38,15 @@ public class Video extends BaseModel {
     public static final String NAME = "name";
     public static final String PASS_DATE = "passDate";
     public static final String STATUS = "status";
+    public static final String ID = "id";
+    public static final String MODIFYTIME = "modifyTime";
     
     public static final int ON_PUBLISTH = 1;
     public static final int ON_CHECKING = 2;
     public static final int ON_RECHECKING = 3;
     public static final int ON_CLOSE = 4;
+    public static final String SUBJECT_ID = "subject_id";
+    private static final String ENTERPRISE_NAME = "enterpriseName";
     
     
     @Id
@@ -45,27 +56,29 @@ public class Video extends BaseModel {
     @Column(name = "name", length=255, nullable = false)
     private String name;
     
-    @Column(name = "path", length = 255, nullable = false)
+    @Column(name = "path", length = 255, nullable = true)
     private String path;
     
     @Column(name = "speaker", length = 40, nullable = true)
     private String speaker;
     
-    @Column(name = "pageUrl", length = 100, nullable = true)
+    @Column(name = "pageUrl", length = 100, nullable = false)
     private String pageUrl;
-    
-    @Column(name = "subject", length = 40, nullable = true)
-    private String subject;
     
     @Column(name = "imgUrl", length = 100, nullable = true)
     private String imgUrl;
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @Cascade(CascadeType.ALL)
+    @Cascade(CascadeType.SAVE_UPDATE)
     @JoinColumn(name = ENTERPRISE_ID)
     private Enterprise enterprise;
     
-    @Column(name="length",nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @Cascade(CascadeType.SAVE_UPDATE)
+    @JoinColumn(name = SUBJECT_ID)
+    private Subject subject;
+    
+    @Column(name="length",nullable = true)
     private Integer length;
     
     @Column(name=STATUS,nullable=false)
@@ -74,10 +87,35 @@ public class Video extends BaseModel {
     @Column(name=PASS_DATE,nullable=false)
     private Date passDate;
     
+    @Column(name=MODIFYTIME,nullable=false)
+    private Date modifyTime;
+    
+    @Column(name = ENTERPRISE_NAME, nullable=false)
+    private String enterpriseName;
+    
     public Video() {
     }
+    
+    public void setUpdate(VideoVO video, Subject subject) {
+	this.subject = subject;
+	this.name = video.getName();
+	this.pageUrl = video.getPageUrl();
+	this.speaker = video.getSpeaker();
+
+    }
+    
+    public Video(Enterprise enterprise, VideoVO video, Subject subject, Integer status) {
+	this.enterprise = enterprise;
+	this.enterpriseName = enterprise.getName();
+	this.subject = subject;
+	this.speaker = video.getSpeaker();
+	this.pageUrl = video.getPageUrl();
+	this.name = video.getName();
+	this.status = status;
+	this.modifyTime = new Date();
+    }
  
-    public Video(String name, String path, String speaker, String subject,
+    public Video(String name, String path, String speaker, Subject subject,
 	    Enterprise enterprise, Integer length, Integer status, Date passDate, String pageUrl, String imgUrl) {
 	super();
 	this.name = name;
@@ -85,6 +123,7 @@ public class Video extends BaseModel {
 	this.speaker = speaker;
 	this.subject = subject;
 	this.enterprise = enterprise;
+	this.enterpriseName = enterprise.getName();
 	this.length = length;
 	this.status = status;
 	this.passDate = passDate;
@@ -172,12 +211,6 @@ public class Video extends BaseModel {
 
 
 
-    public String getSubject() {
-        return subject;
-    }
-
-
-
     public Date getPassDate() {
         return passDate;
     }
@@ -190,15 +223,35 @@ public class Video extends BaseModel {
 
 
 
-    public void setSubject(String subject) {
-        this.subject = subject;
-    }
-
-
-
     public void setPassDate(Date passDate) {
         this.passDate = passDate;
     }
+
+    public Subject getSubject() {
+        return subject;
+    }
+
+    public void setSubject(Subject subject) {
+        this.subject = subject;
+    }
+
+    public Date getModifyTime() {
+        return modifyTime;
+    }
+
+    public void setModifyTime(Date modifyTime) {
+        this.modifyTime = modifyTime;
+    }
+
+    public String getEnterpriseName() {
+        return enterpriseName;
+    }
+
+    public void setEnterpriseName(String enterpriseName) {
+        this.enterpriseName = enterpriseName;
+    }
+    
+    
     
     
     

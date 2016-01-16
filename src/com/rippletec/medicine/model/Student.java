@@ -15,6 +15,10 @@ import org.hibernate.annotations.CascadeType;
 import org.springframework.stereotype.Repository;
 
 
+/**
+ * @author Liuyi
+ *
+ */
 @Repository
 @Entity
 @Table(name=Student.TABLE_NAME)

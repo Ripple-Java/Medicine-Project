@@ -1,7 +1,6 @@
 package com.rippletec.medicine.vo.app;
 
-import javax.persistence.Column;
-
+import com.rippletec.medicine.model.EnterWestMedicine;
 import com.rippletec.medicine.model.WestMedicine;
 
 public class WestMedicineVO {
@@ -24,7 +23,7 @@ public class WestMedicineVO {
     private String warn;
 
     // 不良反应
-    private String ADRS;
+    private String adrs;
 
     // 药物相互作用
     private String interaction;
@@ -64,18 +63,38 @@ public class WestMedicineVO {
 	this.current_application = westMedicine.getCurrent_application();
 	this.pharmacolo = westMedicine.getPharmacolo();
 	this.warn = westMedicine.getWarn();
-	ADRS = westMedicine.getADRS();
+	this.adrs = westMedicine.getAdrs();
 	this.interaction = westMedicine.getInteraction();
 	this.dose_explain = westMedicine.getDose_explain();
 	this.manual = westMedicine.getManual();
 	this.preparations = westMedicine.getPreparations();
-	this.price = westMedicine.getPrice();
 	this.status = westMedicine.getStatus();
 	this.sortKey = westMedicine.getSortKey();
 	this.medicine_id = westMedicine.getMedicine().getId();
 	this.medicine_type_id = westMedicine.getMedicineType().getId();
 	this.id = westMedicine.getId();
     }
+    
+    public WestMedicineVO(EnterWestMedicine westMedicine) {
+  	super();
+  	this.name = westMedicine.getName();
+  	this.other_name = westMedicine.getOther_name();
+  	this.content = westMedicine.getContent();
+  	this.current_application = westMedicine.getCurrent_application();
+  	this.pharmacolo = westMedicine.getPharmacolo();
+  	this.warn = westMedicine.getWarn();
+  	this.adrs = westMedicine.getAdrs();
+  	this.interaction = westMedicine.getInteraction();
+  	this.dose_explain = westMedicine.getDose_explain();
+  	this.manual = westMedicine.getManual();
+  	this.preparations = westMedicine.getPreparations();
+  	this.status = westMedicine.getStatus();
+  	this.sortKey = westMedicine.getSortKey();
+  	this.medicine_id = westMedicine.getMedicine().getId();
+  	this.medicine_type_id = westMedicine.getMedicineType().getId();
+  	this.id = westMedicine.getId();
+  	this.price = westMedicine.getPrice();
+      }
 
     public String getName() {
         return name;
@@ -101,9 +120,7 @@ public class WestMedicineVO {
         return warn;
     }
 
-    public String getADRS() {
-        return ADRS;
-    }
+
 
     public String getInteraction() {
         return interaction;
@@ -169,10 +186,6 @@ public class WestMedicineVO {
         this.warn = warn;
     }
 
-    public void setADRS(String aDRS) {
-        ADRS = aDRS;
-    }
-
     public void setInteraction(String interaction) {
         this.interaction = interaction;
     }
@@ -212,6 +225,16 @@ public class WestMedicineVO {
     public void setId(int id) {
         this.id = id;
     }
+
+    public String getAdrs() {
+        return adrs;
+    }
+
+    public void setAdrs(String adrs) {
+        this.adrs = adrs;
+    }
+    
+    
     
     
     

@@ -14,10 +14,12 @@
 			</a>
 		</nav>
 		<div class="content_nav_search">
-			<input type="search" placeholder="用户名" />
-			<button>
+		<form>
+		<input type="search" placeholder="用户名"  class="userManagement_search"/>
+			<button onclick="searchUser();">
 				<em class="icon iconfont">&#xe645;</em>
 			</button>
+		</form>			
 		</div>
 	</div>
 	<div class="content_content">
@@ -30,27 +32,8 @@
 		<div class="content_content_content" ng-include
 			src="'modules/content/index_modules/list/userlist.html'"></div>
 	</div>
-	<footer class="content_footer">
-		<div class="content_content_function">
-			<button class="content_content_function_all">
-				<em>全选</em>
-			</button>
-			<button class="content_content_function_delete">
-				<em class="icon iconfont">&#xe61f;</em><em>删除</em>
-			</button>
-		</div>
-		<div class="content_content_pageNum">
-			<a>
-				<ul>
-					<li class="page1">1</li>
-					<li class="page2">2</li>
-					<li class="page3">3</li>
-					<li class="page4">4</li>
-					<li class="page5">5</li>
-					<li class="">&gt;</li>
-					<li class="">&gt;&gt;</li>
-				</ul>
-			</a>
-		</div>
+	<footer class="content_footer" ng-include
+			src="'modules/content/index_modules/button/userManagementButton.html'">
+	
 	</footer>
 </section>

@@ -18,6 +18,11 @@ import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.springframework.stereotype.Repository;
 
+/**
+ * 企业新闻Model（未启用）
+ * @author Liuyi
+ *
+ */
 @Repository
 @Entity
 @Table(name  = EnterNews.TABLE_NAME)

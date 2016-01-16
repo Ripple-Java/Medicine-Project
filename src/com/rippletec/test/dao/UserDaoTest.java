@@ -1,28 +1,20 @@
 package com.rippletec.test.dao;
 
-import static org.junit.Assert.*;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.Date;
 
 import javax.annotation.Resource;
 
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.impl.SessionFactoryImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.rippletec.medicine.dao.UserDao;
-import com.rippletec.medicine.dao.impl.UserDaoImpl;
 import com.rippletec.medicine.model.User;
 
 
@@ -68,7 +60,7 @@ public class UserDaoTest implements IBaseDaoTest {
     @Test
     public void testSave() throws Exception {
 	System.out.println((System.currentTimeMillis()+"").substring(3));
-	User user = new User("password","account", User.TYPE_STU, "phone", "certificateImg", new Date());
+	User user = new User("password","account", "name", User.TYPE_STU, "phone", "certificateImg", new Date(), new Date());
 	userDao.save(user);
     }
     

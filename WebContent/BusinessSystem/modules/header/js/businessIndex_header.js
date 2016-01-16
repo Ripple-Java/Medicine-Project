@@ -1,12 +1,25 @@
-function userExitFunction() {//ÓÃ»§ÍË³ö
-    $.get("http://localhost:8080/MedicineProject/Web/enterprise/loginOut",
+function userExitFunction() {////ç”¨æˆ·é€€å‡º
+    $.get("http://112.74.131.194:8080/MedicineProject/Web/enterprise/loginOut",
         function (data) {
             $(".header_userFunction").css("display", "none");
-            alert( "ÍË³ö³É¹¦£¡");
+            alert( "é€€å‡ºæˆåŠŸï¼");
             document.cookie == "";
             location.href = "./businessLogin.html";
         }).
         error(function (data) {
             alert("error");
         });
+}
+function header_user_Click() {//headerç”¨æˆ·å•å‡»æ•ˆæœ
+    if ($(".header_userFunction").css("display") == "block") {
+        $(".header_userFunction").css("display", "none");
+        $(".header_bg").css("display", "none");
+    } else {
+    	$(".header_bg").css("display", "block");
+        $(".header_userFunction").css("display", "block");
+    }
+}
+function close_header_userFunction(){
+	$(".header_userFunction").css("display", "none");
+	$(".header_bg").css("display", "none");
 }

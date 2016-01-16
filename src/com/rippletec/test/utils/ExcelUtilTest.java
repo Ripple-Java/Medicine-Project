@@ -1,24 +1,19 @@
 package com.rippletec.test.utils;
 
-import static org.junit.Assert.*;
-
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.rippletec.medicine.dao.EnterpriseDao;
 import com.rippletec.medicine.model.Enterprise;
 import com.rippletec.medicine.service.EnterpriseManager;
 import com.rippletec.medicine.utils.ExcelUtil;
 import com.rippletec.medicine.utils.InitDBUtil;
-import com.sun.corba.se.spi.orb.StringPair;
 
 
 /**
@@ -81,7 +76,7 @@ public class ExcelUtilTest {
 	String str3 = "北京协和药厂,扬子江药业集团有限公司,哈药集团三精制药股份有限公司,云南白药集团股份有限公司,浙江新和成股份有限公司,天士力制药集团股份有限公司,齐鲁制药有限公司,修正药业集团股份有限公司,神威药业有限公司,石药集团有限公司";
 	String[] strs  = str.split(",");
 	for (String string : strs) {
-	    Enterprise enterprise = new Enterprise(Enterprise.DOMESTIC, string, "00000000", "enterpriseUrl");
+	    Enterprise enterprise = new Enterprise(Enterprise.DOMESTIC, string, "00000000", "enterpriseUrl","",Enterprise.ON_PUBLISTH);
 	    enterprise.setEmail("123456@ripplic.com");
 	    enterprise.setLogo("/images/enter/defaultLogo.png");
 	    enterprise.setPhone("1234567");
@@ -89,7 +84,7 @@ public class ExcelUtilTest {
 	}
 	String[] str2s = str2.split(",");
 	for (String string : str2s) {
-	    Enterprise enterprise = new Enterprise(Enterprise.FOREIGN, string, "00000000", "enterpriseUrl");
+	    Enterprise enterprise = new Enterprise(Enterprise.FOREIGN, string, "00000000", "enterpriseUrl","",Enterprise.ON_PUBLISTH);
 	    enterprise.setEmail("123456@ripplic.com");
 	    enterprise.setLogo("/images/enter/defaultLogo.png");
 	    enterprise.setPhone("1234567");
@@ -97,13 +92,23 @@ public class ExcelUtilTest {
 	}
 	String[] str3s = str3.split(",");
 	for (String string : str3s) {
-	    Enterprise enterprise = new Enterprise(Enterprise.JOINT, string, "00000000", "enterpriseUrl");
+	    Enterprise enterprise = new Enterprise(Enterprise.JOINT, string, "00000000", "enterpriseUrl", "",Enterprise.ON_PUBLISTH);
 	    enterprise.setEmail("123456@ripplic.com");
 	    enterprise.setLogo("/images/enter/defaultLogo.png");
 	    enterprise.setPhone("1234567");
 	    enterpriseManager.save(enterprise);
 	}
 	
+    }
+    
+    @Test
+    public void testsetSubjectToDatabase() throws Exception {
+	
+	String excelPath = "E:\\Desktop\\MedicineProject\\分类明细.xlsx";
+	String sheetName = "科室分类目录";
+	excelUtil.setExcelPath(excelPath)
+		.setSheetName(sheetName);
+	System.out.println(excelUtil.setSubjectToDatabase());
     }
     
     @Test

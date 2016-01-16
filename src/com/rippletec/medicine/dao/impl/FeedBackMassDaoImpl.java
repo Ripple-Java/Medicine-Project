@@ -11,7 +11,7 @@ public class FeedBackMassDaoImpl extends BaseDaoImpl<FeedBackMass> implements Fe
 
     @Override
     public String getClassName() {
-	return FeedBackMass.CLASSE_NAME;
+	return FeedBackMass.CLASS_NAME;
     }
 
     @Override

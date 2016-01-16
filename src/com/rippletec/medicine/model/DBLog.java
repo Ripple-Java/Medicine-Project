@@ -13,6 +13,11 @@ import javax.persistence.TemporalType;
 
 import org.springframework.stereotype.Repository;
 
+/**
+ * 通用药品App端数据同步记录Model
+ * @author Liuyi
+ *
+ */
 @Repository
 @Entity
 @Table(name=DBLog.TABLE_NAME)

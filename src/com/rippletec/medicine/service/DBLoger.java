@@ -2,9 +2,9 @@ package com.rippletec.medicine.service;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 import com.rippletec.medicine.bean.DBLogEntity;
+import com.rippletec.medicine.exception.DaoException;
 import com.rippletec.medicine.model.DBLog;
 
 public interface DBLoger extends IManager<DBLog>{
@@ -21,10 +21,10 @@ public interface DBLoger extends IManager<DBLog>{
 
     List<DBLog> getDatas(int type, int version, int serverVersion);
     
-    List<DBLogEntity> getUpdates(int version, int serverVersion);
+    List<DBLogEntity> getUpdates(int version, int serverVersion) throws DaoException;
     
     List<DBLogEntity> getDeletes(int version, int serverVersion);
     
-    List<DBLogEntity> getSaves(int version, int serverVersion);
+    List<DBLogEntity> getSaves(int version, int serverVersion) throws DaoException;
    
 }

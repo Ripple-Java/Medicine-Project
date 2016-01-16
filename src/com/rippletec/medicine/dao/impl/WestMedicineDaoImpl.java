@@ -2,7 +2,6 @@ package com.rippletec.medicine.dao.impl;
 
 import org.springframework.stereotype.Repository;
 
-import com.rippletec.medicine.annotation.DBLogModel;
 import com.rippletec.medicine.dao.WestMedicineDao;
 import com.rippletec.medicine.model.WestMedicine;
 

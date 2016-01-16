@@ -17,13 +17,14 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.stereotype.Service;
 
-import sun.tools.jar.resources.jar;
-
 import com.rippletec.medicine.bean.PageBean;
 import com.rippletec.medicine.dao.ChineseMedicineDao;
+import com.rippletec.medicine.dao.EnterChineseMedicineDao;
+import com.rippletec.medicine.dao.EnterWestMedicineDao;
 import com.rippletec.medicine.dao.FindAndSearchDao;
 import com.rippletec.medicine.dao.MedicineTypeDao;
 import com.rippletec.medicine.dao.WestMedicineDao;
+import com.rippletec.medicine.exception.DaoException;
 import com.rippletec.medicine.model.ChineseMedicine;
 import com.rippletec.medicine.model.EnterChineseMedicine;
 import com.rippletec.medicine.model.EnterWestMedicine;
@@ -31,6 +32,8 @@ import com.rippletec.medicine.model.MedicineType;
 import com.rippletec.medicine.model.WestMedicine;
 import com.rippletec.medicine.service.MedicineTypeManager;
 import com.rippletec.medicine.utils.JsonUtil;
+import com.rippletec.medicine.utils.ParamMap;
+import com.rippletec.medicine.utils.StringUtil;
 import com.rippletec.medicine.vo.web.BackGroundMedicineVO;
 
 @Service(MedicineTypeManager.NAME)
@@ -42,6 +45,10 @@ public class MedicineTypeManagerImpl extends BaseManager<MedicineType> implement
     private ChineseMedicineDao chineseMedicineDao;
     @Resource(name=WestMedicineDao.NAME)
     private WestMedicineDao westMedicineDao;
+    @Resource(name=EnterChineseMedicineDao.NAME)
+    private EnterChineseMedicineDao enterChineseMedicineDao;
+    @Resource(name=EnterWestMedicineDao.NAME)
+    private EnterWestMedicineDao enterWestMedicineDao;
     @Resource(name=JsonUtil.NAME)
     private JsonUtil jsonUtil;
     
@@ -63,11 +70,9 @@ public class MedicineTypeManagerImpl extends BaseManager<MedicineType> implement
 
 
     @Override
-    public Map<String, Object> getMedicineByTypeId(int typeId, PageBean pageBean) {
+    public Map<String, Object> getMedicineByTypeId(int typeId, PageBean pageBean) throws DaoException {
 	MedicineType medicineType = medicineTypeDao.find(typeId);
 	Map<String, Object> res = new HashMap<String, Object>();
-	if (medicineType == null)
-	    return null;
 	int type = medicineType.getGib_type();
 	if( type == MedicineType.CHINESE){
 	    List<ChineseMedicine> medicines = chineseMedicineDao.findBySql(ChineseMedicine.TABLE_NAME, ChineseMedicine.MEDICINE_TYPE_ID, typeId, pageBean);
@@ -144,19 +149,30 @@ public class MedicineTypeManagerImpl extends BaseManager<MedicineType> implement
 	for (MedicineType medicineType : thirdType) {
 	    forthMap.put(medicineType.getName(),medicineTypeDao.findByParam(MedicineType.PARENT_TYPE_ID, medicineType.getId()));
 	}
-	jsonUtil.setJsonObject("forth", forthMap);
-	
-	org.springframework.core.io.Resource resource = new ClassPathResource("/config.properties");
+	jsonUtil.setJsonObject("forth", forthMap);	
+	org.springframework.core.io.Resource resource = new ClassPathResource("/dataTemp.properties");
 	Properties properties;
+	FileOutputStream fos = null;
 	try {
 	    properties = PropertiesLoaderUtils.loadProperties(resource);
 	    properties.setProperty("medicine.typeJson", jsonUtil.setResultSuccess().toJsonString("/user/getAllMedicineType"));
-	    FileOutputStream fos = new FileOutputStream(resource.getFile());
+	    fos = new FileOutputStream(resource.getFile());
+	    System.out.println(resource.getFile());
 	    properties.store(fos, null);
 	    return true;
 	} catch (IOException e) {
 	    e.printStackTrace();
 	    return false;
+	}
+	finally{
+	    if(fos != null){
+		try {
+		    fos.close();
+		} catch (IOException e) {
+		    e.printStackTrace();
+		    return false;
+		}
+	    }
 	}
     }
 
@@ -164,7 +180,7 @@ public class MedicineTypeManagerImpl extends BaseManager<MedicineType> implement
 
     @Override
     public String getTypeJson() {
-	org.springframework.core.io.Resource resource = new ClassPathResource("/config.properties");
+	org.springframework.core.io.Resource resource = new ClassPathResource("/dataTemp.properties");
 	Properties properties;
 	try {
 	    properties = PropertiesLoaderUtils.loadProperties(resource);
@@ -197,24 +213,24 @@ public class MedicineTypeManagerImpl extends BaseManager<MedicineType> implement
 	if(medicineType.getGib_type() == MedicineType.CHINESE){
 		Set<ChineseMedicine> chineseMedicines = medicineType.getChineseMedicines();
 		for (ChineseMedicine chineseMedicine : chineseMedicines) {
-		    res.add(new BackGroundMedicineVO(medicineType.getBackGroundMedicineType(), chineseMedicine.getName(), null, chineseMedicine.getId()));
+		    res.add(new BackGroundMedicineVO(medicineType.getBackGroundMedicineType(), chineseMedicine.getName(), null, chineseMedicine.getId(), null));
 		}
 		Set<EnterChineseMedicine> enterChineseMedicines = medicineType.getEnterChineseMedicines();
 		if(enterChineseMedicines == null || enterChineseMedicines.size() < 1)
 		    return res;
 		for (EnterChineseMedicine enterChineseMedicine : enterChineseMedicines) {
-		    res.add(new BackGroundMedicineVO(medicineType.getBackGroundMedicineType(), enterChineseMedicine.getName(), enterChineseMedicine.getEnterprise_name(), enterChineseMedicine.getId()));
+		    res.add(new BackGroundMedicineVO(medicineType.getBackGroundMedicineType(), enterChineseMedicine.getName(), enterChineseMedicine.getEnterprise_name(), enterChineseMedicine.getId(), enterChineseMedicine.getUpdateTime()));
 		}
 	    }else{
 		Set<WestMedicine> westMedicines = medicineType.getWestMedicines();
 		for (WestMedicine westMedicine : westMedicines) {
-		    res.add(new BackGroundMedicineVO(medicineType.getBackGroundMedicineType(), westMedicine.getName(), null, westMedicine.getId()));
+		    res.add(new BackGroundMedicineVO(medicineType.getBackGroundMedicineType(), westMedicine.getName(), null, westMedicine.getId(), null));
 		}
 		Set<EnterWestMedicine> enterWestMedicines = medicineType.getEnterWestMedicines();
 		if(enterWestMedicines == null || enterWestMedicines.size() < 1)
 		    return res;
 		for (EnterWestMedicine enterWestMedicine : enterWestMedicines) {
-		    res.add(new BackGroundMedicineVO(medicineType.getBackGroundMedicineType(), enterWestMedicine.getName(), enterWestMedicine.getEnterprise_name(), enterWestMedicine.getId()));
+		    res.add(new BackGroundMedicineVO(medicineType.getBackGroundMedicineType(), enterWestMedicine.getName(), enterWestMedicine.getEnterprise_name(), enterWestMedicine.getId(), enterWestMedicine.getUpdateTime()));
 		}
 	    }
 	return res;
@@ -239,6 +255,47 @@ public class MedicineTypeManagerImpl extends BaseManager<MedicineType> implement
 		}
 	    }
 	return backGroundMedicineVOs;
+    }
+
+
+
+    @Override
+    public List<BackGroundMedicineVO> getEnterBackGroundMedicineVO(
+	    MedicineType medicineType, int enterpriseId) {
+	List<BackGroundMedicineVO> res = new LinkedList<BackGroundMedicineVO>();
+	if(medicineType.getGib_type() == MedicineType.CHINESE){
+	    	ParamMap paramMap = new ParamMap().put(EnterChineseMedicine.MEDICINE_TYPE_ID, medicineType.getId())
+	    				          .put(EnterChineseMedicine.ENTERPRISE_ID, enterpriseId);
+		List<EnterChineseMedicine> enterChineseMedicines = enterChineseMedicineDao.findBySql(EnterChineseMedicine.TABLE_NAME, paramMap);
+		if(enterChineseMedicines == null || enterChineseMedicines.size() < 1)
+		    return res;
+		for (EnterChineseMedicine enterChineseMedicine : enterChineseMedicines) {
+		    res.add(new BackGroundMedicineVO(medicineType.getBackGroundMedicineType(), enterChineseMedicine.getName(), enterChineseMedicine.getEnterprise_name(), enterChineseMedicine.getId(), enterChineseMedicine.getUpdateTime()));
+		}
+	    }else{
+		ParamMap paramMap = new ParamMap().put(EnterWestMedicine.MEDICINE_TYPE_ID, medicineType.getId())
+			          .put(EnterWestMedicine.ENTERPRISE_ID, enterpriseId);
+		List<EnterWestMedicine> enterWestMedicines = enterWestMedicineDao.findBySql(EnterWestMedicine.TABLE_NAME, paramMap);
+		if(enterWestMedicines == null || enterWestMedicines.size() < 1)
+		    return res;
+		for (EnterWestMedicine enterWestMedicine : enterWestMedicines) {
+		    res.add(new BackGroundMedicineVO(medicineType.getBackGroundMedicineType(), enterWestMedicine.getName(), enterWestMedicine.getEnterprise_name(), enterWestMedicine.getId(), enterWestMedicine.getUpdateTime()));
+		}
+	    }
+	return res;
+    }
+
+
+
+    @Override
+    public MedicineType findType(int medicineType_id, int gibType) {
+	ParamMap paramMap = new ParamMap().put(MedicineType.GIB_TYPE, gibType)
+					  .put(MedicineType.ID, medicineType_id);
+	List<MedicineType> medicineTypes = medicineTypeDao.findByParam(paramMap);
+	if(StringUtil.isEmpty(medicineTypes)){
+	    return null;
+	}
+	return medicineTypes.get(0);
     }
 
 }

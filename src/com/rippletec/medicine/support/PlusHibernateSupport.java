@@ -12,6 +12,7 @@ import java.util.List;
 
 
 
+
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -148,6 +149,31 @@ public class PlusHibernateSupport<T> extends HibernateDaoSupport{
 	return items;
       }
     
+    @SuppressWarnings({ "unchecked", "deprecation" })
+    public List<T> findCount(final String sql, final String params,final Object whereValue, String inParam, final Object[] values) {
+	List<T> items = getHibernateTemplate().executeFind(new HibernateCallback<List<T>>() {
+
+	    @Override
+	    public List<T> doInHibernate(Session session)
+		    throws HibernateException, SQLException {
+		Query q = session.createSQLQuery(sql);
+		if(values != null && values.length > 0){
+		    	int i = 0;
+        		for (; i < values.length; i++) {
+        		    q.setParameter(i, values[i]);
+        		}
+        		if(whereValue != null)
+        		    q.setParameter(i, whereValue);
+		}
+		
+		List<T> result = q.list();
+		return result;
+	    }
+	    
+	});
+	return items;
+      }
+    
     public List<T> Search(final String hql,final String param ,final Object value) {
 	return Search(hql, new String[]{param}, new Object[]{value});
     }
@@ -159,6 +185,7 @@ public class PlusHibernateSupport<T> extends HibernateDaoSupport{
 	    @Override
 	    public List<T> doInHibernate(Session session)
 		    throws HibernateException, SQLException {
+		System.out.println(hql);
 		Query q = session.createQuery(hql);
 		for (int i = 0; i < params.length; i++) {
 		    q.setParameter(params[i], "%"+values[i]+"%");
@@ -170,6 +197,34 @@ public class PlusHibernateSupport<T> extends HibernateDaoSupport{
 	});
 	return items;
     }
+    
+    public List<T> Search(final Class<T> enityClass,final String hql,final String field ,final Object keyword ,final String param ,final Object value) {
+ 	return Search(enityClass,hql, new String[]{field}, new Object[]{keyword}, new String[]{param}, new Object[]{value});
+     }
+     
+     @SuppressWarnings({ "unchecked", "deprecation" })
+     public List<T> Search(final Class<T> enityClass, final String hql,final String[] fields ,final Object[] keywords, final String[] params ,final Object[] values) {
+ 	List<T> items = getHibernateTemplate().executeFind(new HibernateCallback<List<T>>() {
+
+ 	    @Override
+ 	    public List<T> doInHibernate(Session session)
+ 		    throws HibernateException, SQLException {
+ 		System.out.println(hql);
+ 		int i = 0;
+ 		Query q = session.createSQLQuery(hql).addEntity(enityClass);
+ 		for (i = 0; i < fields.length; i++) {
+ 		    q.setParameter(i,"%"+ keywords[i]+"%");
+ 		}
+ 		for (int n=0; n < params.length; n++) {
+ 		    q.setParameter(i+n, values[n]);
+ 		}
+ 		List<T> result = q.list();
+ 		return result;
+ 	    }
+ 	    
+ 	});
+ 	return items;
+     }
        
 
 }

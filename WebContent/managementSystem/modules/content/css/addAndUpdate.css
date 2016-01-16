@@ -1,0 +1,167 @@
+﻿.bg {
+	opacity: 0.4;
+	background-color: #e5e5e5;
+	width: 100%;
+	height: 100%;
+	top: 0px;
+	left: 0px;
+	position: absolute;
+	filter: Alpha(opacity = 50);
+	z-index: 99;
+}
+
+.add_drug_ChinaOrWestaside {
+	width: 2.5em;
+	position: absolute;
+	top: 1em;
+	z-index: 101;
+	left:19.209em;
+}
+
+.add_drug_ChinaOrWestaside ul li {
+	height: 7em;
+	padding-top: 1em;
+	padding-left: 0.8em;
+	margin-top: 0.8em;
+	border: 1px solid #e5e5e5;
+	border-right: none;
+}
+
+.add_drug_ChinaOrWestaside_unActive {
+	background-color: #e5e5e5;
+}
+
+.add_drug_ChinaOrWestaside_hadActive {
+	background-color: #ffffff;
+}
+
+.addDrug {
+	width: 70em;
+	background-color: #ffffff;
+	z-index: 100;
+	position: absolute;
+	top: 0px;
+	height: 100%;
+	overflow-y: scroll;
+	margin:auto;
+}
+
+.addDrug .addCommonWestDrug {
+	display: none;
+}
+
+.addDrug ul li:first-child {
+	margin-top: 1em;
+	font-size: 1.3em;
+	font-weight: bold;
+	text-indent: 0.8em;
+	margin-bottom: 0.7em;
+	padding-bottom: 0.3em;
+	border-bottom: 1px dashed #e5e5e5;
+}
+
+.addDrug ul li:last-child {
+	text-align: center;
+	margin-bottom: 1em;
+	margin-top: 2em;
+}
+
+.addDrug li {
+	text-indent: 1em;
+	margin-top: 0.3em;
+}
+
+.addDrug li input[type="text"] ,.addDrug li textarea{
+	font-size: 1.2em;
+	border-radius: 5px;
+	border: 1px solid #e5e5e5;
+	margin-top: 0.3em;
+	padding-left: 0.5em;
+	width: 95%;
+}
+
+.addDrug li input[type="button"],div li button {
+	width: 8em;
+	border-radius: 5px;
+	border: 1px solid #e5e5e5;
+}
+
+.addDrug .drugType_select select{
+	font-size: 1.2em;
+	border-radius: 5px;
+	border: 1px solid #e5e5e5;
+	margin-top: 0.3em;
+	padding-left: 0.5em;
+}
+/*update*/
+
+
+
+.updateDrug {
+	width: 70em;
+	background-color: #ffffff;
+	z-index: 100;
+	position: absolute;
+	top: 0px;
+	height: 100%;
+	overflow-y: scroll;
+	margin:auto;
+}
+
+
+.updateDrug ul li:first-child {
+	margin-top: 1em;
+	font-size: 1.3em;
+	font-weight: bold;
+	text-indent: 0.8em;
+	margin-bottom: 0.7em;
+	padding-bottom: 0.3em;
+	border-bottom: 1px dashed #e5e5e5;
+}
+
+.updateDrug ul li:last-child {
+	text-align: center;
+	margin-bottom: 1em;
+	margin-top: 2em;
+}
+
+.updateDrug li {
+	text-indent: 1em;
+	margin-top: 0.3em;
+}
+
+.updateDrug li input[type="text"] ,.updateDrug li textarea{
+	font-size: 1.2em;
+	border-radius: 5px;
+	border: 1px solid #e5e5e5;
+	margin-top: 0.3em;
+	padding-left: 0.5em;
+	width: 95%;
+}
+
+.updateDrug li input[type="button"],div li button {
+	width: 8em;
+	border-radius: 5px;
+	border: 1px solid #e5e5e5;
+}
+
+.updateDrug .drugType_select select{
+	font-size: 1.2em;
+	border-radius: 5px;
+	border: 1px solid #e5e5e5;
+	margin-top: 0.3em;
+	padding-left: 0.5em;
+}
+/*common*/
+#second{
+	width:27%;
+}
+#first{
+	width: 10%;
+}
+#third{
+	width:20%;
+}
+#forth{
+	width:34.5%;
+}

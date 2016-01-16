@@ -2,17 +2,15 @@ package com.rippletec.medicine.utils;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Date;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import com.rippletec.medicine.bean.Result;
 
+@Repository(FileUtil.NAME)
 public class FileUtil {
     
     
@@ -20,24 +18,58 @@ public class FileUtil {
     
     
     public static String pptHtml;
+    public static String shareHtml;
     
     public FileUtil() {
 	 pptHtml = "";
+	 shareHtml = "";
 	 String classPath = this.getClass().getClassLoader().getResource("/").getPath();
 	 String rootPath = classPath.substring(0, classPath.indexOf("WEB-INF/classes"));
 	 File pptHtmlFile = new File(rootPath+File.separator+"pptshow"+File.separator+"showpptIndex.html");
+	 File shareHtmlFile = new File(rootPath+File.separator+"SharePage"+File.separator+"shareMedicine.html");
+	 if(!pptHtmlFile.exists() || !shareHtmlFile.exists()){
+	     LoggerUtil.UtilLogger.error("ppt页面或分享页面不存在");
+	 }
+	 BufferedReader PPTReader = null;
+	 BufferedReader ShareReader = null;
+	 
 	try {
 	    
-	    BufferedReader reader = new BufferedReader(new FileReader(pptHtmlFile));
+	    PPTReader = new BufferedReader(new FileReader(pptHtmlFile));
 	    String data = null;
-	    data = reader.readLine();
+	    data = PPTReader.readLine();
 	    while (data != null) {
 		pptHtml += data;
 		pptHtml += "\n";
-		data = reader.readLine();
+		data = PPTReader.readLine();
+	    }
+	    ShareReader = new BufferedReader(new FileReader(shareHtmlFile));
+	    String sharedata = null;
+	    sharedata = ShareReader.readLine();
+	    while (sharedata != null) {
+		shareHtml += sharedata;
+		shareHtml += "\n";
+		sharedata = ShareReader.readLine();
 	    }
 	} catch (IOException e) {
-	    LoggerUtil.UtilLogger.error("读取ppt页面失败");
+	    LoggerUtil.UtilLogger.error("读取分享页面失败");
+	}finally{
+	    if(PPTReader != null){
+		try {
+		    PPTReader.close();
+		} catch (IOException e) {
+		    LoggerUtil.UtilLogger.error("关闭pptReader失败");
+		    e.printStackTrace();
+		}
+	    }
+	    if(ShareReader != null){
+		try {
+		    ShareReader.close();
+		} catch (IOException e) {
+		    LoggerUtil.UtilLogger.error("关闭ShareReader失败");
+		    e.printStackTrace();
+		}
+	    }
 	}
     }
     
@@ -61,12 +93,21 @@ public class FileUtil {
 	return filename.substring(filename.lastIndexOf(".")).toLowerCase();
 
     }
+    /**
+     * 获取文件名不带格式
+     * @param filename
+     * @return
+     */
     public static String getSimpleFilename(String filename) {
 
    	return filename.substring(0,filename.lastIndexOf("."));
 
        }
     
+    /**
+     * 获取项目根目录
+     * @return
+     */
     public static String getRootPath() {
 	return System.getProperty("medicine.root");
     }

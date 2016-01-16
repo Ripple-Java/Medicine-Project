@@ -24,7 +24,7 @@ body,h1,h2,h3,h4,h5,h6,hr,p,blockquote, /* structural elements 结构元素 */
 /** 设置默认字体 **/
 body,button,input,select,textarea,li /* for ie */ {
 	font: 12px/1.5 tahoma, arial, \5b8b\4f53, sans-serif;
-	color: #737373;
+ 	color: #737373; 
 	font-family: "微软雅黑";
 }
 
@@ -50,6 +50,7 @@ ul,ol {
 /** 重置文本格式元素 **/
 a {
 	text-decoration: none;
+	color:#555555;
 }
 
 a:hover {

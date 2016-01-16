@@ -49,6 +49,11 @@
 	color: #ffffff;
 }
 
+.loginFailAlert{
+	display:none;
+	color:red;
+	padding-top:0.5em;
+}
 .loginPasswordLabel {
 	float: left;
 }

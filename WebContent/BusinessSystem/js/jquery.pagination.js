@@ -14,8 +14,8 @@ jQuery.fn.pagination = function(maxentries, opts){
 		current_page:0,
 		num_edge_entries:0,
 		link_to:"#",
-		prev_text:"Prev",
-		next_text:"Next",
+		prev_text:"<",
+		next_text:">",
 		ellipse_text:"...",
 		prev_show_always:true,
 		next_show_always:true,
@@ -65,7 +65,8 @@ jQuery.fn.pagination = function(maxentries, opts){
 		 * 此函数将分页链接插入到容器元素中
 		 */
 		function drawLinks() {
-			panel.empty();
+			//panel.empty();
+			$("section #Pagination").empty();
 			var interval = getInterval();
 			var np = numPages();
 			// 这个辅助函数返回一个处理函数调用有着正确page_id的pageSelected。
@@ -77,14 +78,16 @@ jQuery.fn.pagination = function(maxentries, opts){
 				page_id = page_id<0?0:(page_id<np?page_id:np-1); // 规范page id值
 				appendopts = jQuery.extend({text:page_id+1, classes:""}, appendopts||{});
 				if(page_id == current_page){
-					var lnk = jQuery("<span class='current'>"+(appendopts.text)+"</span>");
+					var lnk = jQuery("<span class='current '>"+(appendopts.text)+"</span>");
 				}else{
 					var lnk = jQuery("<a>"+(appendopts.text)+"</a>")
 						.bind("click", getClickHandler(page_id))
 						.attr('href', opts.link_to.replace(/__id__/,page_id));		
 				}
 				if(appendopts.classes){lnk.addClass(appendopts.classes);}
-				panel.append(lnk);
+				$("section #Pagination").append(lnk);
+				//panel.append(lnk);
+				
 			}
 			// 产生"Previous"-链接
 			if(opts.prev_text && (current_page > 0 || opts.prev_show_always)){

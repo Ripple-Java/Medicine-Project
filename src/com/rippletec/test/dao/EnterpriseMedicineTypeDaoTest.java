@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.rippletec.medicine.bean.PageBean;
 import com.rippletec.medicine.dao.EnterpriseDao;
 import com.rippletec.medicine.dao.EnterpriseMedicineTypeDao;
-import com.rippletec.medicine.model.Enterprise;
 import com.rippletec.medicine.model.EnterpriseMedicineType;
 
 /**

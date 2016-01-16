@@ -21,6 +21,7 @@ public class SMS {
     private String authToken = "471cece0f1876416386a690af9413dbd";
     private String appId = "0b1b1aee07ce46e3a643db3ae6cf6e66";
     public static String RegisterTemplateId = "15725";
+    public static String GetBackTemplateId = "17716";
     
     private JsonReqClient client = new JsonReqClient();
     

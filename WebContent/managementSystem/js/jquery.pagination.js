@@ -65,7 +65,8 @@ jQuery.fn.pagination = function(maxentries, opts){
 		 * 此函数将分页链接插入到容器元素中
 		 */
 		function drawLinks() {
-			panel.empty();
+			//panel.empty();
+			$("section #Pagination").empty();
 			var interval = getInterval();
 			var np = numPages();
 			// 这个辅助函数返回一个处理函数调用有着正确page_id的pageSelected。
@@ -84,7 +85,9 @@ jQuery.fn.pagination = function(maxentries, opts){
 						.attr('href', opts.link_to.replace(/__id__/,page_id));		
 				}
 				if(appendopts.classes){lnk.addClass(appendopts.classes);}
-				panel.append(lnk);
+				$("section #Pagination").append(lnk);
+				//panel.append(lnk);
+				
 			}
 			// 产生"Previous"-链接
 			if(opts.prev_text && (current_page > 0 || opts.prev_show_always)){

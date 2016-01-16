@@ -1,8 +1,7 @@
 package com.rippletec.medicine.vo.app;
 
-import javax.persistence.Column;
-
 import com.rippletec.medicine.model.ChineseMedicine;
+import com.rippletec.medicine.model.EnterChineseMedicine;
 
 public class ChineseMedicineVO {
     
@@ -61,12 +60,30 @@ public class ChineseMedicineVO {
 	this.manual = chineseMedicine.getManual();
 	this.store = chineseMedicine.getStore();
 	this.category = chineseMedicine.getCategory();
-	this.price = chineseMedicine.getPrice();
 	this.status = chineseMedicine.getStatus();
 	this.sortKey = chineseMedicine.getSortKey();
 	this.medicine_id = chineseMedicine.getMedicine().getId();;
 	this.medicine_type_id = chineseMedicine.getMedicineType().getId();
     }
+    
+    public ChineseMedicineVO(EnterChineseMedicine chineseMedicine) {
+  	super();
+  	this.id = chineseMedicine.getId();
+  	this.name = chineseMedicine.getName();
+  	this.content = chineseMedicine.getContent();
+  	this.efficacy = chineseMedicine.getEfficacy();
+  	this.annouce = chineseMedicine.getAnnouce();
+  	this.preparations = chineseMedicine.getPreparations();
+  	this.manual = chineseMedicine.getManual();
+  	this.store = chineseMedicine.getStore();
+  	this.category = chineseMedicine.getCategory();
+  	this.status = chineseMedicine.getStatus();
+  	this.sortKey = chineseMedicine.getSortKey();
+  	this.medicine_id = chineseMedicine.getMedicine().getId();;
+  	this.medicine_type_id = chineseMedicine.getMedicineType().getId();
+  	this.price = chineseMedicine.getPrice();
+      }
+
 
 
 

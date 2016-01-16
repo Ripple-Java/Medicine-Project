@@ -16,15 +16,12 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.Cascade;
 import org.springframework.stereotype.Repository;
 
-import com.rippletec.medicine.annotation.DBLogModel;
-
 /**
+ * 通用药品类型Model
  * @author Liuyi
  *
  */
@@ -37,7 +34,9 @@ public class MedicineType extends BaseModel {
     public static final String TABLE_NAME = "medicine_type";
     public static final String PARENT_TYPE_ID = "parent_type_id";
     public static final String BACKGROUND_MEDICINETYPE_ID = "backGroundMedicineType_id";
+    public static final String FLAG = "flag";
     public static final String NAME = "name";
+    public static final String GIB_TYPE = "gib_type";
     public static final int CHINESE = 1;
     public static final int WEST = 2;
 
@@ -45,6 +44,7 @@ public class MedicineType extends BaseModel {
     public static final int DEFAULT_PARENT_ID = -1;
 
     private static final long serialVersionUID = -521600701786316983L;
+    public static final String ID = "id";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

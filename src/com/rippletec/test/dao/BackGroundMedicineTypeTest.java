@@ -1,29 +1,17 @@
 package com.rippletec.test.dao;
 
-import static org.junit.Assert.*;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import javax.annotation.Resource;
 
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.rippletec.medicine.bean.PageBean;
 import com.rippletec.medicine.dao.BackGroundMedicineTypeDao;
 import com.rippletec.medicine.dao.ChineseMedicineDao;
 import com.rippletec.medicine.dao.MedicineTypeDao;
 import com.rippletec.medicine.dao.WestMedicineDao;
-import com.rippletec.medicine.model.BackGroundMedicineType;
-import com.rippletec.medicine.model.ChineseMedicine;
-import com.rippletec.medicine.model.MedicineType;
-import com.rippletec.medicine.model.WestMedicine;
 
 
 /**

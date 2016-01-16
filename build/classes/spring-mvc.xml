@@ -66,28 +66,30 @@
 	<mvc:resources mapping="/BusinessSystem/**" location="/BusinessSystem/" />
 	<mvc:resources mapping="/managementSystem/**" location="/managementSystem/" />
 	<mvc:resources mapping="/pptshow/**" location="/pptshow/" />
+	<mvc:resources mapping="/SharePage/**" location="/SharePage/" />
 	<mvc:resources mapping="/portrait/**" location="/portrait/" />
 	<mvc:resources mapping="/enterprise/**" location="/enterprise/" />
 	<mvc:resources mapping="/video/**" location="/video/" />
+	<mvc:resources mapping="/download/**" location="/download/" />
 	
 	
 	<mvc:interceptors>
 		<mvc:interceptor>
-		<mvc:mapping path="/App/user/*"/>
+		<mvc:mapping path="/App/user/**"/>
 		<bean class="com.rippletec.medicine.Interceptor.AuthorityInterceptor">
 			<property name="type" value="0"></property>
 		</bean>
 		</mvc:interceptor>
 		
 		<mvc:interceptor>
-		<mvc:mapping path="/Web/enterprise/*"/>
+		<mvc:mapping path="/Web/enterprise/**"/>
 		<bean class="com.rippletec.medicine.Interceptor.AuthorityInterceptor">
 			<property name="type" value="3"></property>
 		</bean>
 		</mvc:interceptor>
 		
 		<mvc:interceptor>
-		<mvc:mapping path="/Web/admin/*"/>
+		<mvc:mapping path="/Web/admin/**"/>
 		<bean class="com.rippletec.medicine.Interceptor.AuthorityInterceptor">
 			<property name="type" value="4"></property>
 		</bean>

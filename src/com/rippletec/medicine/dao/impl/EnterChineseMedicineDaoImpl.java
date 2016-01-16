@@ -18,4 +18,9 @@ public class EnterChineseMedicineDaoImpl extends BaseDaoImpl<EnterChineseMedicin
 	return EnterChineseMedicine.class;
     }
 
+    @Override
+    public EnterChineseMedicine findByMedicineId(Integer id) {
+	return findBySql(EnterChineseMedicine.TABLE_NAME, EnterChineseMedicine.MEDICINE_ID, id).get(0);
+    }
+
 }

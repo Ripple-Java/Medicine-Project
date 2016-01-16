@@ -1,9 +1,6 @@
 package com.rippletec.medicine.dao.impl;
 
-import java.util.LinkedList;
 import java.util.List;
-
-import javax.persistence.Query;
 
 import org.hibernate.SQLQuery;
 import org.springframework.stereotype.Repository;
@@ -30,6 +27,7 @@ public class DBLogDaoImpl extends BaseDaoImpl<DBLog> implements DBLogDao{
 	return ((Long)getHibernateTemplate().find(StringUtil.getCountSql(DBLog.CLASS_NAME)).listIterator().next()).intValue();
     }
 
+    @Override
     @SuppressWarnings({ "unchecked", "deprecation" })
     public List<DBLog> getModifiedData(int type, int version, int serverVersion) {
 	String sql = "select * from "+DBLog.TABLE_NAME+" where action=? and db_version <=? and db_version >?"; 

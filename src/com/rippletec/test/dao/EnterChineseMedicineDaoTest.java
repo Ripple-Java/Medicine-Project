@@ -1,5 +1,7 @@
 package com.rippletec.test.dao;
 
+import java.util.Date;
+
 import javax.annotation.Resource;
 
 import org.junit.Test;
@@ -10,10 +12,11 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.rippletec.medicine.dao.EnterChineseMedicineDao;
+import com.rippletec.medicine.dao.EnterpriseDao;
 import com.rippletec.medicine.dao.EnterpriseMedicineTypeDao;
 import com.rippletec.medicine.dao.MedicineTypeDao;
 import com.rippletec.medicine.model.EnterChineseMedicine;
-import com.rippletec.medicine.model.EnterpriseMedicineType;
+import com.rippletec.medicine.model.Enterprise;
 import com.rippletec.medicine.model.Medicine;
 import com.rippletec.medicine.model.MedicineType;
 
@@ -34,6 +37,8 @@ public class EnterChineseMedicineDaoTest implements IBaseDaoTest {
     private EnterpriseMedicineTypeDao enterpriseMedicineTypeDao;
     @Resource(name=MedicineTypeDao.NAME)
     private MedicineTypeDao medicineTypeDao;
+    @Resource(name=EnterpriseDao.NAME)
+    private EnterpriseDao enterpriseDao;
 
     @Override
     @Test
@@ -53,10 +58,16 @@ public class EnterChineseMedicineDaoTest implements IBaseDaoTest {
     @Override
     @Test
     public void testSave() throws Exception {
-	Medicine medicine = new Medicine(Medicine.ENTER_CHINESE);
-	MedicineType medicineType = medicineTypeDao.find(5);
-	EnterChineseMedicine enterChineseMedicine = new EnterChineseMedicine(medicine, medicineType, "enterprise_name", "name", "content", "efficacy", "annouce", "preparations", "manual", "store", "category", 44.0, EnterChineseMedicine.ON_PUBLISTH);
-	enterChineseMedicineDao.save(enterChineseMedicine);
+	for (int i = 0; i < 30; i++) {
+	    Medicine medicine = new Medicine(Medicine.ENTER_CHINESE, 94);
+	    MedicineType medicineType = medicineTypeDao.find(5);
+//	    Enterprise enterprise = enterpriseDao.find(94);
+////	    EnterChineseMedicine enterChineseMedicine = new EnterChineseMedicine(medicine, medicineType, "enterprise_name", "enterChineseMedicne-"+i, "content", "efficacy", "annouce", "preparations", "manual", "store", "category", 44.0, EnterChineseMedicine.ON_PUBLISTH, new Date());
+//	    enterChineseMedicine.setSortKey("sortKey");
+//	    enterChineseMedicine.setEnterprise(enterprise);
+//	    enterChineseMedicineDao.save(enterChineseMedicine);
+	}
+	
     }
 
     @Override

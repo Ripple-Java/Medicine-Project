@@ -1,7 +1,8 @@
 package com.rippletec.medicine.vo.web;
 
+import java.util.Date;
+
 import com.rippletec.medicine.model.BackGroundMedicineType;
-import com.rippletec.medicine.model.BaseModel;
 
 public class BackGroundMedicineVO {
     
@@ -15,13 +16,16 @@ public class BackGroundMedicineVO {
     
     public Integer id;
     
+    public Date updateTime;
+    
     public BackGroundMedicineVO(BackGroundMedicineType type, String name,
-	    String enterpriseName, int id) {
+	    String enterpriseName, int id, Date updateTime) {
 	super();
 	this.type = type;
 	this.name = name;
 	this.enterpriseName = enterpriseName;
 	this.id = id;
+	this.updateTime = updateTime;
     }
 
     public BackGroundMedicineVO() {
@@ -57,6 +61,16 @@ public class BackGroundMedicineVO {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+    
+    
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 
     @Override

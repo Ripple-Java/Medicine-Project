@@ -3,7 +3,6 @@ package com.rippletec.medicine.service;
 import java.util.List;
 
 import com.rippletec.medicine.bean.PageBean;
-import com.rippletec.medicine.model.BaseModel;
 import com.rippletec.medicine.model.Medicine;
 import com.rippletec.medicine.utils.JsonUtil;
 import com.rippletec.medicine.vo.web.BackGroundMedicineVO;
@@ -22,5 +21,5 @@ public interface MedicineManager extends IManager<Medicine> {
 	    String param, Object value);
 
     void getChineseOrWest(List<BackGroundMedicineVO> models, List<Medicine> medicines);
-    
+
 }

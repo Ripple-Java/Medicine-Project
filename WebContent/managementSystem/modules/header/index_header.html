@@ -1,4 +1,5 @@
-﻿<div class="header_message">
+﻿<div class="header_bg"  onclick="close_header_userFunction();"></div>
+<div class="header_message">
 	<div>
 		<em class="icon iconfont header_home_icon ">&#xe601;</em> <b
 			class="header_app_name">医药汇</b> <span class="header_app_backSystem">管理后台</span>
@@ -6,7 +7,7 @@
 </div>
 <a class="icon iconfont header_user" onclick="header_user_Click()"><em>&#xf007c;</em></a>
 <ul class="header_userFunction" style="display: none;">
-	<li class=" header_edit"><a><em class="iconfont">&#xe630;</em><em>修改信息</em></a></li>
+	<li class=" header_edit" ng-click="changeInformatinFunction()"><a><em class="iconfont">&#xe630;</em><em>修改信息</em></a></li>
 	<li class="header_exit" onclick="userExitFunction();"><a><em
 			class="iconfont">&#xe612;</em><em>退出登录</em></a></li>
 </ul>

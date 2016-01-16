@@ -18,42 +18,51 @@ import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.springframework.stereotype.Repository;
 
+/**
+ * 用户反馈Model
+ * @author Liuyi
+ *
+ */
 @Repository
 @Entity
 @Table(name=FeedBackMass.TABLE_NAME)
 public class FeedBackMass extends BaseModel {
 
-    private static final long serialVersionUID = 8388753053148224238L;
+    protected static final long serialVersionUID = 8388753053148224238L;
     
-    public static final String CLASSE_NAME = "FeedBackMass";
+    public static final String CLASS_NAME = "FeedBackMass";
     public static final String TABLE_NAME = "feedbackmass";
     
     public static final String USER_ID = "user_id";
+    public static final String STATUS = "status";
+    public static final int  READED = 1;
+    public static final int  NO_READ = 2;
+    
     
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private Integer id;
+    protected Integer id;
     
     @Column(name="content",columnDefinition="TEXT", nullable=false)
-    private String content;
+    protected String content;
     
     @Column(name="time",nullable=false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date time;
+    protected Date time;
     
     @ManyToOne(fetch=FetchType.LAZY)
     @Cascade(CascadeType.SAVE_UPDATE)
     @JoinColumn(name=USER_ID)
-    private User user;
+    protected User user;
     
     @Column(name="status", length=1, nullable=false)
-    private Integer status;
+    protected Integer status;
     
     @Column(name="phone", length=20, nullable=true)
-    private String phone;
+    protected String phone;
     
     @Column(name="qqNumber", length=15, nullable=true)
-    private String qqNumber;
+    protected String qqNumber;
     
     
     public FeedBackMass() {
@@ -149,8 +158,7 @@ public class FeedBackMass extends BaseModel {
 	public void setQqNumber(String qqNumber) {
 	    this.qqNumber = qqNumber;
 	}
-    
-    
-    
+
+
 
 }

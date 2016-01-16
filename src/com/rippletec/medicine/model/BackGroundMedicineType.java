@@ -1,17 +1,22 @@
 package com.rippletec.medicine.model;
 
-import java.net.Inet4Address;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.stereotype.Repository;
 
+import com.rippletec.medicine.utils.ErrorCode;
+
 /**
+ * 带层级用于后台管理显示的分类数据
  * @author Liuyi
  *
  */
@@ -50,28 +55,35 @@ public class BackGroundMedicineType extends BaseModel{
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @Min(0)
     private Integer id;
     
     @Column(length=1, nullable=false)
+    @Max(10)
     private Integer type;
     
     @Column(length=200, nullable=true)
     private String firstType;
+    
     @Column(nullable=true)
     private Integer firstType_id;
     
     @Column(length=200, nullable=true)
     private String secondType;
+    
     @Column(nullable=true)
     private Integer secondType_id;
     
     @Column(length=200, nullable=true)
     private String thirdType;
+    
+    
     @Column(nullable=true)
     private Integer thirdType_id;
     
     @Column(length=200, nullable=true)
     private String forthType;
+    
     @Column(nullable=true)
     private Integer forthType_id;  
 
