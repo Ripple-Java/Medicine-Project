@@ -11,6 +11,7 @@ import org.springframework.orm.hibernate3.HibernateTemplate;
 import com.rippletec.medicine.bean.PageBean;
 import com.rippletec.medicine.dao.FindAndSearchDao;
 import com.rippletec.medicine.exception.DaoException;
+import com.rippletec.medicine.exception.ServiceException;
 import com.rippletec.medicine.service.IManager;
 import com.rippletec.medicine.utils.ErrorCode;
 
@@ -18,83 +19,78 @@ public abstract class BaseManager<T> implements IManager<T> {
     
     public Logger logger = Logger.getLogger("controllerLog");
     
-    @Resource(name = ErrorCode.CLASS_NAME)
-    public ErrorCode errorCode;
 
     @Override
-    public boolean delete(Integer id) {
+    public boolean delete(Integer id) throws DaoException {
 	return getDao().delete(id);
     }
 
     @Override
     public T find(Integer id) throws DaoException {
-	T object =  getDao().find(id);
-	if(object == null)
-	    throw new DaoException(ErrorCode.DB_NO_ENITY_ERROR);
-	return object;
+	return getDao().find(id);
     }
 
     @Override
-    public List<T> findAll() {
+    public List<T> findAll() throws DaoException {
         return getDao().findAll();
     }
 
     @Override
-    public List<T> findByPage(Map<String, Object> paramMap, PageBean page) {
+    public List<T> findByPage(Map<String, Object> paramMap, PageBean page) throws DaoException {
 	return getDao().findByPage(paramMap, page);
     }
 
     @Override
-    public List<T> findByPage(PageBean page) {
+    public List<T> findByPage(PageBean page) throws DaoException {
 	return getDao().findByPage(page);
     }
     
     @Override
-    public List<T> findByPage(String param, Object value, PageBean page) {
+    public List<T> findByPage(String param, Object value, PageBean page) throws DaoException {
 	return getDao().findByPage(param, value, page);
     }
 
     @Override
-    public List<T> findByParam(String param, Object value) {
+    public List<T> findByParam(String param, Object value) throws DaoException {
 	return getDao().findByParam(param, value);
     }
     
     @Override
-    public List<T> findByParam(Map<String, Object> paramMap) {
+    public List<T> findByParam(Map<String, Object> paramMap) throws DaoException {
 	return getDao().findByParam(paramMap);
     }
     
 
     @Override
-    public List<T> findBySql(String tableName, Map<String, Object> paramMap) {
+    public List<T> findBySql(String tableName, Map<String, Object> paramMap) throws DaoException {
 	return getDao().findBySql(tableName, paramMap);
     }
 
     @Override
-    public List<T> findBySql(String tableName, String param, Object value) {
+    public List<T> findBySql(String tableName, String param, Object value) throws DaoException {
 	return getDao().findBySql(tableName, param, value);
     }
 
     @Override
     public List<T> findBySql(String tableName, String param, Object value,
-	    PageBean page) {
+	    PageBean page) throws DaoException {
 	return getDao().findBySql(tableName, param, value, page);
     }
 
     protected abstract FindAndSearchDao<T> getDao();
 
     @Override
-    public Integer save(T model) {
+    public Integer save(T model) throws DaoException {
 	return getDao().save(model);
     }
      
     @Override
-    public List<T> search(Map<String, Object> paramMap) {
+    public List<T> search(Map<String, Object> paramMap) throws DaoException {
 	return getDao().search(paramMap);
     }
 
     @Override
-    public List<T> search(String param, Object value) {
+    public List<T> search(String param, Object value) throws DaoException {
 	return getDao().search(param, value);
     }
 
@@ -104,24 +100,24 @@ public abstract class BaseManager<T> implements IManager<T> {
     }
 
     @Override
-    public int getCount(String tableName) {
+    public int getCount(String tableName) throws NumberFormatException, DaoException {
 	return getDao().getCount(tableName);
     }
 
     @Override
-    public int getCount(String tableName, String param, Object value) {
+    public int getCount(String tableName, String param, Object value) throws NumberFormatException, DaoException {
 	return getDao().getCount(tableName,param,value);
     }
 
     @Override
-    public int getCount(String tableName, String[] param, Object[] value) {
+    public int getCount(String tableName, String[] param, Object[] value) throws NumberFormatException, DaoException {
 	return getDao().getCount(tableName, param, value);
     }
    
 
     @Override
     public int getCount(String tableName, String whereParam, Object whereValue,
-	    String inParam, Object[] inValue) {
+	    String inParam, Object[] inValue) throws NumberFormatException, DaoException {
 	return getDao().getCount(tableName, whereParam, whereValue, inParam, inValue);
     }
 
@@ -132,16 +128,15 @@ public abstract class BaseManager<T> implements IManager<T> {
 
     @Override
     public List<T> search(String tableName, String field, Object keyword, String param,
-	    Object value) {
+	    Object value) throws DaoException {
 	return getDao().search(tableName,field, keyword, param, value);
     }
 
     @Override
     public List<T> search(String tableName, Map<String, Object> fieldMap,
-	    Map<String, Object> paramMap) {
+	    Map<String, Object> paramMap) throws DaoException {
 	return getDao().search(tableName,fieldMap, paramMap);
     }
-    
     
 
     

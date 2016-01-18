@@ -51,40 +51,36 @@ public class EnterWestMedicineManagerImpl extends BaseManager<EnterWestMedicine>
 
     @Override
     public CheckData addMedicine(Enterprise enterprise,
-	    WestMedicine westMedicine, EnterWestVO enterWestVO) {
+	    WestMedicine westMedicine, EnterWestVO enterWestVO) throws DaoException {
 	Medicine medicine = new Medicine(Medicine.ENTER_WEST, enterprise.getId());
 	MedicineType medicineType = westMedicine.getMedicineType();
 	EnterWestMedicine enterWestMedicine = new EnterWestMedicine(medicine, medicineType, enterprise, enterWestVO, StringUtil.toPinYin(enterWestVO.getName()), new Date());
 	EnterpriseMedicineType enterpriseMedicineType = null;
-	List<EnterpriseMedicineType> enterpriseMedicineTypes = enterpriseMedicineTypeDao.findBySql(EnterpriseMedicineType.TABLE_NAME ,EnterpriseMedicineType.BACKGROUND_MEDICINETYPE_ID, medicineType.getBackGroundMedicineType());
-	if(StringUtil.isEmpty(enterpriseMedicineTypes)){
-	    enterpriseMedicineType = new EnterpriseMedicineType(medicineType, enterprise);
-	}else {
+	List<EnterpriseMedicineType> enterpriseMedicineTypes;
+	try {
+	    enterpriseMedicineTypes = enterpriseMedicineTypeDao.findBySql(EnterpriseMedicineType.TABLE_NAME ,EnterpriseMedicineType.BACKGROUND_MEDICINETYPE_ID, medicineType.getBackGroundMedicineType());
 	    enterpriseMedicineType = enterpriseMedicineTypes.get(0);
+	} catch (DaoException e) {
+	    enterpriseMedicineType = new EnterpriseMedicineType(medicineType, enterprise);
 	}
 	enterWestMedicine.setWestMedicine(westMedicine);
 	enterWestMedicine.setEnterpriseMedicineType(enterpriseMedicineType);
 	int object_id = enterWestMedicineDao.save(enterWestMedicine);
-	if(object_id <= 0)
-	    return null;
 	return new CheckData(enterprise, enterWestVO.getName(),object_id, CheckData.TYPE_MEDICINE_WEST, null, new Date(), CheckData.CHECKING);
     }
 
     @Override
-    public Result active(int id) throws DaoException {
+    public void active(int id) throws DaoException {
 	EnterWestMedicine medicine = enterWestMedicineDao.find(id);
 	medicine.setStatus(EnterWestMedicine.ON_PUBLISTH);
 	enterWestMedicineDao.update(medicine);
-	return new Result(true);
     }
 
 	@Override
-	public List<BackGroundMedicineVO> searchBackGroundVO(String keyword, String param) {
+	public List<BackGroundMedicineVO> searchBackGroundVO(String keyword, String param) throws DaoException {
 		List<BackGroundMedicineVO> res = new CopyOnWriteArrayList<>();
 		List<EnterWestMedicine> enterWestMedicines = new CopyOnWriteArrayList<>();
 		enterWestMedicines = enterWestMedicineDao.search(param,keyword);
-		if(enterWestMedicines == null)
-			return  res;
 		for (EnterWestMedicine enterWestMedicine : enterWestMedicines) {
 			res.add(new BackGroundMedicineVO(enterWestMedicine.getMedicineType().getBackGroundMedicineType(), enterWestMedicine.getName(), enterWestMedicine.getEnterprise_name(), enterWestMedicine.getId(), enterWestMedicine.getUpdateTime()));
 		}
@@ -93,15 +89,13 @@ public class EnterWestMedicineManagerImpl extends BaseManager<EnterWestMedicine>
 
 	@Override
 	public List<BackGroundMedicineVO> getBackGroundVO(
-		Enterprise enterprise, int page, int pageSize) {
+		Enterprise enterprise, int page, int pageSize) throws DaoException {
 	    List<BackGroundMedicineVO> res = new CopyOnWriteArrayList<>();
 		List<EnterWestMedicine> enterWestMedicines = new CopyOnWriteArrayList<>();
 		PageBean pageBean = null;
 		if(page > 0 && pageSize >0)
 		    pageBean = new PageBean(page, 0, pageSize);
 		enterWestMedicines = enterWestMedicineDao.findBySql(EnterWestMedicine.TABLE_NAME, EnterWestMedicine.ENTERPRISE_ID, enterprise.getId(), pageBean);
-		if(enterWestMedicines == null)
-			return  res;
 		for (EnterWestMedicine enterWestMedicine : enterWestMedicines) {
 			res.add(new BackGroundMedicineVO(enterWestMedicine.getMedicineType().getBackGroundMedicineType(), enterWestMedicine.getName(), enterWestMedicine.getEnterprise_name(), enterWestMedicine.getId(), enterWestMedicine.getUpdateTime()));
 		}
@@ -109,29 +103,25 @@ public class EnterWestMedicineManagerImpl extends BaseManager<EnterWestMedicine>
 	}
 
 	@Override
-	public boolean deleteMedicine(int id, Integer enterpriseId) {
+	public void deleteMedicine(int id, Integer enterpriseId) throws DaoException {
 	    ParamMap paramMap = new ParamMap().put(EnterWestMedicine.ID, id).put(EnterWestMedicine.ENTERPRISE_ID, enterpriseId);
 	    List<EnterWestMedicine> target = enterWestMedicineDao.findBySql(EnterWestMedicine.TABLE_NAME, paramMap);
-	    if(target != null && target.size() > 0){
 		int enterTypeId = target.get(0).getEnterpriseMedicineType().getId();
-		List<EnterWestMedicine> enterWestMedicines = enterWestMedicineDao.findBySql(EnterWestMedicine.TABLE_NAME, EnterChineseMedicine.ENTER_MEDICINE_TYPE_ID, enterTypeId);
-		if(StringUtil.isEmpty(enterWestMedicines)){
+		List<EnterWestMedicine> enterWestMedicines;
+		try {
+		    enterWestMedicines = enterWestMedicineDao.findBySql(EnterWestMedicine.TABLE_NAME, EnterChineseMedicine.ENTER_MEDICINE_TYPE_ID, enterTypeId);
+		} catch (DaoException e) {
 		    enterpriseMedicineTypeDao.delete(enterTypeId);
 		}
 		enterWestMedicineDao.delete(id);
-		return true;
-	    }
-	    return false;
 	}
 
 	@Override
 	public List<BackGroundMedicineVO> searchBackGroundVO(String keyword,
-		String field, String param, Object value) {
-	    List<BackGroundMedicineVO> res = new CopyOnWriteArrayList<>();
+		String field, String param, Object value) throws DaoException {
+	   	List<BackGroundMedicineVO> res = new CopyOnWriteArrayList<>();
 		List<EnterWestMedicine> enterWestMedicines = new CopyOnWriteArrayList<>();
 		enterWestMedicines = enterWestMedicineDao.search(EnterWestMedicine.TABLE_NAME, field,keyword, param, value);
-		if(enterWestMedicines == null)
-			return  res;
 		for (EnterWestMedicine enterWestMedicine : enterWestMedicines) {
 			res.add(new BackGroundMedicineVO(enterWestMedicine.getMedicineType().getBackGroundMedicineType(), enterWestMedicine.getName(), enterWestMedicine.getEnterprise_name(), enterWestMedicine.getId(), enterWestMedicine.getUpdateTime()));
 		}
@@ -139,42 +129,36 @@ public class EnterWestMedicineManagerImpl extends BaseManager<EnterWestMedicine>
 	}
 
 	@Override
-	public Result updateMedicine(int id, EnterWestVO enterWestVO,
+	public void updateMedicine(int id, EnterWestVO enterWestVO,
 		Enterprise enterprise) throws DaoException {
 	    WestMedicine westMedicine = westMedicineDao.find(enterWestVO.getMedicineId());
 	    ParamMap paramMap = new ParamMap().put(EnterWestMedicine.ID, id).put(EnterWestMedicine.ENTERPRISE_ID, enterprise.getId());
 	    List<EnterWestMedicine> medicines = enterWestMedicineDao.findBySql(EnterWestMedicine.TABLE_NAME, paramMap);
-	    if (StringUtil.isEmpty(medicines)) {
-		return new Result(false, "该药品不存在");
-	    }
 	    EnterWestMedicine enterWestMedicine = medicines.get(0);
-	    
 	    int oldTypeId = enterWestMedicine.getEnterpriseMedicineType().getId();
 	    BackGroundMedicineType backGroundMedicineType = westMedicine.getMedicineType().getBackGroundMedicineType();
-	    List<EnterpriseMedicineType> enterpriseMedicineTypes = enterpriseMedicineTypeDao.findBySql(EnterpriseMedicineType.TABLE_NAME, EnterpriseMedicineType.BACKGROUND_MEDICINETYPE_ID, backGroundMedicineType.getId());
-	    if(StringUtil.isEmpty(enterpriseMedicineTypes)){
-		enterWestMedicine.setEnterpriseMedicineType(new EnterpriseMedicineType(westMedicine.getMedicineType(), enterprise));
-	    }else {
+	    List<EnterpriseMedicineType> enterpriseMedicineTypes;
+	    try {
+		enterpriseMedicineTypes = enterpriseMedicineTypeDao.findBySql(EnterpriseMedicineType.TABLE_NAME, EnterpriseMedicineType.BACKGROUND_MEDICINETYPE_ID, backGroundMedicineType.getId());
 		enterWestMedicine.setEnterpriseMedicineType(enterpriseMedicineTypes.get(0));
+	    } catch (DaoException e) {
+		enterWestMedicine.setEnterpriseMedicineType(new EnterpriseMedicineType(westMedicine.getMedicineType(), enterprise));
 	    }
 	    enterWestMedicine.setUpdate(enterWestVO, westMedicine);
 	    enterWestMedicineDao.update(enterWestMedicine);
-	    List<EnterWestMedicine> enterWestMedicines_now = enterWestMedicineDao.findBySql(EnterWestMedicine.TABLE_NAME, EnterChineseMedicine.ENTER_MEDICINE_TYPE_ID, oldTypeId);
-	    if(StringUtil.isEmpty(enterWestMedicines_now)){
+	    List<EnterWestMedicine> enterWestMedicines_now;
+	    try {
+		enterWestMedicines_now = enterWestMedicineDao.findBySql(EnterWestMedicine.TABLE_NAME, EnterChineseMedicine.ENTER_MEDICINE_TYPE_ID, oldTypeId);
+	    } catch (DaoException e) {
 		enterpriseMedicineTypeDao.delete(oldTypeId);
 	    }
-	    return new Result(true);
 	}
 
 	@Override
-	public EnterWestMedicine getMedicine(int id, int enterpriseId) {
+	public EnterWestMedicine getMedicine(int id, int enterpriseId) throws DaoException {
 	    ParamMap paramMap = new ParamMap().put(EnterWestMedicine.ID, id)
 			  .put(EnterWestMedicine.ENTERPRISE_ID, enterpriseId);
 	    List<EnterWestMedicine> enterWestMedicines = enterWestMedicineDao.findBySql(EnterWestMedicine.TABLE_NAME, paramMap);
-	    
-	    if(StringUtil.isEmpty(enterWestMedicines)){
-		return null;
-	    }
 	    return enterWestMedicines.get(0);
 	}
 

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import com.rippletec.medicine.bean.PageBean;
 import com.rippletec.medicine.dao.MeetingDao;
+import com.rippletec.medicine.exception.DaoException;
 import com.rippletec.medicine.model.Meeting;
 import com.rippletec.medicine.utils.StringUtil;
 import com.sun.org.apache.bcel.internal.generic.NEW;
@@ -25,7 +26,7 @@ public class MeetingDaoImpl extends BaseDaoImpl<Meeting> implements MeetingDao{
     }
 
     @Override
-    public List<Meeting> findByTime(PageBean page, String param, Object value) {
+    public List<Meeting> findByTime(PageBean page, String param, Object value) throws DaoException {
 	if(page == null){
 	    return findByParam(StringUtil.getSearchHql(Meeting.CLASS_NAME, param)+" order by commitDate desc",new String[]{param} ,new Object[]{value});
 	}

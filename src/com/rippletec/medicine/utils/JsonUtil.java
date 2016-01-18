@@ -13,12 +13,17 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import javax.annotation.Resource;
+
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Repository;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.JSONSerializer;
 import com.alibaba.fastjson.serializer.PropertyPreFilter;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.cloopen.rest.sdk.utils.LoggerUtil;
+import com.rippletec.medicine.exception.UtilException;
 
 /**
  * Json格式化生成工具
@@ -30,30 +35,32 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 public class JsonUtil {
     public static final String NAME = "JsonUtil";
     
-    //使用ConcurrentHashMap，保证线程安全
     private Hashtable<String, List<String>> jsonMap = new Hashtable<String, List<String>>();
+    
+    //注意线程安全
     private ThreadLocal<HashMap<String, Object>>  jsonObjectMapTL =  new ThreadLocal<HashMap<String, Object>>();
     private ThreadLocal<Object>  jsonObjecTL =  new ThreadLocal<Object>();
     private int nameNumber = 0;
     public static final String LISTNAME_PREFIX = "List_";
+    
    
     
     private ErrorCode errorCode = new ErrorCode();
     
-    public JsonUtil() {
+    public JsonUtil() throws UtilException{
+	Properties jsonProperties = new Properties();
 	try {
-	    Properties jsonProperties = new Properties();
 	    jsonProperties.load(JsonUtil.class.getClassLoader().getResourceAsStream("jsonMapping.properties"));
-	    for (Object keyObject : jsonProperties.keySet()) {
-		String key = (String) keyObject;
-		String value = jsonProperties.getProperty(key);
-		jsonMap.put(key, Arrays.asList(value.split(",")));
-		JSON.DEFFAULT_DATE_FORMAT = "yyyy-MM-dd";
-	    }
 	} catch (IOException e) {
-	    throw new RuntimeException("读取jsonMapping失败");
+	    Logger.getLogger(JsonUtil.class).error(StringUtil.getLoggerInfo(ErrorCode.FILE_REDA_ERROR, "jsomMapping 配置文件读取失败"));
+	    throw new UtilException(ErrorCode.INTENAL_ERROR);
 	}
-	
+	for (Object keyObject : jsonProperties.keySet()) {
+	    String key = (String) keyObject;
+	    String value = jsonProperties.getProperty(key);
+	    jsonMap.put(key, Arrays.asList(value.split(",")));
+	    JSON.DEFFAULT_DATE_FORMAT = "yyyy-MM-dd";
+	}
     }
     
     public void clear() {
@@ -76,7 +83,7 @@ public class JsonUtil {
 	return name;
     }
     
-    public boolean isConllection(Object object){
+    public boolean isListConllection(Object object){
 	return (object instanceof List || object instanceof Map) ? true : false;
     }
     
@@ -92,14 +99,13 @@ public class JsonUtil {
 	return flag;
     }
     
-    public JsonUtil setJsonObject(String name, Object object) {
+    public JsonUtil setObject(String name, Object object) {
 	initJsonMap();
 	jsonObjectMapTL.get().put(name, object);
 	return this;
     }
     
-    public JsonUtil setModelList(List objects) {
-	List saveList = new CopyOnWriteArrayList(objects); 
+    public JsonUtil setModels(List objects) {
 	if(objects != null && objects.size() >0)
 	{
 	    initJsonMap();
@@ -108,7 +114,7 @@ public class JsonUtil {
 		jsonObjectMapTL.get().put(name+"s", objects);
 	    }
 	    else{
-		jsonObjectMapTL.get().put(LISTNAME_PREFIX+nameNumber, saveList);
+		jsonObjectMapTL.get().put(LISTNAME_PREFIX+nameNumber, objects);
 		nameNumber++;
 	    }
 	}
@@ -121,19 +127,14 @@ public class JsonUtil {
 	return this;
     }
     
-    public JsonUtil setResultFail() {
-	initJsonMap();
-	jsonObjectMapTL.get().put("result", "fail");
-	return this;
-    }
-    public JsonUtil setResultFail(String tip) {
+    public JsonUtil setFailRes(String tip) {
 	initJsonMap();
 	jsonObjectMapTL.get().put("result", "fail");
 	setTip(tip);
 	return this;
     }
     
-    public JsonUtil setResultFail(int code) {
+    public JsonUtil setFailRes(int code) {
 	initJsonMap();
 	jsonObjectMapTL.get().put("result", "fail");
 	jsonObjectMapTL.get().put("errorCode", code);
@@ -141,7 +142,7 @@ public class JsonUtil {
 	return this;
     }
     
-    public JsonUtil setResultSuccess() {
+    public JsonUtil setSuccessRes() {
 	initJsonMap();
 	jsonObjectMapTL.get().put("result", "success");
 	return this;
@@ -154,7 +155,7 @@ public class JsonUtil {
 	return this;
     }
     
-    public String toJsonString() {
+    public String toJson() {
 	initJsonMap();
 	String jssonString =  JSON.toJSONString(jsonObjectMapTL.get(),SerializerFeature.DisableCircularReferenceDetect,SerializerFeature.WriteMapNullValue,SerializerFeature.WriteDateUseDateFormat);
 	clear();
@@ -163,22 +164,22 @@ public class JsonUtil {
     
     
     
-    public String toJsonString(final String url){
-	return toJsonString(url, jsonObjectMapTL.get());
+    public String toJson(final String url) throws UtilException{
+	return toJson(url, jsonObjectMapTL.get());
     }
   
-    public String toJsonString(final String url, boolean ignored){
+    public String toJson(final String url, boolean ignored) throws UtilException{
    	return toJsonIgnoredString(url, jsonObjectMapTL.get());
     }
     
-    public String toJsonString(final String url, Object jsonObject){
+    public String toJson(final String url, Object jsonObject) throws UtilException{
 	if (!jsonMap.containsKey(url))
-	    return "[]";
+	    throw new UtilException(ErrorCode.JSONUTIL_NOT_MAPPING_ERROR);
 	jsonObjecTL.set(jsonObject);
 	PropertyPreFilter prepPropertyPreFilter = new PropertyPreFilter() {
 	    @Override
 	    public boolean apply(JSONSerializer arg0, Object object, String name) {
-		if(isConllection(object))
+		if(isListConllection(object))
 		    return true;
 		if (isModel(object))
 		    return jsonMap.get(url).contains(name);
@@ -192,9 +193,9 @@ public class JsonUtil {
 	return jsonString;
     }
 
-    public String toJsonIgnoredString(final String url, Object jsonObject){
+    public String toJsonIgnoredString(final String url, Object jsonObject) throws UtilException{
 	if (!jsonMap.containsKey(url))
-	    return "[]";
+	    throw new UtilException(ErrorCode.JSONUTIL_NOT_MAPPING_ERROR);
 	jsonObjecTL.set(jsonObject);
 	String jsonString = JSON.toJSONString(jsonObjectMapTL.get(), new PropertyPreFilter() {
 	    

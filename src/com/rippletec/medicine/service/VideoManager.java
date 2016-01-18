@@ -15,23 +15,23 @@ public interface VideoManager extends IManager<Video> {
     
     public static final String NAME = "VideoManager";
 
-    List<Video> findRecentMeeting(PageBean pageBean, String param, Object value);
+    List<Video> findRecentMeeting(PageBean pageBean, String param, Object value) throws DaoException;
 
-    Result active(int id) throws DaoException;
+    void active(int id) throws DaoException;
 
-    Result deleteVideo(int id, Integer enterpriseId);
+    void deleteVideo(int id, Integer enterpriseId) throws DaoException;
 
-    List<Video> findBySubject(Integer id, Integer enterpriseId);
+    List<Video> findBySubject(Integer id, Integer enterpriseId) throws DaoException;
 
-    Result addVideo(Enterprise enterprise, VideoVO video, Subject subject);
+    void addVideo(Enterprise enterprise, VideoVO video, Subject subject) throws DaoException;
 
-    Result updateVideo(int videoId, int enterpriseId, VideoVO video,
-	    Subject subject);
+    void updateVideo(int videoId, int enterpriseId, VideoVO video,
+	    Subject subject) throws DaoException;
 
-    Result block(int id) throws DaoException;
+    void block(int id) throws DaoException;
 
-    Result unblock(int id) throws DaoException;
+    void unblock(int id) throws DaoException;
 
-    Video getVideo(int id, int enterpriseId);
+    Video getVideo(int id, int enterpriseId) throws DaoException;
 
 }

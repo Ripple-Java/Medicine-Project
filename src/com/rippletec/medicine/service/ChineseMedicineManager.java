@@ -12,13 +12,13 @@ import java.util.List;
 public interface ChineseMedicineManager extends IManager<ChineseMedicine> {
     public static final String NAME = "ChineseMedicineManager";
 
-    List<BackGroundMedicineVO> searchBackGroundVO(String keyword, String param);
+    List<BackGroundMedicineVO> searchBackGroundVO(String keyword, String param) throws DaoException;
 
 
-    Result saveMedicine(ChMedicineVO chMedicineVO, MedicineType medicineType);
+    void saveMedicine(ChMedicineVO chMedicineVO, MedicineType medicineType) throws DaoException;
 
 
-    Result updateMedicine(int id, ChMedicineVO chMedicineVO, MedicineType medicineType) throws DaoException;
+    void updateMedicine(int id, ChMedicineVO chMedicineVO, MedicineType medicineType) throws DaoException;
 
 
 

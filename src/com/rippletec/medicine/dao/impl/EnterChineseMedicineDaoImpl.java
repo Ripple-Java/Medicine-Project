@@ -3,6 +3,7 @@ package com.rippletec.medicine.dao.impl;
 import org.springframework.stereotype.Repository;
 
 import com.rippletec.medicine.dao.EnterChineseMedicineDao;
+import com.rippletec.medicine.exception.DaoException;
 import com.rippletec.medicine.model.EnterChineseMedicine;
 
 @Repository(EnterChineseMedicineDao.NAME)
@@ -19,7 +20,7 @@ public class EnterChineseMedicineDaoImpl extends BaseDaoImpl<EnterChineseMedicin
     }
 
     @Override
-    public EnterChineseMedicine findByMedicineId(Integer id) {
+    public EnterChineseMedicine findByMedicineId(Integer id) throws DaoException {
 	return findBySql(EnterChineseMedicine.TABLE_NAME, EnterChineseMedicine.MEDICINE_ID, id).get(0);
     }
 

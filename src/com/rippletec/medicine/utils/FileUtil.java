@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
@@ -28,7 +29,7 @@ public class FileUtil {
 	 File pptHtmlFile = new File(rootPath+File.separator+"pptshow"+File.separator+"showpptIndex.html");
 	 File shareHtmlFile = new File(rootPath+File.separator+"SharePage"+File.separator+"shareMedicine.html");
 	 if(!pptHtmlFile.exists() || !shareHtmlFile.exists()){
-	     LoggerUtil.UtilLogger.error("ppt页面或分享页面不存在");
+	     Logger.getLogger(FileUtil.class).error(ErrorCode.FILE_NOT_EXISTED_ERROR+" info；分享页面或分享PPT页面不存在");
 	 }
 	 BufferedReader PPTReader = null;
 	 BufferedReader ShareReader = null;
@@ -52,13 +53,13 @@ public class FileUtil {
 		sharedata = ShareReader.readLine();
 	    }
 	} catch (IOException e) {
-	    LoggerUtil.UtilLogger.error("读取分享页面失败");
+	    Logger.getLogger(FileUtil.class).error(ErrorCode.FILE_REDA_ERROR+" info: 读取分享页面失败");
 	}finally{
 	    if(PPTReader != null){
 		try {
 		    PPTReader.close();
 		} catch (IOException e) {
-		    LoggerUtil.UtilLogger.error("关闭pptReader失败");
+		    Logger.getLogger(FileUtil.class).error(ErrorCode.FILE_CLOSE_ERROR+" info: 关闭PPTReader失败");
 		    e.printStackTrace();
 		}
 	    }
@@ -66,7 +67,7 @@ public class FileUtil {
 		try {
 		    ShareReader.close();
 		} catch (IOException e) {
-		    LoggerUtil.UtilLogger.error("关闭ShareReader失败");
+		    Logger.getLogger(FileUtil.class).error(ErrorCode.FILE_CLOSE_ERROR+" info: 关闭ShareReader失败");
 		    e.printStackTrace();
 		}
 	    }
@@ -122,7 +123,7 @@ public class FileUtil {
 	try {
 	    file.transferTo(saveImg);
 	} catch (IllegalStateException | IOException e) {
-	    LoggerUtil.UtilLogger.debug(FileUtil.NAME+":文件写入失败");
+	    Logger.getLogger(FileUtil.class).error(ErrorCode.FILE_WRITE_ERROR+" info: "+fileName+"写入失败！");
 	    return new Result(false, "文件写入失败");
 	}
 	return new Result(true, savePath+"/"+fileName);

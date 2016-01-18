@@ -19,10 +19,12 @@ import com.rippletec.medicine.dao.EnterpriseDao;
 import com.rippletec.medicine.dao.FindAndSearchDao;
 import com.rippletec.medicine.dao.UserDao;
 import com.rippletec.medicine.exception.DaoException;
+import com.rippletec.medicine.exception.ServiceException;
 import com.rippletec.medicine.model.Enterprise;
 import com.rippletec.medicine.model.EnterpriseMedicineType;
 import com.rippletec.medicine.model.User;
 import com.rippletec.medicine.service.EnterpriseManager;
+import com.rippletec.medicine.utils.ErrorCode;
 import com.rippletec.medicine.utils.ParamMap;
 import com.rippletec.medicine.utils.StringUtil;
 import com.rippletec.medicine.vo.web.BackGroundMedicineVO;
@@ -48,70 +50,56 @@ public class EnterpriseManagerImpl extends BaseManager<Enterprise> implements En
     }
 
     @Override
-    public List<Enterprise> getEnterprise(int size, int type, int currentPage) {
+    public List<Enterprise> getEnterprise(int size, int type, int currentPage) throws DaoException {
 	return findByPage(Enterprise.TYPE, type, new PageBean(currentPage, 0, size));
     }
 
     @Override
-    public void deleteByUser(int id) {
+    public void deleteByUser(int id) throws DaoException {
 	List<Enterprise> enterprises = findBySql(Enterprise.TABLE_NAME, Enterprise.USER_ID, id);
-	if(enterprises == null)
-	    return;
 	for (Enterprise enterprise : enterprises) {
 	    delete(enterprise.getId());
 	}
     }
 
     @Override
-    public Enterprise findByUser(User user) {
+    public Enterprise findByUser(User user) throws DaoException {
 	List<Enterprise> enterprises = enterpriseDao.findBySql(Enterprise.TABLE_NAME, Enterprise.USER_ID, user.getId());
-	if(StringUtil.isEmpty(enterprises))
-	    return null;
 	return enterprises.get(0);
     }
 
     @Override
-    public Result updateInfo(int enterpriseId, EnterpriseInfoVO vo) throws DaoException {
+    public void updateInfo(int enterpriseId, EnterpriseInfoVO vo) throws DaoException {
 	Enterprise enterprise = enterpriseDao.find(enterpriseId);
-	if(enterprise == null){
-	    return new Result(false, "企业信息不存在");
-	}
 	enterprise.setUpdate(vo);
 	enterpriseDao.update(enterprise);
-	return new Result(true);
     }
 
     @Override
-    public Result active(int id) throws DaoException {
+    public void active(int id) throws DaoException {
 	Enterprise enterprise = enterpriseDao.find(id);
-	if(enterprise == null){
-	    return new Result(false, "改企业信息不存在");
-	}
 	enterprise.setStatus(Enterprise.ON_PUBLISTH);
 	User user = enterprise.getUser();
 	user.setStatus(User.STATUS_NORMAL);
 	userDao.update(user);
-	return new Result(true);
     }
 
     @Override
-    public Result block(int id) throws DaoException {
+    public void block(int id) throws DaoException {
 	Enterprise enterprise = enterpriseDao.find(id);
 	enterprise.setStatus(Enterprise.ON_CLOSE);
 	enterpriseDao.update(enterprise);
-	return new Result(true);
     }
 
     @Override
-    public Result unblock(int id) throws DaoException {
+    public void unblock(int id) throws DaoException {
 	Enterprise enterprise = enterpriseDao.find(id);
 	enterprise.setStatus(Enterprise.ON_PUBLISTH);
 	enterpriseDao.update(enterprise);
-	return new Result(true);
     }
 
     @Override
-    public List<Enterprise> getValiatedEnterprises(PageBean pageBean) {
+    public List<Enterprise> getValiatedEnterprises(PageBean pageBean) throws ServiceException {
 	List<Object> values = new ArrayList<Object>();
 	values.add(Enterprise.ON_PUBLISTH);
 	values.add(Enterprise.ON_CLOSE);
@@ -120,14 +108,17 @@ public class EnterpriseManagerImpl extends BaseManager<Enterprise> implements En
     
     @Override
     public List<Enterprise> getEnterprise(final String Param, final List<Object> values,
-	    final PageBean pBean, final String orderStr) {
+	    final PageBean pBean, final String orderStr) throws ServiceException {
+	if(pBean.currentPage <0 || pBean.offset <0 || pBean.pageSize <0){
+	    throw new ServiceException(ErrorCode.PARAM_ERROR);
+	}
 	 String hql = "from "+Enterprise.CLASS_NAME+" q where q."+Param+" in (";
 	for (int i = 0; i < values.size(); i++) {
 	    hql += " ?,";
 	}
 	hql = hql.substring(0,hql.length()-1);
 	final String excuHql = hql + ") order by "+orderStr;
-	return getDaoHibernateTemplate().execute(new HibernateCallback<List<Enterprise>>() {
+	List<Enterprise> enterprises = getDaoHibernateTemplate().execute(new HibernateCallback<List<Enterprise>>() {
 
 	    @Override
 	    public List<Enterprise> doInHibernate(Session session)
@@ -143,19 +134,21 @@ public class EnterpriseManagerImpl extends BaseManager<Enterprise> implements En
 		return query.setFirstResult(pBean.offset).setMaxResults(pBean.pageSize).list();
 	    }
 	});
-    }
-
-    @Override
-    public void validEnterPrise(User user) {
-	Enterprise enterprise = findByUser(user);
-	if(enterprise != null){
-	    enterprise.setStatus(Enterprise.ON_CHECKING);
-	    enterpriseDao.update(enterprise);
+	if(enterprises == null || enterprises.size()<1){
+	    throw new ServiceException(ErrorCode.DB_NO_ENITY_ERROR);
 	}
+	return enterprises;
     }
 
     @Override
-    public List<Enterprise> getEnterpriseByType(int type, PageBean pageBean) {
+    public void validEnterPrise(User user) throws DaoException {
+	Enterprise enterprise = findByUser(user);
+	enterprise.setStatus(Enterprise.ON_CHECKING);
+	enterpriseDao.update(enterprise);
+    }
+
+    @Override
+    public List<Enterprise> getEnterpriseByType(int type, PageBean pageBean) throws DaoException {
 	ParamMap paramMap = new ParamMap().put(Enterprise.STATUS, Enterprise.ON_PUBLISTH)	
 					  .put(Enterprise.TYPE, type);
 	if(pageBean == null){

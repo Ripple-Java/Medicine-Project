@@ -8,12 +8,14 @@ public class UtilException extends Exception {
 
     private int errorCode;
     
+    private String info;
+    
     public UtilException(int errorCode) {
 	this.errorCode = errorCode;
     }
     
-    public UtilException(String msg, int errorCode) {
-	super(msg);
+    public UtilException(int errorCode, String info) {
+	this.info = info;
 	this.errorCode = errorCode;
     }
     
@@ -29,5 +31,15 @@ public class UtilException extends Exception {
     public void setErrorCode(int errorCode) {
 	this.errorCode = errorCode;
     }
+
+    public String getInfo() {
+        return info;
+    }
+
+    public void setInfo(String info) {
+        this.info = info;
+    }
+    
+    
 
 }

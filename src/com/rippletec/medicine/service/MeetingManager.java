@@ -13,22 +13,22 @@ import com.rippletec.medicine.vo.web.MeetingVo;
 
 public interface MeetingManager extends IManager<Meeting> {
     public static final String NAME = "MeetingManager";
-    List<Meeting> findRecentMeeting(PageBean pageBean , String param, Object value);
+    List<Meeting> findRecentMeeting(PageBean pageBean , String param, Object value) throws DaoException;
 
     Result active(int id) throws DaoException;
 
-    boolean addMeeting(Enterprise enterprise, MeetingVo meeting, Subject subject);
+    void addMeeting(Enterprise enterprise, MeetingVo meeting, Subject subject) throws DaoException;
 
-    boolean deleteMeeting(int id, Integer enterpriseId);
+    void deleteMeeting(int id, Integer enterpriseId) throws DaoException;
 
-    Result updateMeeting(int meetingId, int enterpriseId, MeetingVo meeting, Subject subject);
+    void updateMeeting(int meetingId, int enterpriseId, MeetingVo meeting, Subject subject) throws DaoException;
 
-    List< Meeting> findBySubject(Integer id, Integer enterpriseId);
+    List< Meeting> findBySubject(Integer id, Integer enterpriseId) throws DaoException;
 
     Result block(int id) throws DaoException;
 
-    Result unblock(int id) throws DaoException;
+    void unblock(int id) throws DaoException;
 
-    Meeting getMeeting(int id, int enterpriseId);
+    Meeting getMeeting(int id, int enterpriseId) throws DaoException;
 
 }

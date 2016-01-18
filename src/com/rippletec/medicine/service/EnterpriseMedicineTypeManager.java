@@ -11,8 +11,8 @@ public interface EnterpriseMedicineTypeManager extends IManager<EnterpriseMedici
 
     Map<String, Object> getMedicinesByTypeId(int typeId, int size, int currentPage) throws DaoException;
 
-    List<EnterpriseMedicineType> getTypesByEnterpriseId(int id);
+    List<EnterpriseMedicineType> getTypesByEnterpriseId(int id) throws DaoException;
 
-    List<EnterpriseMedicineType> getTypes(int enterpriseId, int type);
+    List<EnterpriseMedicineType> getTypes(int enterpriseId, int type) throws DaoException;
 
 }

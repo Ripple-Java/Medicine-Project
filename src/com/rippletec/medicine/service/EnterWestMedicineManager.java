@@ -17,21 +17,21 @@ public interface EnterWestMedicineManager extends IManager<EnterWestMedicine> {
     public static final String NAME = "EnterWestMedicineManager";
 
     CheckData addMedicine(Enterprise enterprise, WestMedicine westMedicine,
-	    EnterWestVO enterWestVO);
+	    EnterWestVO enterWestVO) throws DaoException;
 
-    Result active(int id) throws DaoException;
+    void active(int id) throws DaoException;
 
-    List<BackGroundMedicineVO> searchBackGroundVO(String keyword, String param);
+    List<BackGroundMedicineVO> searchBackGroundVO(String keyword, String param) throws DaoException;
 
     List<BackGroundMedicineVO> getBackGroundVO(Enterprise enterprise, int page,
-	    int pageSize);
+	    int pageSize) throws DaoException;
 
-    boolean deleteMedicine(int id, Integer enterpriseId);
+    void deleteMedicine(int id, Integer enterpriseId) throws DaoException;
 
     List<BackGroundMedicineVO> searchBackGroundVO(String keyword, String field,
-	    String param, Object value);
+	    String param, Object value) throws DaoException;
 
-    Result updateMedicine(int id, EnterWestVO enterWestVO, Enterprise enterprise) throws DaoException;
+    void updateMedicine(int id, EnterWestVO enterWestVO, Enterprise enterprise) throws DaoException;
 
-    EnterWestMedicine getMedicine(int id, int enterpriseId);
+    EnterWestMedicine getMedicine(int id, int enterpriseId) throws DaoException;
 }

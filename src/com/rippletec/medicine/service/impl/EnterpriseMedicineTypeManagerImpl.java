@@ -53,12 +53,12 @@ public class EnterpriseMedicineTypeManagerImpl extends BaseManager<EnterpriseMed
     }
 
     @Override
-    public List<EnterpriseMedicineType> getTypesByEnterpriseId(int id) {
+    public List<EnterpriseMedicineType> getTypesByEnterpriseId(int id) throws DaoException {
 	return enterpriseMedicineTypeDao.findBySql(EnterpriseMedicineType.TABLE_NAME, EnterpriseMedicineType.ENTERPRISE_ID, id);
     }
 
     @Override
-    public List<EnterpriseMedicineType> getTypes(int enterpriseId, int type) {
+    public List<EnterpriseMedicineType> getTypes(int enterpriseId, int type) throws DaoException {
 	ParamMap paramMap = new ParamMap().put(EnterpriseMedicineType.ENTERPRISE_ID, enterpriseId)
 					  .put(EnterpriseMedicineType.GIB_TYPE, type);
 	return enterpriseMedicineTypeDao.findBySql(EnterpriseMedicineType.TABLE_NAME, paramMap);

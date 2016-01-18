@@ -8,6 +8,8 @@ public class DaoException extends Exception{
 
     private int errorCode;
     
+    private String info;
+    
     public DaoException() {
     }
 
@@ -15,6 +17,12 @@ public class DaoException extends Exception{
 	this.errorCode = errorCode;
     }
 
+    public DaoException(int errorCode, String info) {
+	this.errorCode = errorCode;
+	this.info = info;
+    }
+    
+    
     public int getErrorCode() {
 	return errorCode;
     }
@@ -22,5 +30,15 @@ public class DaoException extends Exception{
     public void setErrorCode(int errorCode) {
 	this.errorCode = errorCode;
     }
+
+    public String getInfo() {
+        return info;
+    }
+
+    public void setInfo(String info) {
+        this.info = info;
+    }
+    
+    
 
 }

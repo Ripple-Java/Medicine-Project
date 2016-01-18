@@ -36,10 +36,10 @@ public class UtilTest {
 	List<Object> list = new LinkedList<Object>();
 	list.add(enterprise);
 	list.add(tip);
-	System.out.println(jsonUtil.toJsonString(url, list));
+	System.out.println(jsonUtil.toJson(url, list));
 	list.remove(1);
 	jsonUtil.clear();
-	System.out.println(jsonUtil.setModelList(list).setResultSuccess().toJsonString(url));
+	System.out.println(jsonUtil.setModels(list).setSuccessRes().toJson(url));
 	
     }
     

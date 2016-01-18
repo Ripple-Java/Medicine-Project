@@ -33,12 +33,9 @@ public class ChineseMedicineManagerImpl extends BaseManager<ChineseMedicine> imp
     }
 
     @Override
-    public List<BackGroundMedicineVO> searchBackGroundVO(String keyword, String param) {
+    public List<BackGroundMedicineVO> searchBackGroundVO(String keyword, String param) throws DaoException {
         List<BackGroundMedicineVO> res = new LinkedList<>();
         List<ChineseMedicine> chineseMedicines = search(param, keyword);
-        if (chineseMedicines == null || chineseMedicines.size() < 1) {
-            return  res;
-        }
         for (ChineseMedicine chineseMedicine : chineseMedicines) {
             res.add(new BackGroundMedicineVO(chineseMedicine.getMedicineType().getBackGroundMedicineType(), chineseMedicine.getName(), null, chineseMedicine.getId(),null));
         }
@@ -46,24 +43,18 @@ public class ChineseMedicineManagerImpl extends BaseManager<ChineseMedicine> imp
     }
 
     @Override
-    public Result saveMedicine(ChMedicineVO chMedicineVO,
-	    MedicineType medicineType) {
+    public void saveMedicine(ChMedicineVO chMedicineVO,MedicineType medicineType) throws DaoException {
 	Medicine medicine = new Medicine(Medicine.CHINESE, null);
 	ChineseMedicine chineseMedicine = new ChineseMedicine(chMedicineVO, medicine, medicineType);
 	chineseMedicineDao.save(chineseMedicine);
-	return new Result(true);
     }
 
     @Override
-    public Result updateMedicine(int id, ChMedicineVO chMedicineVO,
+    public void updateMedicine(int id, ChMedicineVO chMedicineVO,
 	    MedicineType medicineType) throws DaoException {
 	ChineseMedicine chineseMedicine = chineseMedicineDao.find(id);
-	if(chineseMedicine == null){
-	    return new Result(false, "该药品不能存在");
-	}
 	chineseMedicine.setUpdate(chMedicineVO, medicineType);
 	chineseMedicineDao.update(chineseMedicine);
-	return new Result(true);
     }
 
 }

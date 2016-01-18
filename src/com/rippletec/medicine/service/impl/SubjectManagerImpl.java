@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.rippletec.medicine.dao.FindAndSearchDao;
 import com.rippletec.medicine.dao.ProjectConfigDao;
 import com.rippletec.medicine.dao.SubjectDao;
+import com.rippletec.medicine.exception.DaoException;
 import com.rippletec.medicine.exception.UtilException;
 import com.rippletec.medicine.model.ProjectConfig;
 import com.rippletec.medicine.model.Subject;
@@ -35,7 +36,7 @@ public class SubjectManagerImpl extends BaseManager<Subject> implements SubjectM
     }
 
     @Override
-    public boolean frushToDB() throws UtilException {
+    public boolean frushToDB() throws UtilException, DaoException {
 	Map<String ,List<Map<String, Object>>> first = new HashMap<String, List<Map<String,Object>>>();
 	List<Subject> firstlList = subjectDao.findByParam(Subject.PARENT_ID, Subject.DEFAULT_PARENT);
 	for (Subject subject : firstlList) {
@@ -50,16 +51,17 @@ public class SubjectManagerImpl extends BaseManager<Subject> implements SubjectM
 	    first.put(subject.getName(), secondList);
 	}
 	JsonUtil jsonUtil = new JsonUtil();
-	String respongJson = jsonUtil.setJsonObject("first", first).setResultSuccess().toJsonString();
-	List<ProjectConfig> existConfig = projectConfigDao.findByParam(ProjectConfig.KEY, ProjectConfig.SUBJECT_RESPONSE_JSON);
-	 ProjectConfig config  = null;
-	if(StringUtil.isEmpty(existConfig)){
-	    config = new ProjectConfig(ProjectConfig.SUBJECT_RESPONSE_JSON, respongJson);
-	    projectConfigDao.save(config);
-	}else {
+	String respongJson = jsonUtil.setObject("first", first).setSuccessRes().toJson();
+	ProjectConfig config  = null;
+	List<ProjectConfig> existConfig;
+	try {
+	    existConfig = projectConfigDao.findByParam(ProjectConfig.KEY, ProjectConfig.SUBJECT_RESPONSE_JSON);
 	    config = existConfig.get(0);
 	    config.setCon_value(respongJson);
 	    projectConfigDao.update(config);
+	} catch (DaoException e) {
+	    config = new ProjectConfig(ProjectConfig.SUBJECT_RESPONSE_JSON, respongJson);
+	    projectConfigDao.save(config);
 	}
 	return true;
     }

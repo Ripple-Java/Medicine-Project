@@ -68,7 +68,7 @@ public class MedicineTypeManagerTest implements IBaseDaoTest {
     public void testSearch() throws Exception {
 	List<BackGroundMedicineVO> backGroundMedicineVOs = medicineTypeManager.searchBackGroundVO("儿科");
 	JsonUtil jsonUtil = new JsonUtil();
-	System.out.println(jsonUtil.setModelList(backGroundMedicineVOs).toJsonString());
+	System.out.println(jsonUtil.setModels(backGroundMedicineVOs).toJson());
     }
 
     @Test

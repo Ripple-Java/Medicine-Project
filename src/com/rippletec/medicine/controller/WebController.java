@@ -1,7 +1,9 @@
 package com.rippletec.medicine.controller;
 
 import com.rippletec.medicine.exception.DaoException;
+import com.rippletec.medicine.exception.UtilException;
 import com.rippletec.medicine.model.*;
+import com.rippletec.medicine.utils.ErrorCode;
 import com.rippletec.medicine.utils.FileUtil;
 import com.rippletec.medicine.utils.StringUtil;
 
@@ -38,12 +40,8 @@ public class WebController extends BaseController {
 
     @RequestMapping(value = "/user/getCount", method = RequestMethod.GET ,produces="application/json;charset=UTF-8")
     @ResponseBody
-    public String user_getCount(
-            @RequestParam(value = "type", required = false, defaultValue = "0") int type) {
-        if (type <= 0)
-            return jsonUtil.setResultFail("type参数必须大于0").toJsonString();
+    public String user_getCount(int type) throws NumberFormatException, DaoException {
         int count = 0;
-
         switch (type) {
             case 11:
                 count = userManager.getCount(User.TABLE_NAME, User.TYPE, User.TYPE_USER, User.STATUS, new Object[]{User.STATUS_NORMAL, User.STATUS_BLOCKED});
@@ -70,32 +68,32 @@ public class WebController extends BaseController {
                 count = videoManager.getCount(Video.TABLE_NAME, Video.STATUS, Video.ON_PUBLISTH);
                 break;
             default:
-                break;
+        	return ParamError();
         }
-        return jsonUtil.setResultSuccess().setJsonObject("count", count).toJsonString();
+        return jsonUtil.setSuccessRes().setObject("count", count).toJson();
     }
 
     @RequestMapping(value = "/user/getPPTImageCount", method = RequestMethod.GET ,produces="application/json;charset=UTF-8")
     @ResponseBody
-    public String user_getPPTImageCount(
-            @RequestParam(value = "meetingID", required = false, defaultValue = "0") int meetingID) throws DaoException {
+    public String user_getPPTImageCount( int meetingID) throws DaoException {
         Meeting meeting = meetingManager.find(meetingID);
         String path = FileUtil.getRootPath() + meeting.getPPT();
         File pptFiles = new File(path);
-        if (!pptFiles.exists() || !pptFiles.isDirectory())
-            return jsonUtil.setResultFail("ppt文件不存在").toJsonString();
-        return jsonUtil.setJsonObject("imageCount", pptFiles.listFiles().length).setResultSuccess().toJsonString();
+        if (!pptFiles.exists() || !pptFiles.isDirectory()){
+            return jsonUtil.setFailRes(ErrorCode.FILE_NOT_EXISTED_ERROR).toJson();
+        }
+        return jsonUtil.setObject("imageCount", pptFiles.listFiles().length).setSuccessRes().toJson();
     }
 
     @RequestMapping(value = "/user/getPPT", method = RequestMethod.GET)
     @ResponseBody
-    public String user_getPPT(
-            @RequestParam(value = "meetingID", required = false, defaultValue = "0") int meetingID) throws DaoException {
+    public String user_getPPT( int meetingID) throws DaoException {
         Meeting meeting = meetingManager.find(meetingID);
         String path = FileUtil.getRootPath() + meeting.getPPT();
         File pptFiles = new File(path);
-        if (!pptFiles.exists() || !pptFiles.isDirectory())
-            return jsonUtil.setResultFail("ppt文件不存在").toJsonString();
+        if (!pptFiles.exists() || !pptFiles.isDirectory()){
+            return jsonUtil.setFailRes(ErrorCode.FILE_NOT_EXISTED_ERROR).toJson();
+        }
         List<String> fileNames = new ArrayList<String>();
         File[] files = pptFiles.listFiles();
         Arrays.sort(files, new Comparator<File>() {
@@ -110,7 +108,7 @@ public class WebController extends BaseController {
             String url = meeting.getPPT() + "/" + files[i].getName();
             fileNames.add(url);
         }
-        return jsonUtil.setResultSuccess().setJsonObject("images", fileNames).setJsonObject("count", files.length).toJsonString();
+        return jsonUtil.setSuccessRes().setObject("images", fileNames).setObject("count", files.length).toJson();
     }
 
     @RequestMapping(value = "/user/getAllMedicineType", method = RequestMethod.GET ,produces="application/json;charset=UTF-8")
@@ -119,14 +117,13 @@ public class WebController extends BaseController {
         String typeJson = medicineTypeManager.getTypeJson();
         if (typeJson != null && typeJson.length() > 0)
             return typeJson;
-        return jsonUtil.setResultFail().toJsonString();
+        return jsonUtil.setFailRes(ErrorCode.INTENAL_ERROR).toJson();
     }
     
     
     @RequestMapping(value = "/user/medicine/name/get", method = RequestMethod.GET,produces="application/json;charset=UTF-8")
     @ResponseBody
-    public String enterprise_getMedicineName(HttpSession httpSession,
-	    @RequestParam(value = "catagoryId", defaultValue = "-1", required = false) int catagoryId) throws DaoException {
+    public String enterprise_getMedicineName(HttpSession httpSession, int catagoryId) throws DaoException, UtilException  {
 	MedicineType medicineType = medicineTypeManager.find(catagoryId);
 	List res = null;
 	if(medicineType.getGib_type() == MedicineType.CHINESE){
@@ -136,7 +133,12 @@ public class WebController extends BaseController {
 		List<MedicineType> medicineTypes = medicineTypeManager.getAllChild(medicineType);
 		res = new LinkedList<ChineseMedicine>();
 		for (MedicineType medicineTypeChild : medicineTypes) {
-		    res.addAll(chineseMedicineManager.findBySql(ChineseMedicine.TABLE_NAME, ChineseMedicine.MEDICINE_TYPE_ID, medicineTypeChild.getId()));
+		    try {
+			res.addAll(chineseMedicineManager.findBySql(ChineseMedicine.TABLE_NAME, ChineseMedicine.MEDICINE_TYPE_ID, medicineTypeChild.getId()));
+		    } catch (DaoException e) {}
+		}
+		if(res.size() < 1){
+		    res = null;
 		}
 		
 	    }
@@ -145,27 +147,34 @@ public class WebController extends BaseController {
 	    if(medicineType.getFlag()){
 		res = westMedicineManager.findBySql(WestMedicine.TABLE_NAME, WestMedicine.MEDICINE_TYPE_ID, medicineType.getId());
 	    }else {
-		List<MedicineType> medicineTypes = medicineTypeManager.getAllChild(medicineType);
-		for (MedicineType medicineTypeChild : medicineTypes) {
-		    res.addAll(westMedicineManager.findBySql(WestMedicine.TABLE_NAME, WestMedicine.MEDICINE_TYPE_ID, medicineTypeChild.getId()));
-		}
+		List<MedicineType> medicineTypes;
+		try {
+		    medicineTypes = medicineTypeManager.getAllChild(medicineType);
+		    for (MedicineType medicineTypeChild : medicineTypes) {
+			    try {
+				res.addAll(westMedicineManager.findBySql(WestMedicine.TABLE_NAME, WestMedicine.MEDICINE_TYPE_ID, medicineTypeChild.getId()));
+			    } catch (DaoException e) {}
+		    }
+		    if(res.size() <1){
+			res = null;
+		    }
+		} catch (DaoException e1) {
+		   res = null;
+		}	
 	    }
 	}
 	if(StringUtil.isEmpty(res)){
-	    return jsonUtil.setResultFail("该药品不存在").toJsonString();
+	    return jsonUtil.setFailRes(ErrorCode.DB_NO_ENITY_ERROR).toJson();
 	}
-	return jsonUtil.setResultSuccess().setJsonObject("medicines", res).toJsonString("/user/medicine/name/get");
+	return jsonUtil.setSuccessRes().setObject("medicines", res).toJson("/user/medicine/name/get");
 
     }
  
     
     @RequestMapping(value = "/user/getSubject", method = RequestMethod.GET ,produces="application/json;charset=UTF-8")
     @ResponseBody
-    public String user_getSubject() {
+    public String user_getSubject() throws DaoException {
        List<ProjectConfig> resConfigs = projectConfigManager.findByParam(ProjectConfig.KEY, ProjectConfig.SUBJECT_RESPONSE_JSON);
-       if(StringUtil.isEmpty(resConfigs)){
-	   return jsonUtil.setResultFail().toJsonString();
-       }
        return resConfigs.get(0).getCon_value();
     }
 

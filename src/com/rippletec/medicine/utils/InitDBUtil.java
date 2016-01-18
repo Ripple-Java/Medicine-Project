@@ -6,6 +6,7 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Repository;
 
+import com.rippletec.medicine.exception.DaoException;
 import com.rippletec.medicine.model.BackGroundMedicineType;
 import com.rippletec.medicine.model.MedicineType;
 import com.rippletec.medicine.service.BackGroundMedicineTypeManager;
@@ -39,8 +40,9 @@ public class InitDBUtil {
     /**
      * 根据分类信息，生成用于后台管理的层级分类
      * @return
+     * @throws DaoException 
      */
-    public  boolean setBackGroundVoToDatabase() {
+    public  boolean setBackGroundVoToDatabase() throws DaoException {
    	List<MedicineType> medicineTypes = medicineTypeManager.findByParam(MedicineType.PARENT_TYPE_ID, MedicineType.DEFAULT_PARENT_ID);
    	for (MedicineType medicineType : medicineTypes) {
    	    List<MedicineType> firstTypes = medicineTypeManager.findByParam(MedicineType.PARENT_TYPE_ID, medicineType.getId());

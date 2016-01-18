@@ -15,22 +15,22 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public interface EnterChineseMedicineManager extends IManager<EnterChineseMedicine> {
     public static final String NAME = "EnterChineseMedicineManager";
 
-    CheckData addMedicine(Enterprise enterprise, ChineseMedicine chineseMedicine, EnterChineseVO entChineseVO);
+    CheckData addMedicine(Enterprise enterprise, ChineseMedicine chineseMedicine, EnterChineseVO entChineseVO) throws DaoException;
 
-    Result active(int id) throws DaoException;
+    void active(int id) throws DaoException;
 
-    List<BackGroundMedicineVO> searchBackGroundVO(String keyword, String param);
+    List<BackGroundMedicineVO> searchBackGroundVO(String keyword, String param) throws DaoException;
 
     List<BackGroundMedicineVO> getBackGroundVO(Enterprise enterprise, int page,
-	    int pageSize);
+	    int pageSize) throws DaoException;
 
-    boolean deleteMedicine(int id, Integer enterpriseId);
+    void deleteMedicine(int id, Integer enterpriseId) throws DaoException;
 
     List<BackGroundMedicineVO> searchBackGroundVO(String keyword, String field,
-	    String param, Object value);
+	    String param, Object value) throws DaoException;
 
-    Result updateMedicine(int id, EnterChineseVO entChineseVO, Enterprise enterprise) throws DaoException;
+    void updateMedicine(int id, EnterChineseVO entChineseVO, Enterprise enterprise) throws DaoException;
 
-    EnterChineseMedicine getMedicine(int id, int enterpriseId);
+    EnterChineseMedicine getMedicine(int id, int enterpriseId) throws DaoException;
 
 }

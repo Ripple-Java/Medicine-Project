@@ -256,6 +256,9 @@ public class StringUtil {
      * @return 校验通过返回true，否则返回false
      */
     public static boolean isChinese(String chinese) {
+	if(chinese == null){ 
+	    return false;
+	}
 	return Pattern.matches(REGEX_CHINESE, chinese);
     }
 
@@ -266,6 +269,9 @@ public class StringUtil {
      * @return 校验通过返回true，否则返回false
      */
     public static boolean isEmail(String email) {
+	if(email == null){
+	    return false;
+	}
 	return Pattern.matches(REGEX_EMAIL, email);
     }
 
@@ -276,6 +282,9 @@ public class StringUtil {
      * @return 校验通过返回true，否则返回false
      */
     public static boolean isIDCard(String idCard) {
+	if(idCard == null){
+	    return false;
+	}
 	return Pattern.matches(REGEX_ID_CARD, idCard);
     }
 
@@ -286,6 +295,9 @@ public class StringUtil {
      * @return 校验通过返回true，否则返回false
      */
     public static boolean isMobile(String mobile) {
+	if(mobile == null){
+	    return false;
+	}
 	return Pattern.matches(REGEX_MOBILE, mobile);
     }
 
@@ -296,6 +308,9 @@ public class StringUtil {
      * @return 校验通过返回true，否则返回false
      */
     public static boolean isPassword(String password) {
+	if(password == null){
+	    return false;
+	}
 	return Pattern.matches(REGEX_PASSWORD, password);
     }
 
@@ -306,6 +321,9 @@ public class StringUtil {
      * @return 校验通过返回true，否则返回false
      */
     public static boolean isUsername(String username) {
+	if(username == null){
+	    return false;
+	}
 	return Pattern.matches(REGEX_USERNAME, username);
     }
     
@@ -316,6 +334,9 @@ public class StringUtil {
      * @return 校验通过返回true，否则返回false
      */
     public static boolean isNumber(String number) {
+	if(number == null){
+	    return false;
+	}
 	return Pattern.matches(REGEX_NUMBER, number);
     }
 
@@ -429,6 +450,10 @@ public class StringUtil {
 	if(whereParam != null)
 	    sql += " and "+whereParam+" = ?";
 	return sql;
+    }
+    
+    public static String getLoggerInfo(int code, String info) {
+	return "Error: "+code+" Info: "+info;
     }
 
 }

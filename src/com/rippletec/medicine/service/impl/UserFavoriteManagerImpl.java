@@ -20,6 +20,7 @@ import com.rippletec.medicine.dao.UserFavoriteDao;
 import com.rippletec.medicine.dao.VideoDao;
 import com.rippletec.medicine.dao.WestMedicineDao;
 import com.rippletec.medicine.exception.DaoException;
+import com.rippletec.medicine.exception.ServiceException;
 import com.rippletec.medicine.model.ChineseMedicine;
 import com.rippletec.medicine.model.EnterChineseMedicine;
 import com.rippletec.medicine.model.EnterWestMedicine;
@@ -71,7 +72,7 @@ public class UserFavoriteManagerImpl extends BaseManager<UserFavorite> implement
     }
 
 	@Override
-	public Result addUserFavorite(String account, UserFavorite userFavorite) throws DaoException {
+	public void addUserFavorite(String account, UserFavorite userFavorite) throws DaoException, ServiceException {
 		User user = userManager.findByAccount(account);
 		userFavorite.setUser(user);
 		String info = "";
@@ -113,24 +114,23 @@ public class UserFavoriteManagerImpl extends BaseManager<UserFavorite> implement
 		    name = meeting.getName();
 		    break;
 		default:
-		    return new Result(false, ErrorCode.PARAM_ERROR);
+		    throw new ServiceException(ErrorCode.PARAM_ERROR);
 		}
 		userFavorite.setName(name);
 		userFavorite.setInfo(info);
 		userFavoriteDao.save(userFavorite);
-		return new Result(true);
 	}
 
 	@Override
-	public List<UserFavorite> findByAccount(String account) {
+	public List<UserFavorite> findByAccount(String account) throws DaoException {
 	    List<UserFavorite> userFavorites = new LinkedList<UserFavorite>();
 	    User user = userManager.findByAccount(account);
-		userFavorites = findBySql(UserFavorite.TABLE_NAME, UserFavorite.USER_ID, user.getId());
+	    userFavorites = findBySql(UserFavorite.TABLE_NAME, UserFavorite.USER_ID, user.getId());
 	    return userFavorites;
 	}
 
 	@Override
-	public List<UserFavorite> getMedicineFavorites(User user) {
+	public List<UserFavorite> getMedicineFavorites(User user) throws DaoException {
 	    LinkedList<UserFavorite> userFavorites = new LinkedList<UserFavorite>();
 	    ParamMap paramMap = new ParamMap().put(UserFavorite.USER_ID, user.getId())
 		    			      .put(UserFavorite.TYPE, UserFavorite.ENTER_CHINESE);

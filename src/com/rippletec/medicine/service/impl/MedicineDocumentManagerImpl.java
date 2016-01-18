@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.rippletec.medicine.dao.FindAndSearchDao;
 import com.rippletec.medicine.dao.MedicineDocumentDao;
+import com.rippletec.medicine.exception.DaoException;
 import com.rippletec.medicine.model.MedicineDocument;
 import com.rippletec.medicine.service.MedicineDocumentManager;
 
@@ -25,7 +26,7 @@ public class MedicineDocumentManagerImpl extends BaseManager<MedicineDocument> i
     }
 
     @Override
-    public List<MedicineDocument> getDocument(int medicineId, int type) {
+    public List<MedicineDocument> getDocument(int medicineId, int type) throws DaoException {
 	Map<String, Object> paramMap = new HashMap<String, Object>();
 	paramMap.put(MedicineDocument.MEDICINE_ID, medicineId);
 	paramMap.put(MedicineDocument.TYPE, type);

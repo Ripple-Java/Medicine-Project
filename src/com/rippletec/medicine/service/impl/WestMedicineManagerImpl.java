@@ -32,11 +32,9 @@ public class WestMedicineManagerImpl extends BaseManager<WestMedicine> implement
     }
 
     @Override
-    public List<BackGroundMedicineVO> searchBackGroudVO(String keyword, String param) {
+    public List<BackGroundMedicineVO> searchBackGroudVO(String keyword, String param) throws DaoException {
         List<BackGroundMedicineVO> res = new LinkedList<>();
         List<WestMedicine> westMedicines = search(param, keyword);
-        if(westMedicines == null && westMedicines.size() <1)
-            return res;
         for (WestMedicine westMedicine : westMedicines) {
             res.add(new BackGroundMedicineVO(westMedicine.getMedicineType().getBackGroundMedicineType(), westMedicine.getName(), null, westMedicine.getId(), null));
         }
@@ -44,7 +42,7 @@ public class WestMedicineManagerImpl extends BaseManager<WestMedicine> implement
     }
 
     @Override
-    public int saveMedicine(WestMedicine westMedicine) {
+    public int saveMedicine(WestMedicine westMedicine) throws DaoException {
 	westMedicine.setSortKey(westMedicine.getName());
 	Medicine medicine = new Medicine(Medicine.WEST, null);
 	westMedicine.setMedicine(medicine);
@@ -52,21 +50,20 @@ public class WestMedicineManagerImpl extends BaseManager<WestMedicine> implement
     }
 
     @Override
-    public Result saveMedicine(WestMedicineVO westMedicineVO,
-	    MedicineType medicineType) {
+    public void saveMedicine(WestMedicineVO westMedicineVO,
+	    MedicineType medicineType) throws DaoException {
 	Medicine medicine = new Medicine(Medicine.WEST, null);
 	WestMedicine westMedicine = new WestMedicine(westMedicineVO, medicine, medicineType);
 	westMedicineDao.save(westMedicine);
-	return new Result(true);
+
     }
 
     @Override
-    public Result updateMedicine(int id, WestMedicineVO westMedicineVO,
+    public void updateMedicine(int id, WestMedicineVO westMedicineVO,
 	    MedicineType medicineType) throws DaoException {
 	WestMedicine westMedicine = westMedicineDao.find(id);
 	westMedicine.setUpdate(westMedicineVO, medicineType);
 	westMedicineDao.update(westMedicine);
-	return new Result(true);
     }
 
 }

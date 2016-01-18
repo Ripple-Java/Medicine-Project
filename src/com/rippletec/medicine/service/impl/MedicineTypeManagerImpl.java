@@ -13,6 +13,7 @@ import java.util.Set;
 import javax.annotation.Resource;
 
 import org.apache.commons.collections.map.LinkedMap;
+import org.apache.log4j.Logger;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.stereotype.Service;
@@ -25,12 +26,14 @@ import com.rippletec.medicine.dao.FindAndSearchDao;
 import com.rippletec.medicine.dao.MedicineTypeDao;
 import com.rippletec.medicine.dao.WestMedicineDao;
 import com.rippletec.medicine.exception.DaoException;
+import com.rippletec.medicine.exception.UtilException;
 import com.rippletec.medicine.model.ChineseMedicine;
 import com.rippletec.medicine.model.EnterChineseMedicine;
 import com.rippletec.medicine.model.EnterWestMedicine;
 import com.rippletec.medicine.model.MedicineType;
 import com.rippletec.medicine.model.WestMedicine;
 import com.rippletec.medicine.service.MedicineTypeManager;
+import com.rippletec.medicine.utils.ErrorCode;
 import com.rippletec.medicine.utils.JsonUtil;
 import com.rippletec.medicine.utils.ParamMap;
 import com.rippletec.medicine.utils.StringUtil;
@@ -60,10 +63,14 @@ public class MedicineTypeManagerImpl extends BaseManager<MedicineType> implement
     
 
     @Override
-    public Integer save(MedicineType model) {
+    public Integer save(MedicineType model) throws DaoException{
 	int id =  super.save(model);
-	if(flushJsonString())
-	    return id;
+	try {
+	    if(flushJsonString())
+	        return id;
+	} catch (UtilException e) {
+	    Logger.getLogger(MedicineTypeManagerImpl.class).error(StringUtil.getLoggerInfo(e.getErrorCode(), e.getInfo()));
+	}
 	return 0;
     }
 
@@ -87,15 +94,13 @@ public class MedicineTypeManagerImpl extends BaseManager<MedicineType> implement
     }
 
     @Override
-    public List<MedicineType> getTypeByParentId(int parentId) {
+    public List<MedicineType> getTypeByParentId(int parentId) throws DaoException {
 	return medicineTypeDao.findByParam(MedicineType.PARENT_TYPE_ID, parentId);
     }
 
     @Override
-    public MedicineType isExist(MedicineType medicineType) {
+    public MedicineType isExist(MedicineType medicineType) throws DaoException {
 	List<MedicineType> medicineTypes = findByParam(MedicineType.NAME, medicineType.getName());
-	if(medicineTypes == null || medicineTypes.size() ==0)
-	    return null;
 	for (MedicineType medicineTypeTemp : medicineTypes) {
 	    if (medicineType.equals(medicineTypeTemp))
 		return medicineTypeTemp;
@@ -105,12 +110,14 @@ public class MedicineTypeManagerImpl extends BaseManager<MedicineType> implement
     }
 
     @Override
-    public Integer uniqueSave(MedicineType medicineType) {
+    public Integer uniqueSave(MedicineType medicineType) throws DaoException {
 	Map<String, Object> paramMap = new HashMap<String, Object>();
 	paramMap.put(MedicineType.NAME, medicineType.getName());
 	paramMap.put(MedicineType.PARENT_TYPE_ID, medicineType.getParent_type_id());
-	List<MedicineType> medicineTypes = findByParam(paramMap);
-	if(medicineTypes != null && medicineTypes.size() > 0){
+	List<MedicineType> medicineTypes = null;
+	try {
+	    medicineTypes = findByParam(paramMap);
+	} catch (DaoException e) {
 	    for (MedicineType medicineType_temp : medicineTypes) {
 		if(medicineType.equals(medicineType_temp))
 		    return medicineType_temp.getId();
@@ -122,12 +129,12 @@ public class MedicineTypeManagerImpl extends BaseManager<MedicineType> implement
 
 
     @Override
-    public Boolean flushJsonString() {
+    public Boolean flushJsonString() throws UtilException, DaoException {
 	List<MedicineType> firstType = medicineTypeDao.findByParam(MedicineType.PARENT_TYPE_ID, MedicineType.DEFAULT_PARENT_ID);
 	Map<String, Object> firstMap = new LinkedMap();
 	List<MedicineType> tampList = null;
 	firstMap.put("superType", firstType);
-	jsonUtil.setJsonObject("first", firstMap);
+	jsonUtil.setObject("first", firstMap);
 	List<MedicineType> secondType = new ArrayList<MedicineType>();
 	Map<String, Object> secondMap = new LinkedMap();
 	for (MedicineType medicineType : firstType) {
@@ -135,7 +142,7 @@ public class MedicineTypeManagerImpl extends BaseManager<MedicineType> implement
 	    secondMap.put(medicineType.getName(),tampList);
 	    secondType.addAll(tampList);
 	}
-	jsonUtil.setJsonObject("second", secondMap);
+	jsonUtil.setObject("second", secondMap);
 	List<MedicineType> thirdType = new ArrayList<MedicineType>();
 	Map<String, Object> thirdMap = new LinkedMap();
 	for (MedicineType medicineType : secondType) {
@@ -143,21 +150,20 @@ public class MedicineTypeManagerImpl extends BaseManager<MedicineType> implement
 	    thirdMap.put(medicineType.getName(),tampList);
 	    thirdType.addAll(tampList);
 	}
-	jsonUtil.setJsonObject("third", thirdMap);
+	jsonUtil.setObject("third", thirdMap);
 	List<MedicineType> forthType = new ArrayList<MedicineType>();
 	Map<String, Object> forthMap = new LinkedMap();
 	for (MedicineType medicineType : thirdType) {
 	    forthMap.put(medicineType.getName(),medicineTypeDao.findByParam(MedicineType.PARENT_TYPE_ID, medicineType.getId()));
 	}
-	jsonUtil.setJsonObject("forth", forthMap);	
+	jsonUtil.setObject("forth", forthMap);	
 	org.springframework.core.io.Resource resource = new ClassPathResource("/dataTemp.properties");
 	Properties properties;
 	FileOutputStream fos = null;
 	try {
 	    properties = PropertiesLoaderUtils.loadProperties(resource);
-	    properties.setProperty("medicine.typeJson", jsonUtil.setResultSuccess().toJsonString("/user/getAllMedicineType"));
+	    properties.setProperty("medicine.typeJson", jsonUtil.setSuccessRes().toJson("/user/getAllMedicineType"));
 	    fos = new FileOutputStream(resource.getFile());
-	    System.out.println(resource.getFile());
 	    properties.store(fos, null);
 	    return true;
 	} catch (IOException e) {
@@ -194,7 +200,7 @@ public class MedicineTypeManagerImpl extends BaseManager<MedicineType> implement
 
 
     @Override
-    public List<MedicineType> getAllChild(MedicineType medicineType) {
+    public List<MedicineType> getAllChild(MedicineType medicineType) throws DaoException {
 	List<MedicineType> aList = new ArrayList<MedicineType>();
 	List<MedicineType> medicineTypes = medicineTypeDao.findByParam(MedicineType.PARENT_TYPE_ID, medicineType.getId());
     	for (MedicineType medicineTypeTemp : medicineTypes) {
@@ -239,21 +245,21 @@ public class MedicineTypeManagerImpl extends BaseManager<MedicineType> implement
 
 
     @Override
-    public List<BackGroundMedicineVO> searchBackGroundVO(String keyword) {
+    public List<BackGroundMedicineVO> searchBackGroundVO(String keyword) throws DaoException {
 	List<BackGroundMedicineVO> backGroundMedicineVOs = new LinkedList<BackGroundMedicineVO>();
 	List<MedicineType> medicineTypes = search(MedicineType.NAME, keyword);
-	if(medicineTypes != null && medicineTypes.size()>0){
-		for (MedicineType medicineType : medicineTypes) {
-		    if(medicineType.hasChild()){
-			List<MedicineType> chiildMedicineTypes = getAllChild(medicineType);
-			for (MedicineType childMedicineType : chiildMedicineTypes) {
-			    backGroundMedicineVOs.addAll(getBackGroundMedicineVO(childMedicineType));
-			}
-		    }else {
-			backGroundMedicineVOs.addAll(getBackGroundMedicineVO(medicineType));
-		    }  
+	for (MedicineType medicineType : medicineTypes) {
+	    if (medicineType.hasChild()) {
+		List<MedicineType> chiildMedicineTypes = getAllChild(medicineType);
+		for (MedicineType childMedicineType : chiildMedicineTypes) {
+		    backGroundMedicineVOs
+			    .addAll(getBackGroundMedicineVO(childMedicineType));
 		}
+	    } else {
+		backGroundMedicineVOs
+			.addAll(getBackGroundMedicineVO(medicineType));
 	    }
+	}
 	return backGroundMedicineVOs;
     }
 
@@ -261,14 +267,12 @@ public class MedicineTypeManagerImpl extends BaseManager<MedicineType> implement
 
     @Override
     public List<BackGroundMedicineVO> getEnterBackGroundMedicineVO(
-	    MedicineType medicineType, int enterpriseId) {
+	    MedicineType medicineType, int enterpriseId) throws DaoException {
 	List<BackGroundMedicineVO> res = new LinkedList<BackGroundMedicineVO>();
 	if(medicineType.getGib_type() == MedicineType.CHINESE){
 	    	ParamMap paramMap = new ParamMap().put(EnterChineseMedicine.MEDICINE_TYPE_ID, medicineType.getId())
 	    				          .put(EnterChineseMedicine.ENTERPRISE_ID, enterpriseId);
 		List<EnterChineseMedicine> enterChineseMedicines = enterChineseMedicineDao.findBySql(EnterChineseMedicine.TABLE_NAME, paramMap);
-		if(enterChineseMedicines == null || enterChineseMedicines.size() < 1)
-		    return res;
 		for (EnterChineseMedicine enterChineseMedicine : enterChineseMedicines) {
 		    res.add(new BackGroundMedicineVO(medicineType.getBackGroundMedicineType(), enterChineseMedicine.getName(), enterChineseMedicine.getEnterprise_name(), enterChineseMedicine.getId(), enterChineseMedicine.getUpdateTime()));
 		}
@@ -276,8 +280,6 @@ public class MedicineTypeManagerImpl extends BaseManager<MedicineType> implement
 		ParamMap paramMap = new ParamMap().put(EnterWestMedicine.MEDICINE_TYPE_ID, medicineType.getId())
 			          .put(EnterWestMedicine.ENTERPRISE_ID, enterpriseId);
 		List<EnterWestMedicine> enterWestMedicines = enterWestMedicineDao.findBySql(EnterWestMedicine.TABLE_NAME, paramMap);
-		if(enterWestMedicines == null || enterWestMedicines.size() < 1)
-		    return res;
 		for (EnterWestMedicine enterWestMedicine : enterWestMedicines) {
 		    res.add(new BackGroundMedicineVO(medicineType.getBackGroundMedicineType(), enterWestMedicine.getName(), enterWestMedicine.getEnterprise_name(), enterWestMedicine.getId(), enterWestMedicine.getUpdateTime()));
 		}
@@ -288,13 +290,10 @@ public class MedicineTypeManagerImpl extends BaseManager<MedicineType> implement
 
 
     @Override
-    public MedicineType findType(int medicineType_id, int gibType) {
+    public MedicineType findType(int medicineType_id, int gibType) throws DaoException {
 	ParamMap paramMap = new ParamMap().put(MedicineType.GIB_TYPE, gibType)
 					  .put(MedicineType.ID, medicineType_id);
 	List<MedicineType> medicineTypes = medicineTypeDao.findByParam(paramMap);
-	if(StringUtil.isEmpty(medicineTypes)){
-	    return null;
-	}
 	return medicineTypes.get(0);
     }
 

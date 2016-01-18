@@ -13,11 +13,16 @@ import java.util.List;
 
 
 
+
+
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+
+import com.rippletec.medicine.exception.DaoException;
+import com.rippletec.medicine.utils.ErrorCode;
 
 /**
  * @author Liuyi
@@ -27,17 +32,20 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 public class PlusHibernateSupport<T> extends HibernateDaoSupport{
 
  
-    public List<T> findByPage(final String hql, int offset, int pageSize) {
+    public List<T> findByPage(final String hql, int offset, int pageSize) throws DaoException {
 	return findByPage(hql,new String[]{}, new Object[]{}, offset, pageSize);
     }
     
-    public List<T> findByPage(final String hql,final String param,final Object value, int offset, int pageSize) {
+    public List<T> findByPage(final String hql,final String param,final Object value, int offset, int pageSize) throws DaoException {
 	return findByPage(hql,new String[]{param}, new Object[]{value}, offset,pageSize);
     }
     
     
     @SuppressWarnings({ "unchecked", "deprecation" })
-    public List<T> findByPage(final String hql,final String[] params,final Object[] values, final int offset, final int pageSize) {
+    public List<T> findByPage(final String hql,final String[] params,final Object[] values, final int offset, final int pageSize) throws DaoException {
+	if(offset < 0 || pageSize < 0){
+	    throw new DaoException(ErrorCode.PARAM_ERROR);
+	}
 	List<T> items = getHibernateTemplate().executeFind(new HibernateCallback<List<T>>() {
 
 	    @Override
@@ -48,15 +56,19 @@ public class PlusHibernateSupport<T> extends HibernateDaoSupport{
 		    q.setParameter(params[i], values[i]);
 		}
 		List<T> result = q.setFirstResult(offset).setMaxResults(pageSize).list();
+		
 		return result;
 	    }
 	    
 	});
+	if(items == null || items.size() <1){
+	    throw new DaoException(ErrorCode.DB_NO_ENITY_ERROR);
+	}
 	return items;
     }
     
     @SuppressWarnings({ "unchecked", "deprecation" })
-    public List<T> findByParam(final String hql,final String[] params ,final Object[] values) {
+    public List<T> findByParam(final String hql,final String[] params ,final Object[] values) throws DaoException {
 	List<T> items = getHibernateTemplate().executeFind(new HibernateCallback<List<T>>() {
 
 	    @Override
@@ -71,11 +83,14 @@ public class PlusHibernateSupport<T> extends HibernateDaoSupport{
 	    }
 	    
 	});
+	if(items == null || items.size() <1){
+	    throw new DaoException(ErrorCode.DB_NO_ENITY_ERROR);
+	}
 	return items;
       }
     
     @SuppressWarnings({ "unchecked", "deprecation" })
-    public List<T> findBySql(final Class<T> enityClass, final String sql,final Object value) {
+    public List<T> findBySql(final Class<T> enityClass, final String sql,final Object value) throws DaoException {
 	List<T> items = getHibernateTemplate().executeFind(new HibernateCallback<List<T>>() {
 
 	    @Override
@@ -88,11 +103,17 @@ public class PlusHibernateSupport<T> extends HibernateDaoSupport{
 	    }
 	    
 	});
+	if(items == null || items.size() <1){
+	    throw new DaoException(ErrorCode.DB_NO_ENITY_ERROR);
+	}
 	return items;
       }
     
     @SuppressWarnings({ "unchecked", "deprecation" })
-    public List<T> findBySql(final Class<T> enityClass, final String sql,final Object value, final int offset, final int pageSize) {
+    public List<T> findBySql(final Class<T> enityClass, final String sql,final Object value, final int offset, final int pageSize) throws DaoException {
+	if(offset < 0 || pageSize < 0){
+	    throw new DaoException(ErrorCode.PARAM_ERROR);
+	}
 	List<T> items = getHibernateTemplate().executeFind(new HibernateCallback<List<T>>() {
 
 	    @Override
@@ -105,12 +126,15 @@ public class PlusHibernateSupport<T> extends HibernateDaoSupport{
 	    }
 	    
 	});
+	if(items == null || items.size() <1){
+	    throw new DaoException(ErrorCode.DB_NO_ENITY_ERROR);
+	}
 	return items;
       }
     
     
     @SuppressWarnings({ "unchecked", "deprecation" })
-    public List<T> findBySql(final Class<T> enityClass, final String sql, final String[] params,final Object[] values) {
+    public List<T> findBySql(final Class<T> enityClass, final String sql, final String[] params,final Object[] values) throws DaoException {
 	List<T> items = getHibernateTemplate().executeFind(new HibernateCallback<List<T>>() {
 
 	    @Override
@@ -125,11 +149,14 @@ public class PlusHibernateSupport<T> extends HibernateDaoSupport{
 	    }
 	    
 	});
+	if(items == null || items.size() <1){
+	    throw new DaoException(ErrorCode.DB_NO_ENITY_ERROR);
+	}
 	return items;
       }
     
     @SuppressWarnings({ "unchecked", "deprecation" })
-    public List<T> findCount(final String sql, final String[] params,final Object[] values) {
+    public List<T> findCount(final String sql, final String[] params,final Object[] values) throws DaoException {
 	List<T> items = getHibernateTemplate().executeFind(new HibernateCallback<List<T>>() {
 
 	    @Override
@@ -146,11 +173,14 @@ public class PlusHibernateSupport<T> extends HibernateDaoSupport{
 	    }
 	    
 	});
+	if(items == null || items.size() <1){
+	    throw new DaoException(ErrorCode.DB_NO_ENITY_ERROR);
+	}
 	return items;
       }
     
     @SuppressWarnings({ "unchecked", "deprecation" })
-    public List<T> findCount(final String sql, final String params,final Object whereValue, String inParam, final Object[] values) {
+    public List<T> findCount(final String sql, final String params,final Object whereValue, String inParam, final Object[] values) throws DaoException {
 	List<T> items = getHibernateTemplate().executeFind(new HibernateCallback<List<T>>() {
 
 	    @Override
@@ -171,15 +201,18 @@ public class PlusHibernateSupport<T> extends HibernateDaoSupport{
 	    }
 	    
 	});
+	if(items == null || items.size() <1){
+	    throw new DaoException(ErrorCode.DB_NO_ENITY_ERROR);
+	}
 	return items;
       }
     
-    public List<T> Search(final String hql,final String param ,final Object value) {
+    public List<T> Search(final String hql,final String param ,final Object value) throws DaoException {
 	return Search(hql, new String[]{param}, new Object[]{value});
     }
     
     @SuppressWarnings({ "unchecked", "deprecation" })
-    public List<T> Search(final String hql,final String[] params ,final Object[] values) {
+    public List<T> Search(final String hql,final String[] params ,final Object[] values) throws DaoException {
 	List<T> items = getHibernateTemplate().executeFind(new HibernateCallback<List<T>>() {
 
 	    @Override
@@ -195,15 +228,18 @@ public class PlusHibernateSupport<T> extends HibernateDaoSupport{
 	    }
 	    
 	});
+	if(items == null || items.size() <1){
+	    throw new DaoException(ErrorCode.DB_NO_ENITY_ERROR);
+	}
 	return items;
     }
     
-    public List<T> Search(final Class<T> enityClass,final String hql,final String field ,final Object keyword ,final String param ,final Object value) {
+    public List<T> Search(final Class<T> enityClass,final String hql,final String field ,final Object keyword ,final String param ,final Object value) throws DaoException {
  	return Search(enityClass,hql, new String[]{field}, new Object[]{keyword}, new String[]{param}, new Object[]{value});
      }
      
      @SuppressWarnings({ "unchecked", "deprecation" })
-     public List<T> Search(final Class<T> enityClass, final String hql,final String[] fields ,final Object[] keywords, final String[] params ,final Object[] values) {
+     public List<T> Search(final Class<T> enityClass, final String hql,final String[] fields ,final Object[] keywords, final String[] params ,final Object[] values) throws DaoException {
  	List<T> items = getHibernateTemplate().executeFind(new HibernateCallback<List<T>>() {
 
  	    @Override
@@ -223,6 +259,9 @@ public class PlusHibernateSupport<T> extends HibernateDaoSupport{
  	    }
  	    
  	});
+ 	if(items == null || items.size() <1){
+	    throw new DaoException(ErrorCode.DB_NO_ENITY_ERROR);
+	}
  	return items;
      }
        

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.rippletec.medicine.dao.FindAndSearchDao;
 import com.rippletec.medicine.dao.StudentDao;
+import com.rippletec.medicine.exception.DaoException;
 import com.rippletec.medicine.model.Student;
 import com.rippletec.medicine.model.User;
 import com.rippletec.medicine.service.StudentManager;
@@ -27,17 +28,13 @@ public class StudentManagerImpl extends BaseManager<Student> implements StudentM
     }
 
     @Override
-    public boolean setStuInfo(String account, String name, String school,
-	    int degree, String major) {
+    public void setStuInfo(String account, String name, String school,
+	    int degree, String major) throws DaoException {
 	User user = userManager.findByAccount(account);
-	if(user == null)
-	    return false;
 	Student student = new Student(user, name, school, major);
-	if(studentDao.save(student) <= 0)
-	    return false;
+	studentDao.save(student);
 	user.setType(User.TYPE_STU);
 	userManager.update(user);
-	return true;
     }
 
    

@@ -16,6 +16,7 @@ import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -44,6 +45,7 @@ public class FeedBackMass extends BaseModel {
     protected Integer id;
     
     @Column(name="content",columnDefinition="TEXT", nullable=false)
+    @NotEmpty
     protected String content;
     
     @Column(name="time",nullable=false)

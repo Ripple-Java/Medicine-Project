@@ -8,6 +8,7 @@ import java.util.Properties;
 
 import javax.annotation.Resource;
 
+import org.apache.log4j.Logger;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.stereotype.Repository;
@@ -16,6 +17,7 @@ import com.rippletec.medicine.bean.DBLogEntity;
 import com.rippletec.medicine.dao.DBLogDao;
 import com.rippletec.medicine.dao.FindAndSearchDao;
 import com.rippletec.medicine.exception.DaoException;
+import com.rippletec.medicine.exception.ServiceException;
 import com.rippletec.medicine.model.ChineseMedicine;
 import com.rippletec.medicine.model.DBLog;
 import com.rippletec.medicine.model.MedicineType;
@@ -24,6 +26,8 @@ import com.rippletec.medicine.service.ChineseMedicineManager;
 import com.rippletec.medicine.service.DBLoger;
 import com.rippletec.medicine.service.MedicineTypeManager;
 import com.rippletec.medicine.service.WestMedicineManager;
+import com.rippletec.medicine.utils.ErrorCode;
+import com.rippletec.medicine.utils.StringUtil;
 import com.rippletec.medicine.vo.app.ChineseMedicineVO;
 import com.rippletec.medicine.vo.app.WestMedicineVO;
 
@@ -48,26 +52,36 @@ public class DBLogerImpl extends BaseManager<DBLog> implements DBLoger{
     }
 
     @Override
-    public Integer getVersion() throws IOException {
+    public Integer getVersion() throws ServiceException{
 	org.springframework.core.io.Resource resource = new ClassPathResource("/config.properties");
-	Properties properties = PropertiesLoaderUtils.loadProperties(resource);
+	Properties properties = null;
+	try {
+	    properties = PropertiesLoaderUtils.loadProperties(resource);
+	} catch (IOException e) {
+	    Logger.getLogger(DBLogerImpl.class).error(StringUtil.getLoggerInfo(ErrorCode.FILE_REDA_ERROR, "读取数据库版本失败!"));
+	    throw new ServiceException(ErrorCode.INTENAL_ERROR);
+	}
 	String ver = properties.getProperty("databaseVersion");
 	return Integer.valueOf(ver);
     }
 
     @Override
-    public Integer uniqueSave(DBLog dbLog) {
-	List<DBLog> dbLogs = findByParam(DBLog.OBJCET_ID, dbLog.getObject_id());
-	if(dbLogs != null && dbLogs.size()>0){
+    public Integer uniqueSave(DBLog dbLog) throws DaoException {
+	List<DBLog> dbLogs;
+	Integer id = -1;
+	try {
+	    dbLogs = findByParam(DBLog.OBJCET_ID, dbLog.getObject_id());
 	    DBLog old = dbLogs.get(0);
 	    old.setAction(dbLog.getAction());
 	    old.setDate(dbLog.getDate());
 	    old.setDbTable(dbLog.getDbTable());
 	    old.setDbVersion(dbLog.getDbVersion());
 	    update(old);
-	    return old.getId();
-	}
-	return save(dbLog);
+	    id = old.getId();
+	} catch (DaoException e) {
+	    id = save(dbLog);
+	}	    
+	return id;
     }
 
     @Override
@@ -83,7 +97,7 @@ public class DBLogerImpl extends BaseManager<DBLog> implements DBLoger{
     }
 
     @Override
-    public List<DBLog> getDatas(int type, int version, int serverVersion) {
+    public List<DBLog> getDatas(int type, int version, int serverVersion) throws DaoException {
 	return dbLogDao.getModifiedData(type, version, serverVersion);
     }
 
@@ -108,7 +122,7 @@ public class DBLogerImpl extends BaseManager<DBLog> implements DBLoger{
     }
 
     @Override
-    public List<DBLogEntity> getDeletes(int version, int serverVersion) {
+    public List<DBLogEntity> getDeletes(int version, int serverVersion) throws DaoException {
 	List<DBLog> logs = dbLogDao.getModifiedData(DBLog.ACTION_DELETE, version, serverVersion);
 	List<DBLogEntity> dbLogEntities = new ArrayList<DBLogEntity>();
 	for (DBLog dbLog : logs) {

@@ -41,19 +41,17 @@ public class MeetingManagerImpl extends BaseManager<Meeting> implements MeetingM
     }
 
     @Override
-    public boolean addMeeting(Enterprise enterprise, MeetingVo meeting, Subject subject) {
+    public void addMeeting(Enterprise enterprise, MeetingVo meeting, Subject subject) throws DaoException {
 	Meeting meetingModel = new Meeting(enterprise, meeting, subject);
 	meetingModel.setStatus(Meeting.ON_PUBLISTH);
 	meetingModel.setCommitDate(new Date());
 	int dataId = meetingDao.save(meetingModel);
-	if(dataId <0 )
-	    return false;
 	CheckData checkData = new CheckData(enterprise, meeting.getName(),dataId, CheckData.TYPE_MEETING, null, new Date(), CheckData.CHECKING);
-	return checkDataManager.save(checkData) > 0 ? true : false;
+	checkDataManager.save(checkData);
     }
 
     @Override
-    public List<Meeting> findRecentMeeting(PageBean pageBean ,String param, Object value) {
+    public List<Meeting> findRecentMeeting(PageBean pageBean ,String param, Object value) throws DaoException {
 	return meetingDao.findByTime(pageBean, param ,value);
     }
 
@@ -80,33 +78,27 @@ public class MeetingManagerImpl extends BaseManager<Meeting> implements MeetingM
     }
 
     @Override
-    public boolean deleteMeeting(int id, Integer enterpriseId) {
+    public void deleteMeeting(int id, Integer enterpriseId) throws DaoException {
 	ParamMap paramMap = new ParamMap().put(Meeting.ID, id)
 					  .put(Meeting.ENTERPRISE_ID, enterpriseId);
 	List<Meeting> meetings = meetingDao.findBySql(Meeting.TABLE_NAME, paramMap);
-	if(StringUtil.isEmpty(meetings))
-	    return false;
 	meetingDao.delete(meetings.get(0).getId());
-	return true;
     }
 
     @Override
-    public Result updateMeeting(int meetingId, int enterpriseId,
-	    MeetingVo meeting, Subject subject) {
+    public void updateMeeting(int meetingId, int enterpriseId,
+	    MeetingVo meeting, Subject subject) throws DaoException {
 	ParamMap paramMap = new ParamMap().put(Meeting.ID, meetingId)
 					  .put(Meeting.ENTERPRISE_ID, enterpriseId);
 	List<Meeting> meetings = meetingDao.findBySql(Meeting.TABLE_NAME, paramMap);
-	if(StringUtil.isEmpty(meetings))
-	    return new Result(false, "此会议不存在");
 	Meeting updateMeeting = meetings.get(0);
 	updateMeeting.setUpdate(meeting, subject);
 	updateMeeting.setModifyTime(new Date());
 	meetingDao.update(updateMeeting);
-	return new Result(true, null);
     }
 
     @Override
-    public List<Meeting> findBySubject(Integer id, Integer enterpriseId) {
+    public List<Meeting> findBySubject(Integer id, Integer enterpriseId) throws DaoException {
 	ParamMap paramMap = new ParamMap().put(Meeting.SUBJECT_ID, id)
 					  .put(Meeting.ENTERPRISE_ID, enterpriseId);
 	return meetingDao.findBySql(Meeting.TABLE_NAME, paramMap);
@@ -122,21 +114,17 @@ public class MeetingManagerImpl extends BaseManager<Meeting> implements MeetingM
     }
 
     @Override
-    public Result unblock(int id) throws DaoException {
+    public void unblock(int id) throws DaoException {
 	Meeting meeting = meetingDao.find(id);
 	meeting.setStatus(Meeting.ON_PUBLISTH);
 	meeting.setModifyTime(new Date());
 	meetingDao.update(meeting);
-	return new Result(true);
     }
 
     @Override
-    public Meeting getMeeting(int id, int enterpriseId) {
+    public Meeting getMeeting(int id, int enterpriseId) throws DaoException {
 	ParamMap paramMap = new ParamMap().put(Meeting.ID, id).put(Meeting.ENTERPRISE_ID, enterpriseId);
 	List<Meeting> meetings = meetingDao.findBySql(Meeting.TABLE_NAME, paramMap);
-	if(StringUtil.isEmpty(meetings)){
-	    return null;
-	}
 	return meetings.get(0);
     }
 

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.rippletec.medicine.bean.PageBean;
+import com.rippletec.medicine.exception.DaoException;
 
 /**
  * @author Liuyi
@@ -17,15 +18,17 @@ public interface IFindByPage<T> {
      * @param paramMap 格式为：<参数名，参数值>
      * @param page offset,pageSize字段不能为空
      * @return
+     * @throws DaoException 
      */
-    public List<T> findByPage(Map<String, Object> paramMap, PageBean page);
+    public List<T> findByPage(Map<String, Object> paramMap, PageBean page) throws DaoException;
     
     /**
      * 基本分页查找方法hql实现（参数不能为外键或级联id）
      * @param page offset,pageSize字段不能为空
      * @return
+     * @throws DaoException 
      */
-    public List<T> findByPage(PageBean page);
+    public List<T> findByPage(PageBean page) throws DaoException;
     
     /**
      * 单参数分页查找hql实现（参数不能为外键或级联id）
@@ -33,8 +36,9 @@ public interface IFindByPage<T> {
      * @param value 参数值
      * @param page offset,pageSize字段不能为空
      * @return
+     * @throws DaoException 
      */
-    public List<T> findByPage(String param, Object value, PageBean page);
+    public List<T> findByPage(String param, Object value, PageBean page) throws DaoException;
     
     /**
      * 单参数分页查找 sql实现（参数可以任意字段）
@@ -43,6 +47,7 @@ public interface IFindByPage<T> {
      * @param value	参数值
      * @param page	分页bean
      * @return
+     * @throws DaoException 
      */
-    public List<T> findBySql(String tableName,String param, Object value,PageBean page);
+    public List<T> findBySql(String tableName,String param, Object value,PageBean page) throws DaoException;
 }

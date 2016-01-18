@@ -1,5 +1,6 @@
 package com.rippletec.medicine.dao;
 
+import com.rippletec.medicine.exception.DaoException;
 import com.rippletec.medicine.model.EnterChineseMedicine;
 
 
@@ -10,6 +11,6 @@ import com.rippletec.medicine.model.EnterChineseMedicine;
 public interface EnterChineseMedicineDao extends FindAndSearchDao<EnterChineseMedicine>{
     public static final String NAME = "EnterChineseMedicineDao";
 
-    EnterChineseMedicine findByMedicineId(Integer id);
+    EnterChineseMedicine findByMedicineId(Integer id) throws DaoException;
 
 }

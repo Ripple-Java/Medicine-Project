@@ -11,9 +11,11 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.websocket.server.PathParam;
 
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,12 +25,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import antlr.InputBuffer;
 
+import com.rippletec.medicine.Interceptor.AuthorityInterceptor;
 import com.rippletec.medicine.exception.DaoException;
+import com.rippletec.medicine.exception.UtilException;
 import com.rippletec.medicine.model.BaseModel;
 import com.rippletec.medicine.model.Medicine;
 import com.rippletec.medicine.model.Meeting;
+import com.rippletec.medicine.utils.ErrorCode;
 import com.rippletec.medicine.utils.FileUtil;
-import com.rippletec.medicine.utils.LoggerUtil;
 
 
 /**
@@ -45,29 +49,25 @@ public class RootController extends BaseController {
     public static final String IOS_FILE_NAME = "IOSupdate_";
     public static final String OUTPUT_NAME = "MedicineHub.apk";
     
-    @RequestMapping(value = "/pptshow/{id}", method = RequestMethod.GET)
-    @ResponseBody
-    public String root_getEnterTypes(@PathVariable int id) throws DaoException {
-	Meeting meeting = meetingManager.find(id);
-	return FileUtil.pptHtml.replace("%value%", id+"");
-    }
+//    @RequestMapping(value = "/pptshow/{id}", method = RequestMethod.GET)
+//    @ResponseBody
+//    public String root_getEnterTypes(@PathVariable int id) throws DaoException {
+//	Meeting meeting = meetingManager.find(id);
+//	return FileUtil.pptHtml.replace("%value%", id+"");
+//    }
     
     @RequestMapping(value = "/share/medicine/{typeId}/{id}", method = RequestMethod.GET)
     @ResponseBody
     public String root_share(@PathVariable int id, @PathVariable int typeId) {
-	if(typeId != Medicine.CHINESE && typeId != Medicine.WEST && typeId != Medicine.ENTER_CHINESE && typeId != Medicine.ENTER_WEST)
-	    return ParamError();
-	if(id < 1)
-	    return ParamError();
+	if(typeId != Medicine.CHINESE && typeId != Medicine.WEST && typeId != Medicine.ENTER_CHINESE && typeId != Medicine.ENTER_WEST){
+	    return ParamError();	    
+	}
 	return FileUtil.shareHtml.replace("%typeId%", typeId+"").replace("%id%", id+"");
     }
     
     @RequestMapping(value = "/share/medicine/get", method = RequestMethod.GET,produces="application/json;charset=UTF-8")
     @ResponseBody
-    public String root_getShareMedicine( @RequestParam(value="type", defaultValue="0", required=false) int type,
-	    @RequestParam(value="id", defaultValue="0", required=false) int id) throws DaoException {
-	if(id < 1)
-	    return ParamError();
+    public String root_getShareMedicine(int type,int id) throws DaoException, UtilException {
 	Object medicine = null;
 	if(type == Medicine.WEST){
 	    medicine = westMedicineManager.find(id);
@@ -80,23 +80,14 @@ public class RootController extends BaseController {
 	}else {
 	    return ParamError();
 	}
-
-	if(medicine == null){
-	    return jsonUtil.setResultFail("该药品不存在").toJsonString();
-	}
-	return  jsonUtil.setResultSuccess().setJsonObject("medicine", medicine).toJsonString("/share/medicine/get").replaceAll("\\\\n", "<br>");
+	return  jsonUtil.setSuccessRes().setObject("medicine", medicine).toJson("/share/medicine/get").replaceAll("\\\\n", "<br>");
     }
     
     
     
     
     @RequestMapping(value = "/updateApp", method = RequestMethod.GET)
-    public void root_updateApp(HttpServletResponse response,
-	    @RequestParam(value="type", defaultValue="0", required=false) int type,
-	    @RequestParam(value="updateVersion", defaultValue="0", required=false) int updateVersion) {
-	if(type <=0 )
-	    return;
-	
+    public void root_updateApp(HttpServletResponse response, HttpServletRequest request, int type, int updateVersion) {
 	String filePath = "";
 	String fileName = "";
 	if(type == 1){
@@ -108,19 +99,19 @@ public class RootController extends BaseController {
 	    fileName = IOS_FILE_NAME+updateVersion+".app";
 	}
 	else {
-	    return;
+	    return ;
 	}
 	
 	File file = new File(filePath, fileName);
 	if(!file.exists()){
-	    LoggerUtil.ControllerLogger.info("下载文件不存在");
+	    Logger.getLogger(RootController.class)
+	    	  .warn("root_updateApp() errorCode:"+ErrorCode.FILE_NOT_EXISTED_ERROR+" from："+getIpAddress(request)+" fileName: "+fileName);
 	    return ; 
 	}
 	OutputStream toClient = null;
 	FileInputStream inputFile = null;
 	try {
 	    inputFile = new FileInputStream(file);
-		
             response.setContentType("multipart/form-data");
 	    response.setHeader("Content-Disposition", "attachment;fileName="+new String(OUTPUT_NAME.getBytes(),"UTF-8"));
 	    response.setHeader("Content-Length", file.length()+"");
@@ -135,8 +126,8 @@ public class RootController extends BaseController {
 	    toClient.flush();
 	    
 	} catch (IOException e) {
-	    LoggerUtil.ControllerLogger.error("获取下载文件失败");
-	    e.printStackTrace();
+	    Logger.getLogger(RootController.class)
+	    	  .warn("root_updateApp() errorCode:"+ErrorCode.FILE_REDA_ERROR+" from："+getIpAddress(request)+" fileName: "+fileName);
 	    return;
 	}
 	finally{
@@ -144,16 +135,16 @@ public class RootController extends BaseController {
 		try {
 		    toClient.close();
 		} catch (IOException e) {
-		    LoggerUtil.ControllerLogger.error("关闭下载文件toClient流失败");
-		    e.printStackTrace();
+		    Logger.getLogger(RootController.class)
+		    	  .warn("root_updateApp() errorCode:"+ErrorCode.FILE_CLOSE_ERROR+" from："+getIpAddress(request)+" fileName: "+fileName);
 		}
 	    }
 	    if(inputFile != null){
 		try {
 		    inputFile.close();
 		} catch (IOException e) {
-		    LoggerUtil.ControllerLogger.error("关闭下载文件inputFile流失败");
-		    e.printStackTrace();
+		    Logger.getLogger(RootController.class)
+		    	  .warn("root_updateApp() errorCode:"+ErrorCode.FILE_CLOSE_ERROR+" from："+getIpAddress(request)+" fileName: "+fileName);
 		}
 	    }
 	  

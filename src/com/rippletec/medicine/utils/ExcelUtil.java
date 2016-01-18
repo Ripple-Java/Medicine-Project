@@ -10,6 +10,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -74,7 +75,7 @@ public class ExcelUtil {
     }
     
     
-    public  boolean setWestTypeToDatabase() {
+    public  boolean setWestTypeToDatabase() throws DaoException {
 	XSSFWorkbook xssfWorkbook;
 	try {
 	    xssfWorkbook = getExcelDom(excelPath);
@@ -117,11 +118,12 @@ public class ExcelUtil {
 	    westMedicineManager.save(westMedicine);
 	    
 	}
-	LoggerUtil.UtilLogger.info("导入通用西药："+xssfSheet.getLastRowNum());
+	Logger.getLogger(ExcelUtil.class)
+	      .info("import WestMedicine："+xssfSheet.getLastRowNum());
    	return true;
     }
     
-    public  boolean setSubjectToDatabase() {
+    public  boolean setSubjectToDatabase() throws DaoException {
    	XSSFWorkbook xssfWorkbook;
    	try {
    	    xssfWorkbook = getExcelDom(excelPath);
@@ -146,11 +148,11 @@ public class ExcelUtil {
            	 subjectManager.save(subject);
    	    }
    	}
-   	LoggerUtil.UtilLogger.info("导入科目："+xssfSheet.getLastRowNum());
+   	Logger.getLogger(ExcelUtil.class).info("import Suject："+xssfSheet.getLastRowNum());
       	return true;
        }
     
-    public  boolean setChineseTypeToDatabase() {
+    public  boolean setChineseTypeToDatabase() throws DaoException {
 	XSSFWorkbook xssfWorkbook;
 	try {
 	    xssfWorkbook = getExcelDom(excelPath);
@@ -205,7 +207,7 @@ public class ExcelUtil {
 	    chineseMedicine.setStatus(ChineseMedicine.ON_PUBLISTH);
 	    chineseMedicineManager.save(chineseMedicine);
 	}
-	LoggerUtil.UtilLogger.info("导入通用中药："+xssfSheet.getLastRowNum());
+	Logger.getLogger(ExcelUtil.class).info("import ChineseMedicine："+xssfSheet.getLastRowNum());
    	return true;
     }
     

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.rippletec.medicine.dao.DoctorDao;
 import com.rippletec.medicine.dao.FindAndSearchDao;
+import com.rippletec.medicine.exception.DaoException;
 import com.rippletec.medicine.model.Doctor;
 import com.rippletec.medicine.model.User;
 import com.rippletec.medicine.service.DoctorManager;
@@ -28,17 +29,13 @@ public class DoctorManagerImpl extends BaseManager<Doctor> implements DoctorMana
     }
 
     @Override
-    public boolean setInfo(String account, String name, String hospital,
-	    String office, String officePhone, String profession) {
+    public void setInfo(String account, String name, String hospital,
+	    String office, String officePhone, String profession) throws DaoException {
 	User user = userManager.findByAccount(account);
-	if(user == null)
-	    return false;
 	Doctor doctor = new Doctor(user, name, hospital, office, profession, officePhone);
-	if(doctorDao.save(doctor) <= 0)
-	    return false;
+	doctorDao.save(doctor);
 	user.setType(User.TYPE_DOC);
 	userManager.update(user);
-	return true;
     }
 
 

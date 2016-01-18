@@ -1,19 +1,24 @@
 package com.rippletec.medicine.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.validation.ConstraintViolationException;
 
+import org.springframework.beans.TypeMismatchException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.rippletec.medicine.exception.ControllerException;
 import com.rippletec.medicine.exception.DaoException;
+import com.rippletec.medicine.exception.ServiceException;
 import com.rippletec.medicine.exception.UtilException;
 import com.rippletec.medicine.model.EnterChineseMedicine;
 import com.rippletec.medicine.model.User;
@@ -54,6 +59,7 @@ public class BaseController {
 
     @Resource(name=JsonUtil.NAME)
     protected JsonUtil jsonUtil;
+    
     
     @Resource(name=ExcelUtil.NAME)
     protected ExcelUtil excelUtil;
@@ -128,13 +134,29 @@ public class BaseController {
     @ResponseBody
     public String exp(HttpServletRequest request, Exception ex) {  
 	if (ex instanceof DaoException) {
-	    return jsonUtil.setResultFail(((DaoException) ex).getErrorCode()).toJsonString();
+	    return jsonUtil.setFailRes(((DaoException) ex).getErrorCode()).toJson();
 	}
 	else if (ex instanceof UtilException) {
-	    return jsonUtil.setResultFail(((UtilException) ex).getErrorCode()).toJsonString();
+	    return jsonUtil.setFailRes(((UtilException) ex).getErrorCode()).toJson();
+	}
+	else if (ex instanceof ServiceException) {
+	    return jsonUtil.setFailRes(((ServiceException) ex).getErrorCode()).toJson();
+	}
+	else if (ex instanceof ControllerException) {
+	    return jsonUtil.setFailRes(((ControllerException) ex).getErrorCode()).toJson();
+	}
+	else if(ex instanceof TypeMismatchException){
+	    return jsonUtil.setFailRes(ErrorCode.PARAM_ERROR).toJson();
+	}
+	else if(ex instanceof IllegalStateException){
+	    return jsonUtil.setFailRes(ErrorCode.PARAM_ERROR).toJson();
+	}
+	else if (ex instanceof ConstraintViolationException) {
+	    return jsonUtil.setFailRes(ErrorCode.PARAM_ERROR).toJson();
 	}
 	else {
-	    return jsonUtil.setResultFail(ErrorCode.INTENAL_ERROR).toJsonString();
+	    ex.printStackTrace();
+	    return jsonUtil.setFailRes(ErrorCode.INTENAL_ERROR).toJson();
 	}
     }  
     
@@ -145,23 +167,49 @@ public class BaseController {
 	    errorStr += objectError.getDefaultMessage() +", ";
 	}
 	errorStr = errorStr.substring(0,errorStr.length()-2);
-	return jsonUtil.setResultFail(errorStr).toJsonString();
+	return jsonUtil.setFailRes(errorStr).toJson();
     }
     
     protected String ParamError() {
-	return jsonUtil.setResultFail("参数错误").toJsonString();
+	return jsonUtil.setFailRes(ErrorCode.PARAM_ERROR).toJson();
     }
     
     
-    protected String getAccount(HttpSession httpSession) {
+    protected String getAccount(HttpSession httpSession) throws ControllerException {
 	Object accountAttr = httpSession.getAttribute(User.ACCOUNT);
-	return accountAttr == null ? null : (String) accountAttr;
+	if(accountAttr == null){
+	    throw new ControllerException(ErrorCode.USER_GET_ACCOUNT_ERROR, new Date().toLocaleString()+" : getAccount()");
+	}
+	return (String) accountAttr;
     }
     
-    protected int getEnterpriseId(HttpSession httpSession) {
+    protected int getEnterpriseId(HttpSession httpSession) throws ControllerException {
 	Object accountAttr = httpSession
 		.getAttribute(EnterChineseMedicine.ENTERPRISE_ID);
-	return accountAttr == null ? -1 : (int) accountAttr;
+	if(accountAttr == null){
+	    throw new ControllerException(ErrorCode.ENTERPRISE_GET_ID_ERROR, new Date().toLocaleString()+" : getEnterpriseId()");
+	}
+	return (int) accountAttr;
     }
     
+    public static String getIpAddress(HttpServletRequest request) {
+	String ip = request.getHeader("x-forwarded-for");
+	if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+	    ip = request.getHeader("Proxy-Client-IP");
+	}
+	if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+	    ip = request.getHeader("WL-Proxy-Client-IP");
+	}
+	if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+	    ip = request.getHeader("HTTP_CLIENT_IP");
+	}
+	if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+	    ip = request.getHeader("HTTP_X_FORWARDED_FOR");
+	}
+	if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+	    ip = request.getRemoteAddr();
+	}
+	return ip;
+    }
+
 }

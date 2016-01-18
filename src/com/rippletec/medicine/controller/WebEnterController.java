@@ -24,7 +24,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.rippletec.medicine.bean.PageBean;
 import com.rippletec.medicine.bean.Result;
+import com.rippletec.medicine.exception.ControllerException;
 import com.rippletec.medicine.exception.DaoException;
+import com.rippletec.medicine.exception.ServiceException;
+import com.rippletec.medicine.exception.UtilException;
 import com.rippletec.medicine.model.CheckData;
 import com.rippletec.medicine.model.ChineseMedicine;
 import com.rippletec.medicine.model.EnterChineseMedicine;
@@ -40,6 +43,7 @@ import com.rippletec.medicine.model.WestMedicine;
 import com.rippletec.medicine.model.extend.EnterChMedicineBean;
 import com.rippletec.medicine.model.extend.EnterWestMedicineBean;
 import com.rippletec.medicine.service.EnterWestMedicineManager;
+import com.rippletec.medicine.utils.ErrorCode;
 import com.rippletec.medicine.utils.MD5Util;
 import com.rippletec.medicine.utils.ParamMap;
 import com.rippletec.medicine.utils.StringUtil;
@@ -76,244 +80,214 @@ public class WebEnterController extends BaseController {
     @RequestMapping(value = "/enteruser/setInfo", method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
     public String enterprise_setInfo(HttpSession httpSession, String name, int type, String number, String imgUrl) {
-        if (StringUtil.isEnterpriseName(name) && StringUtil.isEnterpriseType(type) && StringUtil.isNumber(number)) {
-            Enterprise enterprise = new Enterprise(type, name, number, null, imgUrl,Enterprise.ON_VAlIDATING);
-            httpSession.setAttribute(Enterprise.CLASS_NAME, enterprise);
-            httpSession.setAttribute("infoFlag", true);
-            return jsonUtil.setResultSuccess().toJsonString();
+        if (!StringUtil.isEnterpriseName(name) || !StringUtil.isEnterpriseType(type) || !StringUtil.isNumber(number)) {
+           return jsonUtil.setFailRes(ErrorCode.PARAM_FORMAT_ERROR).toJson();
         }
-        return jsonUtil.setResultFail().setTip("参数不正确").toJsonString();
+        Enterprise enterprise = new Enterprise(type, name, number, null, imgUrl,Enterprise.ON_VAlIDATING);
+        httpSession.setAttribute(Enterprise.CLASS_NAME, enterprise);
+        httpSession.setAttribute("infoFlag", true);
+        return jsonUtil.setSuccessRes().toJson();
     }
 
     @RequestMapping(value = "/enteruser/register", method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
-    public String enterprise_setRegister(HttpSession httpSession, String email, String password) {
-
+    public String enterprise_setRegister(HttpSession httpSession, String email, String password) throws DaoException, ServiceException {
         Object infoAttr = httpSession.getAttribute("infoFlag");
-        if (infoAttr == null)
-            return jsonUtil.setResultFail("非法操作").toJsonString();
-        if (StringUtil.isEmail(email) && StringUtil.hasText(password)) {
-            User user = userManager.findByAccount(email);
-            if (user != null) {
-                if (user.getStatus() != User.STATUS_VAlIDATING)
-                    return jsonUtil.setResultFail().setTip("该用户已存在").toJsonString();
-                enterpriseManager.deleteByUser(user.getId());
-            }
-            if (userManager.registerEnterprise(email, password, httpSession))
-                return jsonUtil.setResultSuccess().toJsonString();
-            return jsonUtil.setResultFail().toJsonString();
+        if (infoAttr == null){
+            return jsonUtil.setFailRes(ErrorCode.ILLEGAL_ACCESS_ERROR).toJson();
         }
-        return jsonUtil.setResultFail().setTip("参数不正确").toJsonString();
+        if (!StringUtil.isEmail(email) || !StringUtil.hasText(password)) {
+            return jsonUtil.setFailRes(ErrorCode.PARAM_FORMAT_ERROR).toJson();
+        }
+        User user;
+	try {
+	    user = userManager.findByAccount(email);
+	    if (user.getStatus() != User.STATUS_VAlIDATING){
+        	return jsonUtil.setFailRes(ErrorCode.USER_EXISTED_ERROR).toJson();
+            }
+            enterpriseManager.deleteByUser(user.getId());
+	} catch (DaoException e) {}
+        userManager.registerEnterprise(email, password, httpSession);
+        return jsonUtil.setSuccessRes().toJson();
     }
 
     @RequestMapping(value = "/enteruser/validate", method = RequestMethod.GET,produces="application/json;charset=UTF-8")
     @ResponseBody
     public String enterprise_setValidate(String action, String code, String account) {
-        if (!StringUtil.hasText(action, code, account))
-            return jsonUtil.setResultFail("参数不正确").toJsonString();
-        User user = userManager.findByAccount(account);
-        if (user != null) {
-            if (user.getStatus() != User.STATUS_VAlIDATING)
-                return jsonUtil.setResultFail("此用户不需要要验证").toJsonString();
+        if (!StringUtil.hasText(action, code, account)){
+            return ParamError();
+        }
+        User user;
+	try {
+	    user = userManager.findByAccount(account);
+	    if (user.getStatus() != User.STATUS_VAlIDATING){
+		return jsonUtil.setFailRes(ErrorCode.BAD_ACCESS_ERROR).toJson();
+	    }
             try {
                 if (MD5Util.validPasswd(user.getAccount() + user.getPassword(), code)) {
                     userManager.validUser(account);
                     enterpriseManager.validEnterPrise(user);
-                    return jsonUtil.setResultSuccess().toJsonString();
+                    return jsonUtil.setSuccessRes().toJson();
                 }
+                return jsonUtil.setFailRes(ErrorCode.ENTERPRISE_VALICATE_ERROR).toJson();
             } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
-                e.printStackTrace();
-                return jsonUtil.setResultFail().toJsonString();
+                return jsonUtil.setFailRes(ErrorCode.INTENAL_ERROR).toJson();
             }
-            return jsonUtil.setResultFail("验证码不正确").toJsonString();
-        }
-        return jsonUtil.setResultFail("该用户未注册").toJsonString();
+	} catch (DaoException e) {
+	    return jsonUtil.setFailRes(ErrorCode.BAD_ACCESS_ERROR).toJson();
+	}
     }
 
     @RequestMapping(value = "/enteruser/login", method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
-    public String enterprise_setLogin(
-            HttpSession httpSession,
-            @RequestParam(value = "account", required = false, defaultValue = "") String account,
-            @RequestParam(value = "password", required = false, defaultValue = "") String password) {
-        if (StringUtil.isEmail(account) && StringUtil.hasText(password)) {
-            if (userManager.isLogined(httpSession)){
-        	userManager.loginOutEnterprise(account, httpSession);
-            }
-            Result result = userManager.adminLogin(account, password, httpSession);
-            if (result.isSuccess()){
-        	User user = userManager.findByAccount(account);
-        	Enterprise enterprise = enterpriseManager.findByUser(user);
-        	httpSession.setAttribute(EnterChineseMedicine.ENTERPRISE_ID, enterprise.getId());
-        	jsonUtil.setResultSuccess();
-            }
-            else
-                jsonUtil.setResultFail(result.getErrorCode()).toJsonString();
-        } else
-            jsonUtil.setResultFail("参数错误");
-        return jsonUtil.toJsonString();
+    public String enterprise_setLogin(HttpSession httpSession, String account, String password) throws DaoException, ServiceException {
+        if (!StringUtil.isEmail(account) || !StringUtil.hasText(password)) {
+            return jsonUtil.setFailRes(ErrorCode.PARAM_FORMAT_ERROR).toJson();
+        }
+        if (userManager.isLogined(httpSession)){
+    	    userManager.loginOutEnterprise(account, httpSession);
+        }
+        userManager.adminLogin(account, password, httpSession);
+    	User user = userManager.findByAccount(account);
+    	Enterprise enterprise = enterpriseManager.findByUser(user);
+    	httpSession.setAttribute(EnterChineseMedicine.ENTERPRISE_ID, enterprise.getId());
+    	return jsonUtil.setSuccessRes().toJson();
     }
 
-    @RequestMapping(value = "/enteruser/getBackPassword", method = RequestMethod.POST,produces="application/json;charset=UTF-8")
-    @ResponseBody
-    public String enterprise_getBackPassword(
-            @RequestParam(value = "account", required = false, defaultValue = "") String account) {
-        if (StringUtil.isEmail(account)) {
-            if (!userManager.isExist(account))
-                return jsonUtil.setResultFail("该用户不存在").toJsonString();
-            if (userManager.initPassword(account))
-                return jsonUtil.setResultSuccess().toJsonString();
-        }
-        return jsonUtil.setResultFail("参数错误").toJsonString();
-    }
+//    @RequestMapping(value = "/enteruser/getBackPassword", method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+//    @ResponseBody
+//    public String enterprise_getBackPassword( String account) {
+//        if (!StringUtil.isEmail(account)) {
+//            return jsonUtil.setFailRes(ErrorCode.PARAM_FORMAT_ERROR).toJson();
+//        }
+//        if (!userManager.isExist(account))
+//        if (userManager.initPassword(account))
+//            return jsonUtil.setSuccessRes().toJson();
+//        
+//    }
 
     @RequestMapping(value = "/enterprise/loginOut", method = RequestMethod.GET,produces="application/json;charset=UTF-8")
     @ResponseBody
-    public String enterprise_setLoginOut(
-            HttpSession httpSession) {
-        if (userManager.loginOutEnterprise(getAccount(httpSession), httpSession)){
-            return jsonUtil.setResultSuccess().toJsonString();
-        }
-        else return jsonUtil.setResultFail().toJsonString();
+    public String enterprise_setLoginOut(HttpSession httpSession) throws DaoException, ControllerException {
+	String account = getAccount(httpSession);
+	userManager.loginOutEnterprise(account, httpSession);
+        return jsonUtil.setSuccessRes().toJson();        
     }
 
     @RequestMapping(value = "/enterprise/addMeeting", method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
-    public String enterprise_addMeeting(HttpSession httpSession, @Validated @ModelAttribute MeetingVo meeting, BindingResult result) throws DaoException {
-        if (result.hasErrors())
-            return toErrorJson(result);
+    public String enterprise_addMeeting(HttpSession httpSession, @Validated @ModelAttribute MeetingVo meeting, BindingResult result) throws DaoException, ControllerException {
+        if (result.hasErrors()){
+            return ParamError();
+        }
         User user = userManager.findByAccount(getAccount(httpSession));
         Enterprise enterprise = enterpriseManager.findByUser(user);
         Subject subject = subjectManager.find(meeting.getSubject_id());
-        if (meetingManager.addMeeting(enterprise, meeting, subject))
-            return jsonUtil.setResultSuccess().toJsonString();
-        return jsonUtil.setResultFail().toJsonString();
+        meetingManager.addMeeting(enterprise, meeting, subject);
+        return jsonUtil.setSuccessRes().toJson();
     }
     
     @RequestMapping(value = "/enterprise/video/add", method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
-    public String enterprise_addVideo(HttpSession httpSession, @Validated @ModelAttribute VideoVO video, BindingResult result) throws DaoException {
-        if (result.hasErrors())
-            return toErrorJson(result);
+    public String enterprise_addVideo(HttpSession httpSession, @Validated @ModelAttribute VideoVO video, BindingResult result) throws DaoException, ControllerException {
+        if (result.hasErrors()){
+            return ParamError();
+        }
         Subject subject = subjectManager.find(video.getSubject_id());
         Enterprise enterprise = enterpriseManager.find(getEnterpriseId(httpSession));
-        if(enterprise == null)
-            return jsonUtil.setResultFail("企业信息不存在").toJsonString();
-        
-        Result res = videoManager.addVideo(enterprise, video, subject);
-        if(res.isSuccess())
-            return jsonUtil.setResultSuccess().toJsonString();
-        return jsonUtil.setResultFail(res.getErrorCode()).toJsonString();
+        videoManager.addVideo(enterprise, video, subject);
+        return jsonUtil.setSuccessRes().toJson();
     }
     
     
     @RequestMapping(value = "/enterprise/info/add", method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
-    public String enterprise_addInfo(HttpSession httpSession, @Validated @ModelAttribute EnterpriseInfoVO enterpriseInfoVO, BindingResult result) throws DaoException {
+    public String enterprise_addInfo(HttpSession httpSession, @Validated @ModelAttribute EnterpriseInfoVO enterpriseInfoVO, BindingResult result) throws DaoException, ControllerException {
         if (result.hasErrors()){            
-            return toErrorJson(result);
+            return ParamError();
         }
         int enterpriseId = getEnterpriseId(httpSession);
-        Result res = enterpriseManager.updateInfo(enterpriseId, enterpriseInfoVO);
-        if(res.isSuccess()){
-            return jsonUtil.setResultSuccess().toJsonString();
-        }
-        return jsonUtil.setResultFail(res.getErrorCode()).toJsonString();
+        enterpriseManager.updateInfo(enterpriseId, enterpriseInfoVO);
+        return jsonUtil.setSuccessRes().toJson();
     }
 
 
     @RequestMapping(value = "/enterprise/addChinMedicine", method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
-    public String enterprise_addChinMedicine(HttpSession httpSession, @Validated @ModelAttribute EnterChineseVO entChineseVO, BindingResult result) throws DaoException {
+    public String enterprise_addChinMedicine(HttpSession httpSession, @Validated @ModelAttribute EnterChineseVO entChineseVO, BindingResult result) throws DaoException, ControllerException {
         if (result.hasErrors())
             return toErrorJson(result);
         User user = userManager.findByAccount(getAccount(httpSession));
         Enterprise enterprise = enterpriseManager.findByUser(user);
         ChineseMedicine chineseMedicine = chineseMedicineManager.find(entChineseVO.getMedicineId());
         CheckData checkData = enterChineseMedicineManager.addMedicine(enterprise, chineseMedicine, entChineseVO);
-        if (checkData == null)
-            return jsonUtil.setResultFail("添加失败").toJsonString();
         checkDataManager.save(checkData);
-        return jsonUtil.setResultSuccess().toJsonString();
+        return jsonUtil.setSuccessRes().toJson();
     }
 
     @RequestMapping(value = "/enterprise/addWestMedicine", method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
-    public String enterprise_addWestMedicine(HttpSession httpSession, @Validated @ModelAttribute EnterWestVO enterWestVO, BindingResult result) throws DaoException {
-        if (result.hasErrors())
-            return toErrorJson(result);
+    public String enterprise_addWestMedicine(HttpSession httpSession, @Validated @ModelAttribute EnterWestVO enterWestVO, BindingResult result) throws DaoException, ControllerException {
+        if (result.hasErrors()){
+            return ParamError();
+        }
         User user = userManager.findByAccount(getAccount(httpSession));
         Enterprise enterprise = enterpriseManager.findByUser(user);
         WestMedicine westMedicine = westMedicineManager.find(enterWestVO.getMedicineId());
         CheckData checkData = enterWestMedicineManager.addMedicine(enterprise, westMedicine, enterWestVO);
-        if (checkData == null)
-            return jsonUtil.setResultFail("保存失败").toJsonString();
         checkDataManager.save(checkData);
-        return jsonUtil.setResultSuccess().toJsonString();
+        return jsonUtil.setSuccessRes().toJson();
 
     }
     
     @RequestMapping(value = "/enterprise/getMedicine", method = RequestMethod.GET,produces="application/json;charset=UTF-8")
     @ResponseBody
-    public String enterprise_getMedicines(HttpSession httpSession,
-	    @RequestParam(value = "pageSize", defaultValue = "-1", required = false) int pageSize,
-	    @RequestParam(value = "page", defaultValue = "-1", required = false) int page) throws DaoException {
-	if(pageSize < 0 || page < 0){
-	    return ParamError();
-	}
+    public String enterprise_getMedicines(HttpSession httpSession, int pageSize, int page) throws UtilException, DaoException, ControllerException{
 	Enterprise enterprise = enterpriseManager.find(getEnterpriseId(httpSession));
-	List<BackGroundMedicineVO> chineseBackGroundMedicineVOs = enterChineseMedicineManager.getBackGroundVO(enterprise, 0, 0);
-	List<BackGroundMedicineVO> westBackGroundMedicineVOs = enterWestMedicineManager.getBackGroundVO(enterprise, 0, 0);
-	westBackGroundMedicineVOs.addAll(chineseBackGroundMedicineVOs);
+	List<BackGroundMedicineVO> westBackGroundMedicineVOs;
+	try {
+	    westBackGroundMedicineVOs = enterWestMedicineManager.getBackGroundVO(enterprise, 0, 0);
+	} catch (DaoException e) {
+	    westBackGroundMedicineVOs = new LinkedList<BackGroundMedicineVO>();
+	}
+	List<BackGroundMedicineVO> chineseBackGroundMedicineVOs;
+	try {
+	    chineseBackGroundMedicineVOs = enterChineseMedicineManager.getBackGroundVO(enterprise, 0, 0);
+	    westBackGroundMedicineVOs.addAll(chineseBackGroundMedicineVOs);
+	} catch (DaoException e) {}
+	if(StringUtil.isEmpty(westBackGroundMedicineVOs)){
+	    return jsonUtil.setFailRes(ErrorCode.DB_NO_ENITY_ERROR).toJson();
+	}
 	if(page == 0 && pageSize == 0)
-	    return jsonUtil.setResultSuccess().setModelList(westBackGroundMedicineVOs).toJsonString();
+	    return jsonUtil.setSuccessRes().setModels(westBackGroundMedicineVOs).toJson();
 	PageBean pageBean = new PageBean(page, 0, pageSize);
 	int start = pageBean.offset;
 	int end = start + pageBean.pageSize;
 	if(pageBean.offset+pageBean.pageSize > westBackGroundMedicineVOs.size())
 	    end = westBackGroundMedicineVOs.size();
-	if(westBackGroundMedicineVOs.size() == 0){
-	    return jsonUtil.setResultFail("无相关结果").toJsonString();
-	}
-	return jsonUtil.setResultSuccess().setModelList(westBackGroundMedicineVOs.subList(start,end)).toJsonString("/enterprise/getMedicine");
+	return jsonUtil.setSuccessRes().setModels(westBackGroundMedicineVOs.subList(start,end)).toJson("/enterprise/getMedicine");
     }
     
     @RequestMapping(value = "/enterprise/deleteMedicine", method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
-    public String enterprise_deleteMedicine(HttpSession httpSession,
-	    @RequestParam(value = "id", defaultValue = "-1", required = false) int id,
-	    @RequestParam(value = "type", defaultValue = "-1", required = false) int type) {
-	if(id <= 0 || type <= 0){
-	    return ParamError();
-	}
+    public String enterprise_deleteMedicine(HttpSession httpSession,int id, int type) throws DaoException, ControllerException {
 	Integer enterpriseId = getEnterpriseId(httpSession);
 	if(type == Medicine.ENTER_CHINESE){
-	    if(enterChineseMedicineManager.deleteMedicine(id, enterpriseId)){
-		return jsonUtil.setResultSuccess().toJsonString();
-	    }else {
-		return jsonUtil.setResultFail("删除失败").toJsonString();
-	    }
+	    enterChineseMedicineManager.deleteMedicine(id, enterpriseId);
 	}else if (type == Medicine.ENTER_WEST) {
-	    if(enterWestMedicineManager.deleteMedicine(id, enterpriseId)){
-		return jsonUtil.setResultSuccess().toJsonString();
-	    }else {
-		return jsonUtil.setResultFail("删除失败").toJsonString();
-	    }
+	    enterWestMedicineManager.deleteMedicine(id, enterpriseId);
 	}
 	else {
 	    return ParamError();
 	}
+	return jsonUtil.setSuccessRes().toJson();
 	
     }
     
 
     @RequestMapping(value = "/enterprise/getCount", method = RequestMethod.GET,produces="application/json;charset=UTF-8")
     @ResponseBody
-    public String enterprise_getCount(HttpSession httpSession,
-            @RequestParam(value = "type", required = false, defaultValue = "0") int type) {
-        if (type <= 0){
-            return ParamError();
-        }
+    public String enterprise_getCount(HttpSession httpSession,int type) throws UtilException, ControllerException, NumberFormatException, DaoException {
         int count = 0;
         int enterpriseId = getEnterpriseId(httpSession);
 
@@ -332,212 +306,215 @@ public class WebEnterController extends BaseController {
         	return ParamError();
 
         }
-        return jsonUtil.setResultSuccess().setJsonObject("count", count).toJsonString("/enterprise/getCount");
+        return jsonUtil.setSuccessRes().setObject("count", count).toJson("/enterprise/getCount");
     }
     
     @RequestMapping(value = "/enterprise/searchMedicine", method = RequestMethod.GET,produces="application/json;charset=UTF-8")
     @ResponseBody
-    public String enterprise_searchMedicine(HttpSession httpSession,
-            @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword) {
+    public String enterprise_searchMedicine(HttpSession httpSession, String keyword) throws ControllerException {
         if(!StringUtil.hasText(keyword)){
             return ParamError();
         }
-        List<BackGroundMedicineVO> nameResult = enterChineseMedicineManager.searchBackGroundVO(keyword, EnterChineseMedicine.NAME, EnterChineseMedicine.ENTERPRISE_ID, getEnterpriseId(httpSession));
-        List<BackGroundMedicineVO> nameResult_2 = enterWestMedicineManager.searchBackGroundVO(keyword, EnterWestMedicine.NAME, EnterWestMedicine.ENTERPRISE_ID, getEnterpriseId(httpSession));
-        List<BackGroundMedicineVO> typeResult = new LinkedList<BackGroundMedicineVO>();
-        List<MedicineType> medicineTypes = medicineTypeManager.search(MedicineType.TABLE_NAME, MedicineType.NAME, keyword, MedicineType.FLAG, 1);
-        for (MedicineType medicineType : medicineTypes) {
-	    typeResult.addAll(medicineTypeManager.getEnterBackGroundMedicineVO(medicineType, getEnterpriseId(httpSession)));
+        int enterpriseId = getEnterpriseId(httpSession);
+        List<BackGroundMedicineVO> nameResult;
+	try {
+	    nameResult = enterChineseMedicineManager.searchBackGroundVO(keyword, EnterChineseMedicine.NAME, EnterChineseMedicine.ENTERPRISE_ID, enterpriseId);
+	} catch (DaoException e) {
+	    nameResult = new LinkedList<BackGroundMedicineVO>();
 	}
+        List<BackGroundMedicineVO> nameResult_2;
+	try {
+	    nameResult_2 = enterWestMedicineManager.searchBackGroundVO(keyword, EnterWestMedicine.NAME, EnterWestMedicine.ENTERPRISE_ID, enterpriseId);
+	} catch (DaoException e) {
+	    nameResult_2 = null;
+	}
+        List<BackGroundMedicineVO> typeResult = new LinkedList<BackGroundMedicineVO>();
+        List<MedicineType> medicineTypes;
+	try {
+	    medicineTypes = medicineTypeManager.search(MedicineType.TABLE_NAME, MedicineType.NAME, keyword, MedicineType.FLAG, 1);
+	    for (MedicineType medicineType : medicineTypes) {
+		try {
+		    typeResult.addAll(medicineTypeManager.getEnterBackGroundMedicineVO(medicineType, getEnterpriseId(httpSession)));
+		} catch (Exception e) {}
+	    }
+	    if(typeResult.size() < 1){
+		typeResult = null;
+	    }
+	} catch (DaoException e) {
+	    typeResult = null;
+	}
+        
         nameResult.addAll(nameResult_2);
-        if(nameResult.size() < 1 && typeResult.size() < 1){
-            return jsonUtil.setResultFail("无相关结果").toJsonString();
+        if(StringUtil.isEmpty(nameResult) && StringUtil.isEmpty(typeResult)){
+            return jsonUtil.setFailRes(ErrorCode.DB_NO_ENITY_ERROR).toJson();
         }
-        return jsonUtil.setResultSuccess().setJsonObject("nameResult", nameResult).setJsonObject("typeResult", typeResult).toJsonString();
+        return jsonUtil.setSuccessRes().setObject("nameResult", nameResult).setObject("typeResult", typeResult).toJson();
        
     }
     
     
     @RequestMapping(value = "/enterprise/getMeeting", method = RequestMethod.GET,produces="application/json;charset=UTF-8")
     @ResponseBody
-    public String enterprise_getMeeting(HttpSession httpSession,
-	    @RequestParam(value = "pageSize", defaultValue = "-1", required = false) int pageSize,
-	    @RequestParam(value = "page", defaultValue = "-1", required = false) int page) {
-	if(pageSize < 0 || page < 0){
-	    return ParamError();
-	}
+    public String enterprise_getMeeting(HttpSession httpSession, int pageSize, int page) throws DaoException, ControllerException, UtilException {
 	int enterpriseId = getEnterpriseId(httpSession);
 	List<Meeting> meetings = null;
 	if(pageSize == 0 && page == 0){
 	     meetings = meetingManager.findBySql(Meeting.TABLE_NAME, Meeting.ENTERPRISE_ID, enterpriseId);
-	     return jsonUtil.setResultSuccess().setModelList(meetings).toJsonString("/enterprise/getMeeting");
+	     return jsonUtil.setSuccessRes().setModels(meetings).toJson("/enterprise/getMeeting");
 	}
 	
 	meetings = meetingManager.findBySql(Meeting.TABLE_NAME, Meeting.ENTERPRISE_ID, enterpriseId, new PageBean(page, 0, pageSize));
-	return jsonUtil.setResultSuccess().setModelList(meetings).toJsonString("/enterprise/getMeeting");
+	return jsonUtil.setSuccessRes().setModels(meetings).toJson("/enterprise/getMeeting");
     }
     
     @RequestMapping(value = "/enterprise/getMeeting/detail", method = RequestMethod.GET,produces="application/json;charset=UTF-8")
     @ResponseBody
-    public String enterprise_getMeetingDetial(HttpSession httpSession,
-	    @RequestParam(value = "id", defaultValue = "0", required = false) int id) {
+    public String enterprise_getMeetingDetial(HttpSession httpSession, int id) throws ControllerException, DaoException, UtilException {
 	int enterpriseId = getEnterpriseId(httpSession);
 	Meeting meeting = meetingManager.getMeeting(id, enterpriseId);
-	if(meeting == null){
-	    return jsonUtil.setResultFail("此会议不存在").toJsonString();
-	}
-	return jsonUtil.setResultSuccess().setJsonObject("Meeting", meeting).toJsonString("/enterprise/getMeeting/detail");
+	return jsonUtil.setSuccessRes().setObject("Meeting", meeting).toJson("/enterprise/getMeeting/detail");
     }
     
     @RequestMapping(value = "/enterprise/deleteMeeting", method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
-    public String enterprise_deleteMeeting(HttpSession httpSession,
-	    @RequestParam(value = "id", defaultValue = "-1", required = false) int id) {
-	if(id <= 0){
-	    return ParamError();
-	}
+    public String enterprise_deleteMeeting(HttpSession httpSession, int id) throws ControllerException, DaoException {
 	Integer enterpriseId = getEnterpriseId(httpSession);
-	if (meetingManager.deleteMeeting(id, enterpriseId)) {
-	    return jsonUtil.setResultSuccess().toJsonString();
-	} else {
-	    return jsonUtil.setResultFail("删除失败").toJsonString();
-	}
+	meetingManager.deleteMeeting(id, enterpriseId);
+	return jsonUtil.setSuccessRes().toJson();
     }
     
 
     @RequestMapping(value = "/enterprise/updateMeeting", method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
-    public String enterprise_updateMeeting(HttpSession httpSession,
-	    @Validated @ModelAttribute MeetingVo meeting, BindingResult result,
-	    int meetingId) throws DaoException {
-        if (result.hasErrors())
-            return toErrorJson(result);
+    public String enterprise_updateMeeting(HttpSession httpSession, @Validated @ModelAttribute MeetingVo meeting, BindingResult result,int meetingId) throws DaoException, ControllerException {
+        if (result.hasErrors()){
+            return ParamError();
+        }
         int enterpriseId = getEnterpriseId(httpSession);
         Integer subjectId = meeting.getSubject_id();
         Subject subject = subjectManager.find(subjectId);
-        Result res = meetingManager.updateMeeting(meetingId , enterpriseId, meeting, subject);
-        if (res.isSuccess())
-            return jsonUtil.setResultSuccess().toJsonString();
-        return jsonUtil.setResultFail(res.getErrorCode()).toJsonString();
+        meetingManager.updateMeeting(meetingId , enterpriseId, meeting, subject);
+        return jsonUtil.setSuccessRes().toJson();
     }
     
     @RequestMapping(value = "/enterprise/searchMeeting", method = RequestMethod.GET,produces="application/json;charset=UTF-8")
     @ResponseBody
-    public String enterprise_searchMeeting(HttpSession httpSession,
-            @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword) {
+    public String enterprise_searchMeeting(HttpSession httpSession, String keyword) throws UtilException, ControllerException {
         if(!StringUtil.hasText(keyword)){
             return ParamError();
         }
         Integer enterpriseId = getEnterpriseId(httpSession);
-        List<Meeting> nameResult = meetingManager.search(Meeting.TABLE_NAME, Meeting.NAME, keyword, Meeting.ENTERPRISE_ID, enterpriseId);
-        List<Meeting> typeResult = new LinkedList<Meeting>();
-        List<Subject> subjects = subjectManager.search(Subject.NAME, keyword);
-        for (Subject subject : subjects) {
-	    typeResult.addAll(meetingManager.findBySubject(subject.getId(), enterpriseId));
+        List<Meeting> nameResult;
+	try {
+	    nameResult = meetingManager.search(Meeting.TABLE_NAME, Meeting.NAME, keyword, Meeting.ENTERPRISE_ID, enterpriseId);
+	} catch (DaoException e) {
+	    nameResult = null;
 	}
-        if(nameResult.size() < 1 && typeResult.size() < 1){
-            return jsonUtil.setResultFail("无相关结果").toJsonString();
-        }
-        return jsonUtil.setResultSuccess().setJsonObject("nameResult", nameResult).setJsonObject("typeResult", typeResult).toJsonString("/enterprise/getMeeting");
+        List<Meeting> typeResult = new LinkedList<Meeting>();
+        List<Subject> subjects;
+	try {
+	    subjects = subjectManager.search(Subject.NAME, keyword);
+	    for (Subject subject : subjects) {
+		try {
+		    typeResult.addAll(meetingManager.findBySubject(subject.getId(), enterpriseId));
+		} catch (Exception e) {}   
+	    }
+	} catch (DaoException e) {
+	    typeResult = null;
+	}
+	if(StringUtil.isEmpty(nameResult) && StringUtil.isEmpty(typeResult)){
+	    return jsonUtil.setFailRes(ErrorCode.DB_NO_ENITY_ERROR).toJson();
+	}
+        return jsonUtil.setSuccessRes().setObject("nameResult", nameResult).setObject("typeResult", typeResult).toJson("/enterprise/getMeeting");
        
     }
     
     @RequestMapping(value = "/enterprise/meeting/get/BySubjcet", method = RequestMethod.GET,produces="application/json;charset=UTF-8")
     @ResponseBody
-    public String enterprise_getMeetingBySubject(HttpSession httpSession,
-            @RequestParam(value = "subjcetId", required = false, defaultValue = "0") int subjcetId) throws DaoException {
+    public String enterprise_getMeetingBySubject(HttpSession httpSession,int subjcetId) throws DaoException, ControllerException, UtilException {
         Subject subject = subjectManager.find(subjcetId);
         List<Meeting> meetings = meetingManager.findBySubject(subjcetId, getEnterpriseId(httpSession));
-        if(StringUtil.isEmpty(meetings))
-            return jsonUtil.setResultFail("此科目下未找到相关会议").toJsonString();
-        return jsonUtil.setResultSuccess().setModelList(meetings).toJsonString("/enterprise/getMeeting");
+        return jsonUtil.setSuccessRes().setModels(meetings).toJson("/enterprise/getMeeting");
        
     }
     
     
     @RequestMapping(value = "/enterprise/video/get", method = RequestMethod.GET,produces="application/json;charset=UTF-8")
     @ResponseBody
-    public String enterprise_getVideo(HttpSession httpSession,
-	    @RequestParam(value = "pageSize", defaultValue = "-1", required = false) int pageSize,
-	    @RequestParam(value = "page", defaultValue = "-1", required = false) int page) {
-	if(pageSize < 0 || page < 0){
-	    return ParamError();
-	}
+    public String enterprise_getVideo(HttpSession httpSession,int pageSize, int page) throws ControllerException, DaoException, UtilException {
 	int enterpriseId = getEnterpriseId(httpSession);
 	List<Video> videos = null;
 	if(pageSize == 0 && page == 0){
-	     videos = videoManager.findBySql(Video.TABLE_NAME, Video.ENTERPRISE_ID, enterpriseId);
-	     return jsonUtil.setResultSuccess().setModelList(videos).toJsonString("/enterprise/video/get");
+	    videos = videoManager.findBySql(Video.TABLE_NAME, Video.ENTERPRISE_ID, enterpriseId);
+	}else {
+	    videos = videoManager.findBySql(Video.TABLE_NAME, Video.ENTERPRISE_ID, enterpriseId, new PageBean(page, 0, pageSize));	    
 	}
-	
-	videos = videoManager.findBySql(Video.TABLE_NAME, Video.ENTERPRISE_ID, enterpriseId, new PageBean(page, 0, pageSize));
-	return jsonUtil.setResultSuccess().setModelList(videos).toJsonString("/enterprise/video/get");
+	return jsonUtil.setSuccessRes().setModels(videos).toJson("/enterprise/video/get");
     }
     
     @RequestMapping(value = "/enterprise/video/get/detail", method = RequestMethod.GET,produces="application/json;charset=UTF-8")
     @ResponseBody
     public String enterprise_getVideoDetial(HttpSession httpSession,
-	    @RequestParam(value = "id", defaultValue = "0", required = false) int id) {
+	    @RequestParam(value = "id", defaultValue = "0", required = false) int id) throws ControllerException, DaoException, UtilException {
 	int enterpriseId = getEnterpriseId(httpSession);
 	Video video = videoManager.getVideo(id, enterpriseId);
-	if(video == null){
-	    return jsonUtil.setResultFail("此视频不存在").toJsonString();
-	}
-	return jsonUtil.setResultSuccess().setJsonObject(Video.CLASS_NAME, video).toJsonString("/enterprise/video/get/detail");
+	return jsonUtil.setSuccessRes().setObject(Video.CLASS_NAME, video).toJson("/enterprise/video/get/detail");
     }
     
     @RequestMapping(value = "/enterprise/video/delete", method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
-    public String enterprise_deleteVideo(HttpSession httpSession,
-	    @RequestParam(value = "id", defaultValue = "-1", required = false) int id) {
-	if(id <= 0){
-	    return ParamError();
-	}
+    public String enterprise_deleteVideo(HttpSession httpSession,int id) throws ControllerException, DaoException {
 	Integer enterpriseId = getEnterpriseId(httpSession);
-	Result result = videoManager.deleteVideo(id, enterpriseId);
-	if(result.isSuccess()){
-	    return jsonUtil.setResultSuccess().toJsonString();
-	}
-	return jsonUtil.setResultFail(result.getErrorCode()).toJsonString();
+	videoManager.deleteVideo(id, enterpriseId);
+	return jsonUtil.setSuccessRes().toJson();
     }
     
 
     @RequestMapping(value = "/enterprise/video/update", method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
     public String enterprise_updateVideo(HttpSession httpSession,
-	    @Validated @ModelAttribute VideoVO video, BindingResult result,
-	    int videoId) throws DaoException {
-        if (result.hasErrors())
-            return toErrorJson(result);
+	    @Validated @ModelAttribute VideoVO video, BindingResult result,int videoId) throws DaoException, ControllerException {
+        if (result.hasErrors()){
+            return ParamError();
+        }
         int enterpriseId = getEnterpriseId(httpSession);
         Integer subjectId = video.getSubject_id();
         Subject subject = subjectManager.find(subjectId);
-        Result res = videoManager.updateVideo(videoId , enterpriseId, video, subject);
-        if (res.isSuccess())
-            return jsonUtil.setResultSuccess().toJsonString();
-        return jsonUtil.setResultFail(res.getErrorCode()).toJsonString();
+        videoManager.updateVideo(videoId , enterpriseId, video, subject);
+        return jsonUtil.setSuccessRes().toJson();
     }
     
     
     
     @RequestMapping(value = "/enterprise/video/search", method = RequestMethod.GET,produces="application/json;charset=UTF-8")
     @ResponseBody
-    public String enterprise_searchVideo(HttpSession httpSession,
-            @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword) {
+    public String enterprise_searchVideo(HttpSession httpSession, String keyword) throws UtilException, ControllerException {
         if(!StringUtil.hasText(keyword)){
             return ParamError();
         }
         Integer enterpriseId = getEnterpriseId(httpSession);
-        List<Video> nameResult = videoManager.search(Video.TABLE_NAME, Video.NAME, keyword, Video.ENTERPRISE_ID, enterpriseId);
-        List<Video> typeResult = new LinkedList<Video>();
-        List<Subject> subjects = subjectManager.search(Subject.NAME, keyword);
-        for (Subject subject : subjects) {
-	    typeResult.addAll(videoManager.findBySubject(subject.getId(), enterpriseId));
+        List<Video> nameResult;
+	try {
+	    nameResult = videoManager.search(Video.TABLE_NAME, Video.NAME, keyword, Video.ENTERPRISE_ID, enterpriseId);
+	} catch (DaoException e) {
+	    nameResult = null;
 	}
-        if(nameResult.size() < 1 && typeResult.size() < 1){
-            return jsonUtil.setResultFail("无相关结果").toJsonString();
-        }
-        return jsonUtil.setResultSuccess().setJsonObject("nameResult", nameResult).setJsonObject("typeResult", typeResult).toJsonString("/enterprise/video/get");
+        List<Video> typeResult = new LinkedList<Video>();
+        List<Subject> subjects;
+	try {
+	    subjects = subjectManager.search(Subject.NAME, keyword);
+	    for (Subject subject : subjects) {
+		try {
+		    typeResult.addAll(videoManager.findBySubject(subject.getId(), enterpriseId));
+		} catch (Exception e) {}
+	    }
+	} catch (DaoException e) {
+	    typeResult = null;
+	}
+	if(StringUtil.isEmpty(nameResult) && StringUtil.isEmpty(typeResult)){
+	    return jsonUtil.setFailRes(ErrorCode.DB_NO_ENITY_ERROR).toJson();
+	}
+        return jsonUtil.setSuccessRes().setObject("nameResult", nameResult).setObject("typeResult", typeResult).toJson("/enterprise/video/get");
         
        
     }
@@ -545,103 +522,74 @@ public class WebEnterController extends BaseController {
     
     @RequestMapping(value = "/enterprise/video/get/BySubjcet", method = RequestMethod.GET,produces="application/json;charset=UTF-8")
     @ResponseBody
-    public String enterprise_getVideoBySubject(HttpSession httpSession,
-            @RequestParam(value = "subjcetId", required = false, defaultValue = "0") int subjcetId) throws DaoException {
+    public String enterprise_getVideoBySubject(HttpSession httpSession,int subjcetId) throws DaoException, ControllerException, UtilException {
         Subject subject = subjectManager.find(subjcetId);
         List<Video> videos = videoManager.findBySubject(subjcetId, getEnterpriseId(httpSession));
-        if(StringUtil.isEmpty(videos)){
-            return jsonUtil.setResultFail("无相关视频").toJsonString();
-        }
-        return jsonUtil.setResultSuccess().setModelList(videos).toJsonString("/enterprise/video/get");
+        return jsonUtil.setSuccessRes().setModels(videos).toJson("/enterprise/video/get");
        
     }
     
     @RequestMapping(value = "/enterprise/info/get", method = RequestMethod.GET,produces="application/json;charset=UTF-8")
     @ResponseBody
-    public String enterprise_getInfo(HttpSession httpSession) throws DaoException {
+    public String enterprise_getInfo(HttpSession httpSession) throws DaoException, ControllerException, UtilException {
 	int enterpriseId = getEnterpriseId(httpSession);
 	Enterprise enterprise = enterpriseManager.find(enterpriseId);
-	return jsonUtil.setJsonObject("enterprise", enterprise).toJsonString("/enterprise/info/get");
+	return jsonUtil.setObject("enterprise", enterprise).toJson("/enterprise/info/get");
     }
     
     @RequestMapping(value = "/enterprise/upatePassword", method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
-    public String enterprise_upatePassword(HttpSession httpSession,
-	    @RequestParam(value = "oldPassword", required = false, defaultValue="") String oldPassword,
-	    @RequestParam(value = "newPassword", required = false, defaultValue="") String newPassword) {
+    public String enterprise_upatePassword(HttpSession httpSession, String oldPassword, String newPassword) throws DaoException, ServiceException, ControllerException {
 	if(!StringUtil.hasText(oldPassword, newPassword)){
 	    return ParamError();
 	}
         String userAccount = getAccount(httpSession);
-        boolean result = userManager.updatePassword(userAccount, oldPassword, newPassword);
-        if(result){
-            return jsonUtil.setResultSuccess().toJsonString();
-        }
-        return jsonUtil.setResultFail().toJsonString();
+        userManager.updatePassword(userAccount, oldPassword, newPassword);
+        return jsonUtil.setSuccessRes().toJson();
     }
     
     @RequestMapping(value = "/enterprise/ChinMedicine/update", method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
     public String enterprise_updateChinMedicine(HttpSession httpSession,
-	    @Validated @ModelAttribute EnterChineseVO entChineseVO, BindingResult result,
-	    int id) throws DaoException {
-        if (result.hasErrors())
-            return toErrorJson(result);
-        Enterprise enterprise = enterpriseManager.find(getEnterpriseId(httpSession));
-        Result updateResult = enterChineseMedicineManager.updateMedicine(id, entChineseVO, enterprise);
-        if(updateResult.isSuccess()){
-            return jsonUtil.setResultSuccess().toJsonString();
+	    @Validated @ModelAttribute EnterChineseVO entChineseVO, BindingResult result,int id) throws DaoException, ControllerException {
+        if (result.hasErrors()){
+            return ParamError();
         }
-        return jsonUtil.setResultFail(updateResult.getErrorCode()).toJsonString();
+        Enterprise enterprise = enterpriseManager.find(getEnterpriseId(httpSession));
+        enterChineseMedicineManager.updateMedicine(id, entChineseVO, enterprise);
+        return jsonUtil.setSuccessRes().toJson();
     }
     
     
     @RequestMapping(value = "/enterprise/WestMedicine/update", method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
     public String enterprise_updateWestMeicine(HttpSession httpSession,
-	    @Validated @ModelAttribute EnterWestVO enterWestVO, BindingResult result,
-	    int id) throws DaoException {
-        if (result.hasErrors())
-            return toErrorJson(result);
-        Enterprise enterprise = enterpriseManager.find(getEnterpriseId(httpSession));
-        Result updateResult = enterWestMedicineManager.updateMedicine(id, enterWestVO, enterprise);
-        if(updateResult.isSuccess()){
-            return jsonUtil.setResultSuccess().toJsonString();
+	    @Validated @ModelAttribute EnterWestVO enterWestVO, BindingResult result, int id) throws DaoException, ControllerException {
+        if (result.hasErrors()){
+            return ParamError();
         }
-        return jsonUtil.setResultFail(updateResult.getErrorCode()).toJsonString();
+        Enterprise enterprise = enterpriseManager.find(getEnterpriseId(httpSession));
+        enterWestMedicineManager.updateMedicine(id, enterWestVO, enterprise);
+        return jsonUtil.setSuccessRes().toJson();
     }
     
     @RequestMapping(value = "/enterprise/EnterMedicine/get", method = RequestMethod.GET,produces="application/json;charset=UTF-8")
     @ResponseBody
     public String enterprise_getEnterpriseMedicine(
-	    HttpSession httpSession,
-	    @RequestParam(value = "id", required = false, defaultValue = "-1") int id,
-	    @RequestParam(value = "type", required = false, defaultValue = "-1") int type) {
+	    HttpSession httpSession, int id, int type) throws DaoException, ControllerException, UtilException {
 	    Object jsonObject = null;
 	    int enterpriseId = getEnterpriseId(httpSession);
-	    System.out.println(enterpriseId);
 	    if(type == Medicine.ENTER_CHINESE){	
 		EnterChineseMedicine medicine = enterChineseMedicineManager.getMedicine(id, enterpriseId);
-		if(medicine == null){
-		    jsonObject = null;
-		}else {
-		    jsonObject = new EnterChMedicineBean(medicine);
-		}
+		jsonObject = new EnterChMedicineBean(medicine);
 	    }
 	    else if (type == Medicine.ENTER_WEST){	
 		EnterWestMedicine medicine = enterWestMedicineManager.getMedicine(id, enterpriseId);
-		if (medicine == null) {
-		    jsonObject = null;
-		} else {
-		    jsonObject = new EnterWestMedicineBean(medicine);
-		}
+		jsonObject = new EnterWestMedicineBean(medicine);
 	    }else {
 		return ParamError();
 	    }
-	    if(jsonObject == null){
-		return jsonUtil.setResultFail("该药品不存在").toJsonString();
-	    }
-	    return jsonUtil.setResultSuccess().setJsonObject("entity", jsonObject).toJsonString("/enterprise/EnterMedicine/get");
+	    return jsonUtil.setSuccessRes().setObject("entity", jsonObject).toJson("/enterprise/EnterMedicine/get");
     }
  
  

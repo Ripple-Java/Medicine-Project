@@ -2,6 +2,7 @@ package com.rippletec.medicine.service.impl;
 
 import java.util.LinkedList;
 import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import com.rippletec.medicine.dao.EnterWestMedicineDao;
 import com.rippletec.medicine.dao.FindAndSearchDao;
 import com.rippletec.medicine.dao.MedicineDao;
 import com.rippletec.medicine.dao.WestMedicineDao;
+import com.rippletec.medicine.exception.DaoException;
 import com.rippletec.medicine.model.ChineseMedicine;
 import com.rippletec.medicine.model.EnterChineseMedicine;
 import com.rippletec.medicine.model.EnterWestMedicine;
@@ -51,7 +53,7 @@ public class MedicineManagerImpl extends BaseManager<Medicine> implements Medici
     }
 
     @Override
-    public boolean deleteMedicine(int id, int type) {
+    public boolean deleteMedicine(int id, int type) throws DaoException {
 	switch (type) {
 	case Medicine.CHINESE:
 	    return chineseMedicineDao.delete(id);
@@ -67,35 +69,31 @@ public class MedicineManagerImpl extends BaseManager<Medicine> implements Medici
     }
 
     @Override
-    public boolean getMedicine(PageBean page, int type, JsonUtil jsonUtil, String param, Object value) { 
+    public boolean getMedicine(PageBean page, int type, JsonUtil jsonUtil, String param, Object value) throws DaoException { 
 	boolean res = false;
 	switch (type) {
 	case Medicine.CHINESE:
 	    List<BackGroundMedicineVO> ch_backGroundMedicineVO = new LinkedList<BackGroundMedicineVO>();
 	    List<ChineseMedicine> chineseMedicines = chineseMedicineDao.findBySql(ChineseMedicine.TABLE_NAME,param, value, page);
-	    if(chineseMedicines == null)
-		return false;
 	    for (ChineseMedicine chineseMedicine : chineseMedicines) {
 		BackGroundMedicineVO backGroundMedicineVO = new BackGroundMedicineVO(chineseMedicine.getMedicineType().getBackGroundMedicineType(), chineseMedicine.getName(), null, chineseMedicine.getId(), null);
 		ch_backGroundMedicineVO.add(backGroundMedicineVO);
 	    }
 	    if(ch_backGroundMedicineVO.size() > 0){
 		res = true;
-		jsonUtil.setModelList(ch_backGroundMedicineVO);
+		jsonUtil.setModels(ch_backGroundMedicineVO);
 	    }
 	    break;
 	case Medicine.WEST:
 	    List<BackGroundMedicineVO> west_backGroundMedicineVO = new LinkedList<BackGroundMedicineVO>();
 	    List<WestMedicine> westMedicines = westMedicineDao.findBySql(WestMedicine.TABLE_NAME,param, value, page);
-	    if(westMedicines == null)
-		return false;
 	    for (WestMedicine westMedicine : westMedicines) {
 		BackGroundMedicineVO backGroundMedicineVO = new BackGroundMedicineVO(westMedicine.getMedicineType().getBackGroundMedicineType(), westMedicine.getName(), null, westMedicine.getId(), null);
 		west_backGroundMedicineVO.add(backGroundMedicineVO);
 	    }
 	    if(west_backGroundMedicineVO.size() > 0){
 		res = true;
-		jsonUtil.setModelList(west_backGroundMedicineVO);
+		jsonUtil.setModels(west_backGroundMedicineVO);
 	    }
 	    break;
 	case Medicine.ENTER_CHINESE:
@@ -103,15 +101,13 @@ public class MedicineManagerImpl extends BaseManager<Medicine> implements Medici
 	    if(param != null && param.equals(ChineseMedicine.MEDICINE_TYPE_ID))
 		param = EnterChineseMedicine.ENTER_MEDICINE_TYPE_ID;
 	    List<EnterChineseMedicine> enterChineseMedicines = enterChineseMedicineDao.findBySql(EnterChineseMedicine.TABLE_NAME,param, value, page);
-	    if(enterChineseMedicines == null)
-		return false;
 	    for (EnterChineseMedicine enterChineseMedicine : enterChineseMedicines) {
 		BackGroundMedicineVO backGroundMedicineVO = new BackGroundMedicineVO(enterChineseMedicine.getMedicineType().getBackGroundMedicineType(), enterChineseMedicine.getName(), enterChineseMedicine.getEnterprise_name(), enterChineseMedicine.getId(), enterChineseMedicine.getUpdateTime());
 		ench_backGroundMedicineVO.add(backGroundMedicineVO);
 	    }
 	    if (ench_backGroundMedicineVO.size() > 0) {
 		res = true;
-		jsonUtil.setModelList(ench_backGroundMedicineVO);
+		jsonUtil.setModels(ench_backGroundMedicineVO);
 	    }
 	    break;
 	case Medicine.ENTER_WEST:
@@ -119,15 +115,13 @@ public class MedicineManagerImpl extends BaseManager<Medicine> implements Medici
 	    if(param != null && param.equals(ChineseMedicine.MEDICINE_TYPE_ID))
 		param = EnterChineseMedicine.ENTER_MEDICINE_TYPE_ID;
 	    List<EnterWestMedicine> enterWestMedicines = enterWestMedicineDao.findBySql(EnterWestMedicine.TABLE_NAME,param, value, page);
-	    if(enterWestMedicines == null)
-		return false;
 	    for (EnterWestMedicine enterWestMedicine : enterWestMedicines) {
 		BackGroundMedicineVO backGroundMedicineVO = new BackGroundMedicineVO(enterWestMedicine.getMedicineType().getBackGroundMedicineType(), enterWestMedicine.getName(), enterWestMedicine.getEnterprise_name(), enterWestMedicine.getId(), enterWestMedicine.getUpdateTime());
 		enwest_backGroundMedicineVO.add(backGroundMedicineVO);
 	    }
 	    if(enwest_backGroundMedicineVO.size() > 0){
 		res = true;
-		jsonUtil.setModelList(enwest_backGroundMedicineVO);
+		jsonUtil.setModels(enwest_backGroundMedicineVO);
 	    }
 	    break;
 	default:
@@ -138,48 +132,40 @@ public class MedicineManagerImpl extends BaseManager<Medicine> implements Medici
 
     @Override
     public boolean getMedicineByCategory(PageBean page, int type, int category,
-	    JsonUtil jsonUtil) {
+	    JsonUtil jsonUtil) throws DaoException {
 	return getMedicine(page, type, jsonUtil, ChineseMedicine.MEDICINE_TYPE_ID, category);
     }
 
     @Override
-    public boolean getMedicine(PageBean page, int type, JsonUtil jsonUtil) {
+    public boolean getMedicine(PageBean page, int type, JsonUtil jsonUtil) throws DaoException {
 	return getMedicine(page, type, jsonUtil, null, null);
     }
 
     @Override
     public void getChineseOrWest(List<BackGroundMedicineVO> models,
-	    List<Medicine> medicines) {
+	    List<Medicine> medicines) throws DaoException {
 	for (Medicine medicine : medicines) {
 	    int bigType = medicine.getParentType();
 	    switch (bigType) {
 	    case Medicine.CHINESE:
 		List<ChineseMedicine> chineseMedicines = chineseMedicineDao.findBySql(ChineseMedicine.TABLE_NAME, ChineseMedicine.MEDICINE_ID, medicine.getId());
-		if(chineseMedicines != null){
-		    ChineseMedicine medicineTemp = chineseMedicines.get(0);
-		    models.add(new BackGroundMedicineVO(medicineTemp.getMedicineType().getBackGroundMedicineType(), medicineTemp.getName(), null, medicineTemp.getId(), null));
-		}
+		ChineseMedicine medicineTemp = chineseMedicines.get(0);
+		models.add(new BackGroundMedicineVO(medicineTemp.getMedicineType().getBackGroundMedicineType(), medicineTemp.getName(), null, medicineTemp.getId(), null));
 		break;
 	    case Medicine.WEST:
 		List<WestMedicine> westMedicines = westMedicineDao.findBySql(WestMedicine.TABLE_NAME, WestMedicine.MEDICINE_ID, medicine.getId());
-		if(westMedicines != null){
-		    WestMedicine westMedicine = westMedicines.get(0);
-		    models.add(new BackGroundMedicineVO(westMedicine.getMedicineType().getBackGroundMedicineType(), westMedicine.getName(), null, westMedicine.getId(), null));
-		}
+		WestMedicine westMedicine = westMedicines.get(0);
+		models.add(new BackGroundMedicineVO(westMedicine.getMedicineType().getBackGroundMedicineType(), westMedicine.getName(), null, westMedicine.getId(), null));
 		break;
 	    case Medicine.ENTER_CHINESE:
 		List<EnterChineseMedicine> enterChineseMedicines = enterChineseMedicineDao.findBySql(EnterChineseMedicine.TABLE_NAME, EnterChineseMedicine.MEDICINE_ID, medicine.getId());
-		if(enterChineseMedicines != null){
-		    EnterChineseMedicine enterChineseMedicine = enterChineseMedicines.get(0);
-		    models.add(new BackGroundMedicineVO(enterChineseMedicine.getMedicineType().getBackGroundMedicineType(), enterChineseMedicine.getName(), enterChineseMedicine.getEnterprise_name(), enterChineseMedicine.getId(), enterChineseMedicine.getUpdateTime()));
-		}
+		EnterChineseMedicine enterChineseMedicine = enterChineseMedicines.get(0);
+		models.add(new BackGroundMedicineVO(enterChineseMedicine.getMedicineType().getBackGroundMedicineType(), enterChineseMedicine.getName(), enterChineseMedicine.getEnterprise_name(), enterChineseMedicine.getId(), enterChineseMedicine.getUpdateTime()));
 		break;
 	    case Medicine.ENTER_WEST:
 		List<EnterWestMedicine> enterWestMedicines = enterWestMedicineDao.findBySql(EnterWestMedicine.TABLE_NAME, EnterWestMedicine.MEDICINE_ID, medicine.getId());
-		if(enterWestMedicines != null){
-		    EnterWestMedicine enterWestMedicine = enterWestMedicines.get(0);
-		    models.add(new BackGroundMedicineVO(enterWestMedicine.getMedicineType().getBackGroundMedicineType(), enterWestMedicine.getName(), enterWestMedicine.getEnterprise_name(), enterWestMedicine.getId(), enterWestMedicine.getUpdateTime()));
-		}
+		EnterWestMedicine enterWestMedicine = enterWestMedicines.get(0);
+		models.add(new BackGroundMedicineVO(enterWestMedicine.getMedicineType().getBackGroundMedicineType(), enterWestMedicine.getName(), enterWestMedicine.getEnterprise_name(), enterWestMedicine.getId(), enterWestMedicine.getUpdateTime()));
 		break;
 	    default:
 		break;

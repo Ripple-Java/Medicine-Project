@@ -42,7 +42,7 @@ public class EnterpriseManagerTesst implements IBaseDaoTest {
     public void testFindByPage() throws Exception {
 	List<Enterprise> enterprises = enterpriseManager.findByPage(Enterprise.TYPE, Enterprise.FOREIGN, new PageBean(0, 10));
 	JsonUtil util = new JsonUtil();
-	System.out.println(util.setModelList(enterprises).setResultFail().setJsonObject("page", new PageBean(0, 10)).toJsonString("/enterprise"));
+	System.out.println(util.setModels(enterprises).setSuccessRes().setObject("page", new PageBean(0, 10)).toJson("/enterprise"));
     }
 
     @Override

@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Min;
 
 import org.springframework.stereotype.Repository;
 
@@ -47,6 +48,7 @@ public class UserFavorite extends BaseModel{
     
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @Min(0)
     private Integer id;
     
     @ManyToOne(fetch=FetchType.LAZY)

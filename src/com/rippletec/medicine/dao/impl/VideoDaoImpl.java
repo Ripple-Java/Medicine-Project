@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import com.rippletec.medicine.bean.PageBean;
 import com.rippletec.medicine.dao.VideoDao;
+import com.rippletec.medicine.exception.DaoException;
 import com.rippletec.medicine.model.Video;
 import com.rippletec.medicine.utils.StringUtil;
 import com.sun.org.apache.bcel.internal.generic.NEW;
@@ -24,7 +25,7 @@ public class VideoDaoImpl extends BaseDaoImpl<Video> implements VideoDao{
     }
 
     @Override
-    public List<Video> findByTime(PageBean page, String param, Object value) {
+    public List<Video> findByTime(PageBean page, String param, Object value) throws DaoException {
 	if(page == null){
 	    return findByParam(StringUtil.getSearchHql(Video.CLASS_NAME, param)+" order by passDate desc", new String[]{param}, new Object[]{value});
 	}

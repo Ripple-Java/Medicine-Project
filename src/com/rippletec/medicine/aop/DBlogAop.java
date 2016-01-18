@@ -8,14 +8,19 @@ import java.util.Date;
 
 import javax.annotation.Resource;
 
+import org.apache.log4j.Logger;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
+import com.rippletec.medicine.exception.DaoException;
+import com.rippletec.medicine.exception.ServiceException;
 import com.rippletec.medicine.model.DBLog;
 import com.rippletec.medicine.service.DBLoger;
+import com.rippletec.medicine.utils.ErrorCode;
+import com.rippletec.medicine.utils.StringUtil;
 
 @Component
 @Aspect
@@ -44,7 +49,6 @@ public class DBlogAop {
     // 配置后置通知,使用在方法aspect()上注册的切入点
     @After("aspectTarget() && aspectUpdate()")
     public void afterUpdate(JoinPoint joinPoint) {
-	System.out.println("invoke update");
 	Object[] args = joinPoint.getArgs();
 	if (args != null && args.length > 0) {
 	    Object arg = args[0];
@@ -61,11 +65,11 @@ public class DBlogAop {
 		dbLoger.uniqueSave(log);
 	    } catch (NoSuchFieldException | SecurityException
 		    | IllegalArgumentException | IllegalAccessException e) {
-		// log待定
-		e.printStackTrace();
-	    } catch (IOException e) {
-		System.out.println("数据库版本配置文件读取失败");
-		e.printStackTrace();
+		Logger.getLogger(DBlogAop.class).error(StringUtil.getLoggerInfo(ErrorCode.INTENAL_ERROR, "afterUpdate()"));
+	    }catch (DaoException e) {
+		Logger.getLogger(DBlogAop.class).error(StringUtil.getLoggerInfo(e.getErrorCode(), "afterUpdate()"));
+	    } catch (ServiceException e) {
+		Logger.getLogger(DBlogAop.class).error(StringUtil.getLoggerInfo(e.getErrorCode(), "afterUpdate()"));
 	    }
 
 	}
@@ -90,11 +94,11 @@ public class DBlogAop {
 			DBLog.ACTION_DELETE, new Date());
 		dbLoger.uniqueSave(log);
 	    } catch ( NoSuchMethodException | InvocationTargetException | IllegalAccessException | IllegalArgumentException | NoSuchFieldException | SecurityException e) {
-		// log待定
-		e.printStackTrace();
-	    } catch (IOException e) {
-		System.out.println("数据库版本配置文件读取失败");
-		e.printStackTrace();
+		Logger.getLogger(DBlogAop.class).error(StringUtil.getLoggerInfo(ErrorCode.INTENAL_ERROR, "afterDelete()"));
+	    } catch (DaoException e) {
+		Logger.getLogger(DBlogAop.class).error(StringUtil.getLoggerInfo(e.getErrorCode(), "afterDelete()"));
+	    } catch (ServiceException e) {
+		Logger.getLogger(DBlogAop.class).error(StringUtil.getLoggerInfo(e.getErrorCode(), "afterDelete()"));
 	    }
 
 	}
@@ -120,13 +124,12 @@ public class DBlogAop {
 		dbLoger.uniqueSave(log);
 	    } catch (NoSuchFieldException | SecurityException
 		    | IllegalArgumentException | IllegalAccessException e) {
-		// log待定
-		e.printStackTrace();
-	    } catch (IOException e) {
-		System.out.println("数据库版本配置文件读取失败");
-		e.printStackTrace();
+		Logger.getLogger(DBlogAop.class).error(StringUtil.getLoggerInfo(ErrorCode.INTENAL_ERROR, "afterDelete()"));
+	    } catch (DaoException e) {
+		Logger.getLogger(DBlogAop.class).error(StringUtil.getLoggerInfo(e.getErrorCode(), "afterDelete()"));
+	    } catch (ServiceException e) {
+		Logger.getLogger(DBlogAop.class).error(StringUtil.getLoggerInfo(e.getErrorCode(), "afterDelete()"));
 	    }
-
 	}
     }
 
