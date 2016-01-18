@@ -52,12 +52,14 @@ import com.rippletec.medicine.model.User;
 import com.rippletec.medicine.model.UserFavorite;
 import com.rippletec.medicine.model.Video;
 import com.rippletec.medicine.model.WestMedicine;
+import com.rippletec.medicine.model.extend.MeetingBean;
 import com.rippletec.medicine.service.DBLoger;
 import com.rippletec.medicine.utils.ErrorCode;
 import com.rippletec.medicine.utils.JsonUtil;
 import com.rippletec.medicine.utils.ParamMap;
 import com.rippletec.medicine.utils.StringUtil;
 import com.rippletec.medicine.vo.app.EnterTypesVO;
+import com.sun.org.apache.bcel.internal.generic.NEW;
 
 /**
  * App端Controller
@@ -135,7 +137,7 @@ public class AppController extends BaseController {
     	return jsonUtil.setSuccessRes().toJson();
     }
     
-    @RequestMapping(value = "/user/getAllSearch", method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @RequestMapping(value = "/res/getAllSearch", method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
     public String user_getAllSearch(String keyword) throws UtilException {
 	if (!StringUtil.hasText(keyword)) {
@@ -194,7 +196,7 @@ public class AppController extends BaseController {
 		.setModels(enterprises)
 		.setModels(meetings)
 		.setModels(videos);
-	return jsonUtil.setSuccessRes().toJson("/user/getAllSearch");
+	return jsonUtil.setSuccessRes().toJson("/res/getAllSearch");
     }
 
     @RequestMapping(value = "/res/getEnterprise", method = RequestMethod.POST,produces="application/json;charset=UTF-8")
@@ -351,7 +353,7 @@ public class AppController extends BaseController {
 	return jsonUtil.setSuccessRes().setObject("sessionid", httpSession.getId()).toJson();
     }
     
-    @RequestMapping(value = "/loginOut", method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    @RequestMapping(value = "/user/loginOut", method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
     public String user_setLoginOut(HttpSession httpSession) throws ControllerException, DaoException {
 	String account = getAccount(httpSession);
@@ -533,13 +535,18 @@ public class AppController extends BaseController {
 	    return ParamError();
 	}
 	List<Meeting> meetings = null;
+	Map<String, String> logoCache = new HashMap<String, String>();
 	if(size == 0){
 	    meetings = meetingManager.findRecentMeeting(null,Meeting.STATUS,Meeting.ON_PUBLISTH);
 	}
 	else {
 	    meetings = meetingManager.findRecentMeeting(new PageBean(1, 0, size),Meeting.STATUS,Meeting.ON_PUBLISTH);
 	}
-	return jsonUtil.setSuccessRes().setModels(meetings).toJson("/res/getRecentMeeting");
+	List<MeetingBean> meetingBeans = new LinkedList<MeetingBean>();
+	for (Meeting meeting : meetings) {
+	    meetingBeans.add(new MeetingBean(meeting, logoCache));
+	}
+	return jsonUtil.setSuccessRes().setModels(meetingBeans).toJson("/res/getRecentMeeting");
     }
     
     @RequestMapping(value = "/user/getMeetings", method = RequestMethod.POST,produces="application/json;charset=UTF-8")
@@ -548,8 +555,13 @@ public class AppController extends BaseController {
 	Map<String, Object> paramMap = new HashMap<String, Object>();
 	paramMap.put(Meeting.ENTERPRISE_ID, id);
 	paramMap.put(Meeting.STATUS, Meeting.ON_PUBLISTH);
+	Map<String, String> logoCache = new HashMap<String, String>();
 	List<Meeting> meetings = meetingManager.findBySql(Meeting.TABLE_NAME, paramMap);
-	return jsonUtil.setSuccessRes().setModels(meetings).toJson("/user/getMeetings");
+	List<MeetingBean> meetingBeans = new LinkedList<MeetingBean>();
+	for (Meeting meeting : meetings) {
+	    meetingBeans.add(new MeetingBean(meeting, logoCache));
+	}
+	return jsonUtil.setSuccessRes().setModels(meetingBeans).toJson("/user/getMeetings");
     }
     
     
@@ -559,7 +571,7 @@ public class AppController extends BaseController {
 	ParamMap paramMap = new ParamMap().put(Meeting.ID, id)
 					  .put(Meeting.STATUS, Meeting.ON_PUBLISTH);
 	List<Meeting> meetings = meetingManager.findByParam(paramMap);
-	return jsonUtil.setObject("meeting", meetings.get(0)).setSuccessRes().toJson("/user/getMeetingById");
+	return jsonUtil.setObject("meeting", new MeetingBean(meetings.get(0))).setSuccessRes().toJson("/user/getMeetingById");
     }
     
     

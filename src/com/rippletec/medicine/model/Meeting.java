@@ -130,6 +130,25 @@ public class Meeting extends BaseModel {
 	this.modifyTime = new Date();
     }
     
+    public Meeting(Meeting meeting) {
+	this.commitDate = meeting.getCommitDate();
+	this.content = meeting.getContent();
+	this.date = meeting.getDate();
+	this.enterprise = meeting.getEnterprise();
+	this.enterpriseName = meeting.getEnterpriseName();
+	this.id = meeting.getId();
+	this.medicine = meeting.getMedicine();
+	this.modifyTime = meeting.getModifyTime();
+	this.name = meeting.getName();
+	this.pageUrl = meeting.getPageUrl();
+	this.PPT = meeting.getPPT();
+	this.speaker = meeting.getSpeaker();
+	this.status = meeting.getStatus();
+	this.subject = meeting.getSubject();
+	this.video = meeting.getVideo();
+    }
+
+    
     public void setUpdate(MeetingVo vo, Subject subject) {
 	this.name = vo.getName();
 	this.speaker = vo.getSpeaker();

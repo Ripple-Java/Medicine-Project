@@ -212,7 +212,7 @@ public class WebAdminController extends BaseController{
     }
     
 
-    @RequestMapping(value = "/admin/updateChinMedicine", method = RequestMethod.GET,produces="application/json;charset=UTF-8")
+    @RequestMapping(value = "/admin/getCount", method = RequestMethod.GET,produces="application/json;charset=UTF-8")
     @ResponseBody
     public String admin_getCount(int type) throws NumberFormatException, DaoException {;
         int count = 0;
