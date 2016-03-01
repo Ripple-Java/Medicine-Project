@@ -60,6 +60,10 @@ public class MeetingManagerImpl extends BaseManager<Meeting> implements MeetingM
 	Meeting meeting = meetingDao.find(id);
 	meeting.setStatus(Meeting.ON_PUBLISTH);
 	String pptPath = meeting.getPPT();
+	if(!StringUtil.hasText(pptPath)){
+	    meetingDao.update(meeting);
+	    return new Result(true);
+	}
 	meeting.setPPT("App"+PPTUtil.separator+"ppt"+PPTUtil.separator+meeting.getId());
 	meetingDao.update(meeting);
 	File pptFile = new File(pptPath);

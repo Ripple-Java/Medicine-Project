@@ -72,7 +72,7 @@ public class UserFavoriteManagerImpl extends BaseManager<UserFavorite> implement
     }
 
 	@Override
-	public void addUserFavorite(String account, UserFavorite userFavorite) throws DaoException, ServiceException {
+	public int addUserFavorite(String account, UserFavorite userFavorite) throws DaoException, ServiceException {
 		User user = userManager.findByAccount(account);
 		userFavorite.setUser(user);
 		String info = "";
@@ -118,7 +118,7 @@ public class UserFavoriteManagerImpl extends BaseManager<UserFavorite> implement
 		}
 		userFavorite.setName(name);
 		userFavorite.setInfo(info);
-		userFavoriteDao.save(userFavorite);
+		return userFavoriteDao.save(userFavorite);
 	}
 
 	@Override
@@ -142,6 +142,19 @@ public class UserFavoriteManagerImpl extends BaseManager<UserFavorite> implement
 	    paramMap.put(UserFavorite.TYPE, UserFavorite.MEDICINE_WEST);
 	    userFavorites.addAll(userFavoriteDao.findBySql(UserFavorite.TABLE_NAME, paramMap));
 	    return userFavorites;
+	}
+
+	@Override
+	public boolean isExist(Integer type, Integer objectId, User user) {
+	    ParamMap paramMap = new ParamMap().put(UserFavorite.TYPE, type)
+		    			      .put(UserFavorite.OBJECT_ID, objectId)
+		    			      .put(UserFavorite.USER_ID, user.getId());
+	    try {
+		userFavoriteDao.findBySql(UserFavorite.TABLE_NAME, paramMap);
+		return true;
+	    } catch (DaoException e) {
+		return false;
+	    }
 	}
     
    

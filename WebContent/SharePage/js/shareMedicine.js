@@ -18,7 +18,7 @@ function getMedicineMessage(){
 	var adrs="";
 	var businessName="";
 	$.ajax({
-		url:"http://112.74.131.194:8080/MedicineProject/share/medicine/get",
+		url:"http://localhost:8080/MedicineProject/share/medicine/get",
 		type:"GET",
 		data:{
 			type:$(".medicineType").val(),

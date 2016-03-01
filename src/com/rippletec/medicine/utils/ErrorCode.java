@@ -55,6 +55,8 @@ public class ErrorCode {
     
     public static final int CHECKCODE_ERROR = 100601;
     
+    public static final int FAVORITE_EXIST_ERROR = 100701;
+    
     
     public static final int JSONUTIL_NOT_MAPPING_ERROR = 101001;
 
@@ -94,11 +96,16 @@ public class ErrorCode {
 	errorInfo.put(PERMISSION_DENIED_ERROR, "权限不足错误");
 	errorInfo.put(CHECKCODE_ERROR, "App校验失败错误");
 	errorInfo.put(JSONUTIL_NOT_MAPPING_ERROR, "JsonUtil工具配置参数错误");
+	errorInfo.put(FAVORITE_EXIST_ERROR, "收藏已存在错误");
 	
 
     }
     
     public String getInfo(int code) {
 	return errorInfo.get(code);
+    }
+    
+    public Map<Integer, String> getInfoMap(int code) {
+   	return errorInfo;
     }
 }

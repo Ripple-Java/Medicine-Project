@@ -290,10 +290,6 @@ public class Enterprise extends BaseModel {
     public void setCheckDatas(Set<CheckData> checkDatas) {
         this.checkDatas = checkDatas;
     }
-    
-    
-    
-    
 
     public String getCheckImg() {
         return checkImg;

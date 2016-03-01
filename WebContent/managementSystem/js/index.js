@@ -1,4 +1,4 @@
-﻿angular.module("doctor_app", []).run(function () {
+﻿angular.module("doctor_app", ["doctor_app_header"]).run(function () {
     if (document.cookie == "") { alert("用户未登录！"); location.href = "./backgroundLogin.html"; }
     resize();
 }).controller('my', ['$scope', function (scope) {

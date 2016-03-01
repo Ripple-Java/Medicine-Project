@@ -54,6 +54,7 @@
 	width: 230px;
 	line-height: 3.5em;
 	border-bottom: dashed 1px #e5e5e5;
+	cursor:pointer;
 }
 
 .aside_sidebar_icon {

@@ -50,4 +50,6 @@ public interface IFindByPage<T> {
      * @throws DaoException 
      */
     public List<T> findBySql(String tableName,String param, Object value,PageBean page) throws DaoException;
+
+    List<T> findBySql(String tableName, Map<String, Object> paramMap,PageBean page) throws DaoException;
 }

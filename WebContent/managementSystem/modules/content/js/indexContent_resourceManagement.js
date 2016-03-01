@@ -7,7 +7,7 @@ function loadingResourceManagement_drugList(pageSize, pageNum,type) {//加载药
     var drugType = "";
     var thisType=0;
     $.ajax({
-    	url:"http://112.74.131.194:8080/MedicineProject/Web/admin/getMedicine",
+    	url:"http://localhost:8080/MedicineProject/Web/admin/getMedicine",
     	data:{
             pageSize: pageSize,
             pageNum: pageNum,
@@ -15,6 +15,7 @@ function loadingResourceManagement_drugList(pageSize, pageNum,type) {//加载药
         }, 
         success:function (data,status) {
             if(data.result.trim()=="success"){
+            	if(data.BackGroundMedicineVOs!=null)
             	$.each(data.BackGroundMedicineVOs, function (times, result) {
                     checkbox = "<td><li value=\""+pageNum+"\"><input type=\"checkbox\" value=\""+result.id +"\" id=\"checkbox-" + result.id + "\" onclick=\"checkboxFunction(" + result.id + ");\" /><label for=\"checkbox-" + result.id + "\"></label></li></td>";
                     if(type==5){
@@ -70,7 +71,7 @@ function addCommonChinaDrugButtonFunction() {//资源管理---药品列表---添
     if($(".addCommonChinaDrug #forth").val()==null){checkTheforthIsNull=$(" .addCommonChinaDrug #third").val();}
     else checkTheforthIsNull=$(".addCommonChinaDrug #forth").val();
     if (checkIsNull == 0) {
-        $.post("http://112.74.131.194:8080/MedicineProject/Web/admin/addChinMedicine", {
+        $.post("http://localhost:8080/MedicineProject/Web/admin/addChinMedicine", {
             name: $(".CommonChinaDrug_name").val(),
             content: $(".CommonChinaDrug_content").val(),
             efficacy: $(".CommonChinaDrug_efficacy").val(),
@@ -97,7 +98,7 @@ function addCommonWestDrugButtonFunction() {//资源管理---药品列表---添�
         if ($(result).val() == "") { checkIsNull = 1; return false; }
     });
     if (checkIsNull == 0) {
-        $.post("http://112.74.131.194:8080/MedicineProject/Web/admin/addWestMedicine", {
+        $.post("http://localhost:8080/MedicineProject/Web/admin/addWestMedicine", {
             name: $(".CommonWestDrug_name").val(),
             other_name: $(".CommonWestDrug_other_name").val(),
             content: $(".CommonWestDrug_content").val(),
@@ -128,7 +129,7 @@ function deleteDrug(){//which default:删除但是页表下药品 ，-1：删除
 		if($(result).is(':checked')){
 			thisType=".type-"+$(result).val();
 			$.ajax({
-		    	url:"http://112.74.131.194:8080/MedicineProject/Web/admin/deleteMedicine",
+		    	url:"http://localhost:8080/MedicineProject/Web/admin/deleteMedicine",
 		    	data:{
 		            id:$(result).val(),
 		            type:$(thisType).val()
@@ -183,34 +184,39 @@ function searchDrug(){
     var thisType=0;
     if($(".resourceManagement_search").val().trim()!="")
     $.ajax({
-    	url:"http://112.74.131.194:8080/MedicineProject/Web/admin/searchMedicine",
+    	url:"http://localhost:8080/MedicineProject/Web/admin/searchMedicine",
     	data:{
             keyword:$(".resourceManagement_search").val()
         }, 
         success:function (data,status) {
             if(data.result.trim()=="success"){
-            	$.each(data.BackGroundMedicineVOs, function (times, result) {
-                    checkbox = "<td><li value=\"-1\"><input type=\"checkbox\" value=\""+result.id +"\" id=\"checkbox-" + result.id + "\" onclick=\"checkboxFunction(" + result.id + ");\" /><label for=\"checkbox-" + result.id + "\"></label></li></td>";
-                    	if(result.type.firstType.trim()=="西药"){
-                    		if(result.enterpriseName) thisType=4;
-                    		else thisType=2;
-                    	}else{
-                    		if(result.enterpriseName) thisType=3;
-                    		else thisType=1;
-                    	}
-                    Name = "<td>" + result.name + "</td>";
-                    if(result.enterpriseName)  {
-                    	Business = "<td>" + result.enterpriseName + "</td>";     
-                    	Function="<td></td>";
-                    }
-                    else {
-                    	Business = "<td></td>";
-                    	Function = "<td class=\"list_button resourceList\"><ul><li class=\"drugList_list_editButton iconfont \" onclick=\"updateDrug("+result.id+");\" ><a>&#xe630;</a></li></ul></td>";
-                    }
-                    Type = "<td><li class=\"type-"+result.id+"\"value=\""+thisType+" \">" + result.type.firstType + "-" + result.type.secondType + "-" + result.type.thirdType+"</li></td>" ;
-                    Message = Message + "<tr>" + checkbox + Name + Type + Business + Function + "</tr>";
-                });
-            	$(".drugList").empty().prepend(Message);
+            	if(data.BackGroundMedicineVOs!=null){
+            		$.each(data.BackGroundMedicineVOs, function (times, result) {
+                        checkbox = "<td><li value=\"-1\"><input type=\"checkbox\" value=\""+result.id +"\" id=\"checkbox-" + result.id + "\" onclick=\"checkboxFunction(" + result.id + ");\" /><label for=\"checkbox-" + result.id + "\"></label></li></td>";
+                        	if(result.type.firstType.trim()=="西药"){
+                        		if(result.enterpriseName) thisType=4;
+                        		else thisType=2;
+                        	}else{
+                        		if(result.enterpriseName) thisType=3;
+                        		else thisType=1;
+                        	}
+                        Name = "<td>" + result.name + "</td>";
+                        if(result.enterpriseName)  {
+                        	Business = "<td>" + result.enterpriseName + "</td>";     
+                        	Function="<td></td>";
+                        }
+                        else {
+                        	Business = "<td></td>";
+                        	Function = "<td class=\"list_button resourceList\"><ul><li class=\"drugList_list_editButton iconfont \" onclick=\"updateDrug("+result.id+");\" ><a>&#xe630;</a></li></ul></td>";
+                        }
+                        Type = "<td><li class=\"type-"+result.id+"\"value=\""+thisType+" \">" + result.type.firstType + "-" + result.type.secondType + "-" + result.type.thirdType+"</li></td>" ;
+                        Message = Message + "<tr>" + checkbox + Name + Type + Business + Function + "</tr>";
+                    });
+                	$(".drugList").empty().prepend(Message);
+            	}else{
+            		alert("无相关数据！");
+            	}
+            	
             }else{
             	console.log(data);
             }       
@@ -244,7 +250,7 @@ function updateDrug(isUpdate){
 }
 function getCommonChinaDrugMessage(which){//1:中药；2：西药
 	 $.ajax({
-	    	url:"http://112.74.131.194:8080/MedicineProject/Web/admin/medicine/get/detail",
+	    	url:"http://localhost:8080/MedicineProject/Web/admin/medicine/get/detail",
 	    	data:{
 	            id:$(".saveID").val(),
 	            type: which
@@ -293,7 +299,7 @@ function updateCommonChinaDrug(){
     
     if (checkIsNull == 0) {
         $.ajax({
-        	url:"http://112.74.131.194:8080/MedicineProject/Web/admin/updateChinMedicine", 
+        	url:"http://localhost:8080/MedicineProject/Web/admin/updateChinMedicine", 
         	data:{
             name: $(".CommonChinaDrug_name").val(),
             content: $(".CommonChinaDrug_content").val(),
@@ -348,7 +354,7 @@ function updateCommonWestDrug(){
     });
     
     if (checkIsNull == 0) {
-        $.post("http://112.74.131.194:8080/MedicineProject/Web/admin/updateWestMedicine", {
+        $.post("http://localhost:8080/MedicineProject/Web/admin/updateWestMedicine", {
             name: $(".CommonWestDrug_name").val(),
             other_name: $(".CommonWestDrug_other_name").val(),
             content: $(".CommonWestDrug_content").val(),
@@ -402,13 +408,14 @@ function loadingResourceManagement_meetingList(page, size) {//加载药品列表
     var Subject = "";
     var Times="";   
     $.ajax({
-    	url:"http://112.74.131.194:8080/MedicineProject/Web/admin/getMeetings",
+    	url:"http://localhost:8080/MedicineProject/Web/admin/getMeetings",
     	data:{
             page:page,
             size: size
         }, 
         success:function (data,status) {
            if(data.result=="success"){
+        	   if(data.Meetings!=null)
             	$.each(data.Meetings, function (times, result) {
                     checkbox = "<td><li value=\""+page+"\"><input type=\"checkbox\" value=\""+result.id +"\" id=\"checkbox-" + result.id + "\" onclick=\"checkboxFunction(" + result.id + ");\" /><label for=\"checkbox-" + result.id + "\"></label></li></td>";
                     Name = "<td><a href=\""+result.pageUrl+"\">" + result.name + "</a></td>";
@@ -435,7 +442,7 @@ function deleteMeeting(){//which default:删除但是页表下会议 ，-1：删
 	$.each($(".meetingList_tbody :checkbox "),function(times,result){
 		if($(result).is(':checked')){
 			$.ajax({
-		    	url:"http://112.74.131.194:8080/MedicineProject/Web/admin/deleteMeeting",
+		    	url:"http://localhost:8080/MedicineProject/Web/admin/deleteMeeting",
 		    	data:{
 		            id:$(result).val()
 		        }, 
@@ -482,21 +489,26 @@ function searchMeeting(){
     var Times="";
     var Function="";   
     $.ajax({
-    	url:"http://112.74.131.194:8080/MedicineProject/Web/admin/searchMeeting",
+    	url:"http://localhost:8080/MedicineProject/Web/admin/searchMeeting",
     	data:{
     		keyword:$(".resourceManagement_search").val()
         }, 
         success:function (data,status) {
            if(data.result.trim()=="success"){
-            	$.each(data.Meetings, function (times, result) {
-                    checkbox = "<td><li value=\"-1\"><input type=\"checkbox\" value=\""+result.id +"\" id=\"checkbox-" + result.id + "\" onclick=\"checkboxFunction(" + result.id + ");\" /><label for=\"checkbox-" + result.id + "\"></label></li></td>";
-                    Name = "<td>" + result.name + "</td>";
-                    Subject = "<td>" +result.subject.parent_name  +" - "+result.subject.name+"</td>";
-                    Times="<td>"+result.commitDate+"</td>";
-                    Function = "<td class=\"list_button businessList_button\"><ul><li class=\"businessList_list_freezeButton iconfont icon\"><a>&#xe647;</a></li></ul></td>";
-                    Message = Message + "<tr>" + checkbox + Name + Subject+Times + Function + "</tr>";
-                });
-            	$(".meetingList_tbody").empty().prepend(Message);
+        	   if(data.Meetings!=null){
+        		   $.each(data.Meetings, function (times, result) {
+                       checkbox = "<td><li value=\"-1\"><input type=\"checkbox\" value=\""+result.id +"\" id=\"checkbox-" + result.id + "\" onclick=\"checkboxFunction(" + result.id + ");\" /><label for=\"checkbox-" + result.id + "\"></label></li></td>";
+                       Name = "<td>" + result.name + "</td>";
+                       Subject = "<td>" +result.subject.parent_name  +" - "+result.subject.name+"</td>";
+                       Times="<td>"+result.commitDate+"</td>";
+                       Function = "<td class=\"list_button businessList_button\"><ul><li class=\"businessList_list_freezeButton iconfont icon\"><a>&#xe647;</a></li></ul></td>";
+                       Message = Message + "<tr>" + checkbox + Name + Subject+Times + Function + "</tr>";
+                   });
+               	$(".meetingList_tbody").empty().prepend(Message);
+        	   }else{
+        		   alert("无相关数据！");
+        	   }
+            	
             }   
         },
         dataType:"json",
@@ -513,13 +525,14 @@ function loadingResourceManagement_videoList(page, size) {//加载视频列表
     var Subject = "";
     var Times="";   
     $.ajax({
-    	url:"http://112.74.131.194:8080/MedicineProject/Web/admin/video/get",
+    	url:"http://localhost:8080/MedicineProject/Web/admin/video/get",
     	data:{
             page:page,
             pageSize: size
         }, 
         success:function (data,status) {
            if(data.result.trim()=="success"){
+        	   if(data.Videos!=null)
             	$.each(data.Videos, function (times, result) {
                     checkbox = "<td><li value=\""+page+"\"><input type=\"checkbox\" value=\""+result.id +"\" id=\"checkbox-" + result.id + "\" onclick=\"checkboxFunction(" + result.id + ");\" /><label for=\"checkbox-" + result.id + "\"></label></li></td>";
                     Name = "<td><a href=\""+result.pageUrl+"\">" + result.name + "</a></td>";
@@ -544,7 +557,7 @@ function deleteVideo(){//which default:删除但是页表下视频，-1：删除
 	$.each($(".videoList_tbody :checkbox "),function(times,result){
 		if($(result).is(':checked')){
 			$.ajax({
-		    	url:"http://112.74.131.194:8080/MedicineProject/Web/admin/video/delete",
+		    	url:"http://localhost:8080/MedicineProject/Web/admin/video/delete",
 		    	data:{
 		            id:$(result).val()
 		        }, 
@@ -595,7 +608,7 @@ function getDrugType(){
 	var firstDefaultvalue=0;
 	var forthTimes_1=0;
 	$.ajax({
-    	url:"http://112.74.131.194:8080/MedicineProject/Web/user/getAllMedicineType",
+    	url:"http://localhost:8080/MedicineProject/Web/user/getAllMedicineType",
         success:function (data,status) {
             if(data.result.trim()=="success"){
             	$.each(data.first.superType, function (time1, superType) {
@@ -667,21 +680,25 @@ function searchVideo(){//未完成，等后台
     var Times="";
     var Function="";   
     $.ajax({
-    	url:"http://112.74.131.194:8080/MedicineProject/Web/admin/video/search",
+    	url:"http://localhost:8080/MedicineProject/Web/admin/video/search",
     	data:{
     		keyword:$(".resourceManagement_search").val()
         }, 
         success:function (data,status) {
            if(data.result.trim()=="success"){
-            	$.each(data.nameResult, function (times, result) {
-                    checkbox = "<td><li value=\"-1\"><input type=\"checkbox\" value=\""+result.id +"\" id=\"checkbox-" + result.id + "\" onclick=\"checkboxFunction(" + result.id + ");\" /><label for=\"checkbox-" + result.id + "\"></label></li></td>";
-                    Name = "<td>" + result.name + "</td>";
-                    Subject = "<td>" +result.subject.parent_name  +" - "+result.subject.name+"</td>";
-                    Times="<td>"+result.modifyTime+"</td>";
-                    Function = "<td class=\"list_button businessList_button\"><ul><li class=\"businessList_list_freezeButton iconfont icon\"><a>&#xe647;</a></li></ul></td>";
-                    Message = Message + "<tr>" + checkbox + Name + Subject+Times + Function + "</tr>";
-                });
-            	$(".videoList_tbody").empty().prepend(Message);
+        	   if(data.nameResult!=null){
+        		   $.each(data.nameResult, function (times, result) {
+                       checkbox = "<td><li value=\"-1\"><input type=\"checkbox\" value=\""+result.id +"\" id=\"checkbox-" + result.id + "\" onclick=\"checkboxFunction(" + result.id + ");\" /><label for=\"checkbox-" + result.id + "\"></label></li></td>";
+                       Name = "<td>" + result.name + "</td>";
+                       Subject = "<td>" +result.subject.parent_name  +" - "+result.subject.name+"</td>";
+                       Times="<td>"+result.modifyTime+"</td>";
+                       Function = "<td class=\"list_button businessList_button\"><ul><li class=\"businessList_list_freezeButton iconfont icon\"><a>&#xe647;</a></li></ul></td>";
+                       Message = Message + "<tr>" + checkbox + Name + Subject+Times + Function + "</tr>";
+                   });
+               	$(".videoList_tbody").empty().prepend(Message);
+        	   }else{
+        		   alert("无相关数据！");
+        	   }           	
             }   else{
             	$(".videoList_tbody").empty().prepend("<td></td><td>加载列表数据失败！</td>");
             } 

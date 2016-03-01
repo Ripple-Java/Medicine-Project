@@ -25,6 +25,7 @@
 	margin-top: 0.8em;
 	border: 1px solid #e5e5e5;
 	border-right: none;
+    cursor:pointer;
 }
 
 .add_drug_ChinaOrWestaside_unActive {
@@ -84,6 +85,7 @@
 	width: 8em;
 	border-radius: 5px;
 	border: 1px solid #e5e5e5;
+    height:2em;
 }
 
 .addDrug .drugType_select select{
@@ -143,6 +145,7 @@
 	width: 8em;
 	border-radius: 5px;
 	border: 1px solid #e5e5e5;
+    height:2em;
 }
 
 .updateDrug .drugType_select select{

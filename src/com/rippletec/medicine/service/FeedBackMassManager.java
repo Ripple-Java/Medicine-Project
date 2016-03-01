@@ -7,5 +7,5 @@ public interface FeedBackMassManager extends IManager<FeedBackMass> {
     
     public static final String NAME = "FeedBackMassManager";
 
-    void addFeedBackMass(FeedBackMass feedBackMass,String account) throws DaoException;
+    int addFeedBackMass(FeedBackMass feedBackMass,String account) throws DaoException;
 }

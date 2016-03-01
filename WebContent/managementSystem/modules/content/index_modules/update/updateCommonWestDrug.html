@@ -7,6 +7,10 @@ $(document).ready(function(){getDrugType();getCommonChinaDrugMessage(2)});
 		<form>
 			<ul>
 				<li><label>通用西药添加</label></li>
+                <li class="drugType_select">
+                    <p><label>药品分类：</label></p>
+                    <p class="drugTypeAllSelect updateCommonChinaDrugType "><select id="first" size="1"></select> - <select id="second"></select> - <select id="third"></select> </p>
+                </li>
 				<li>
 					<p>
 						<label>药品名称：</label>
@@ -106,10 +110,7 @@ $(document).ready(function(){getDrugType();getCommonChinaDrugMessage(2)});
 							class="CommonWestDrug_preparations" />
 					</p>
 				</li>
-				<li class="drugType_select">
-				<p><label>药品分类：</label></p>
-				<p class="drugTypeAllSelect updateCommonChinaDrugType "><select id="first" size="1" ></select> - <select id="second" ></select> - <select id="third"  ></select> </p>
-				</li>
+				
 				<li><input type="button" value="取消" onclick="updateDrug(-1);" />
 				<input type="button" value="保存" onclick="updateCommonWestDrug();"/></li>
 			</ul>

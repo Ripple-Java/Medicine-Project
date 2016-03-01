@@ -5,7 +5,7 @@ function loadingBusinessManagement_businessList(page, size) {//加载企业列�
     var Type = ""; 
     var Status="";
     $.ajax({
-    	url:"http://112.74.131.194:8080/MedicineProject/Web/admin/getEnterprises",
+    	url:"http://localhost:8080/MedicineProject/Web/admin/getEnterprises",
     	data:{
             page:page,
             size: size
@@ -48,7 +48,7 @@ function searchBusiness(){
     var Status="";
     if($(".businessManagement_search").val().trim()!="")
     $.ajax({
-    	url:"http://112.74.131.194:8080/MedicineProject/Web/admin/searchEnterprise",
+    	url:"http://localhost:8080/MedicineProject/Web/admin/searchEnterprise",
     	data:{
             keyword:$(".businessManagement_search").val()
         }, 
@@ -86,7 +86,7 @@ function blockBusiness(value){//1：冻结，0：解冻/恢复
 	$.each($(".businessList_tbody :checkbox "),function(times,result){
 		if($(result).is(':checked')){
 			$.ajax({
-		    	url:"http://112.74.131.194:8080/MedicineProject/Web/admin/enterprise/block",
+		    	url:"http://localhost:8080/MedicineProject/Web/admin/enterprise/block",
 		    	data:{
 		            id:$(result).val(),
 		            value:value
@@ -124,7 +124,7 @@ function loadingBusinessManagement_registerCheckList(page, size) {//加载企业
     var Number="";
     var Img="";
     $.ajax({
-    	url:"http://112.74.131.194:8080/MedicineProject/Web/admin/getEnterCheck",
+    	url:"http://localhost:8080/MedicineProject/Web/admin/getEnterCheck",
     	data:{
     		pageNum:page,
     		pageSize: size
@@ -162,7 +162,7 @@ function passBusinessRegisterCheck(){
 	$.each($(".registerCheckList_tobody :checkbox "),function(times,result){
 		if($(result).is(':checked')){
 			$.ajax({
-		    	url:"http://112.74.131.194:8080/MedicineProject/Web/admin/passCheckData",
+		    	url:"http://localhost:8080/MedicineProject/Web/admin/passCheckData",
 		    	data:{
 		            id:$(result).val(),
 		            type:1
@@ -199,7 +199,7 @@ function unpassBusinessRegisterCheck(){
 	$.each($(".registerCheckList_tobody :checkbox "),function(times,result){
 		if($(result).is(':checked')){
 			$.ajax({
-		    	url:"http://112.74.131.194:8080/MedicineProject/Web/admin/enterprise/unpass",
+		    	url:"http://localhost:8080/MedicineProject/Web/admin/enterprise/unpass",
 		    	data:{
 		            id:$(result).val()
 		        }, 

@@ -8,7 +8,7 @@ function loadingUserManagement_userList(page, size) {//加载用户列表
     var Device=""; 
     var Status="";
     $.ajax({
-    	url:"http://112.74.131.194:8080/MedicineProject/Web/admin/getUsers",
+    	url:"http://localhost:8080/MedicineProject/Web/admin/getUsers",
     	data:{
             page:page,
             size: size,
@@ -59,7 +59,7 @@ function searchUser(){
     var Status="";
     if($(".userManagement_search").val().trim()!="")
     $.ajax({
-    	url:"http://112.74.131.194:8080/MedicineProject/Web/admin/searchUser",
+    	url:"http://localhost:8080/MedicineProject/Web/admin/searchUser",
     	data:{
             keyword:$(".userManagement_search").val()
         }, 
@@ -99,7 +99,7 @@ function blockUser(value){//1：冻结，0：解冻/恢复
 	$.each($(".userList_tbody :checkbox "),function(times,result){
 		if($(result).is(':checked')){
 			$.ajax({
-		    	url:"http://112.74.131.194:8080/MedicineProject/Web/admin/user/block",
+		    	url:"http://localhost:8080/MedicineProject/Web/admin/user/block",
 		    	data:{
 		            id:$(result).val(),
 		            value:value
@@ -138,7 +138,7 @@ function userfilter(page, size){
     var Device=""; 
     var Status="";
     $.ajax({
-    	url:"http://112.74.131.194:8080/MedicineProject/Web/admin/getUsersByType",
+    	url:"http://localhost:8080/MedicineProject/Web/admin/getUsersByType",
     	data:{
             page:page,
             size: size,

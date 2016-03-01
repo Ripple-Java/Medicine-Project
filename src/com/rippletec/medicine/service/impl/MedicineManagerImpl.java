@@ -145,31 +145,33 @@ public class MedicineManagerImpl extends BaseManager<Medicine> implements Medici
     public void getChineseOrWest(List<BackGroundMedicineVO> models,
 	    List<Medicine> medicines) throws DaoException {
 	for (Medicine medicine : medicines) {
-	    int bigType = medicine.getParentType();
-	    switch (bigType) {
-	    case Medicine.CHINESE:
-		List<ChineseMedicine> chineseMedicines = chineseMedicineDao.findBySql(ChineseMedicine.TABLE_NAME, ChineseMedicine.MEDICINE_ID, medicine.getId());
-		ChineseMedicine medicineTemp = chineseMedicines.get(0);
-		models.add(new BackGroundMedicineVO(medicineTemp.getMedicineType().getBackGroundMedicineType(), medicineTemp.getName(), null, medicineTemp.getId(), null));
-		break;
-	    case Medicine.WEST:
-		List<WestMedicine> westMedicines = westMedicineDao.findBySql(WestMedicine.TABLE_NAME, WestMedicine.MEDICINE_ID, medicine.getId());
-		WestMedicine westMedicine = westMedicines.get(0);
-		models.add(new BackGroundMedicineVO(westMedicine.getMedicineType().getBackGroundMedicineType(), westMedicine.getName(), null, westMedicine.getId(), null));
-		break;
-	    case Medicine.ENTER_CHINESE:
-		List<EnterChineseMedicine> enterChineseMedicines = enterChineseMedicineDao.findBySql(EnterChineseMedicine.TABLE_NAME, EnterChineseMedicine.MEDICINE_ID, medicine.getId());
-		EnterChineseMedicine enterChineseMedicine = enterChineseMedicines.get(0);
-		models.add(new BackGroundMedicineVO(enterChineseMedicine.getMedicineType().getBackGroundMedicineType(), enterChineseMedicine.getName(), enterChineseMedicine.getEnterprise_name(), enterChineseMedicine.getId(), enterChineseMedicine.getUpdateTime()));
-		break;
-	    case Medicine.ENTER_WEST:
-		List<EnterWestMedicine> enterWestMedicines = enterWestMedicineDao.findBySql(EnterWestMedicine.TABLE_NAME, EnterWestMedicine.MEDICINE_ID, medicine.getId());
-		EnterWestMedicine enterWestMedicine = enterWestMedicines.get(0);
-		models.add(new BackGroundMedicineVO(enterWestMedicine.getMedicineType().getBackGroundMedicineType(), enterWestMedicine.getName(), enterWestMedicine.getEnterprise_name(), enterWestMedicine.getId(), enterWestMedicine.getUpdateTime()));
-		break;
-	    default:
-		break;
-	    }
+	    try {
+		int bigType = medicine.getParentType();
+		    switch (bigType) {
+		    case Medicine.CHINESE:
+			List<ChineseMedicine> chineseMedicines = chineseMedicineDao.findBySql(ChineseMedicine.TABLE_NAME, ChineseMedicine.MEDICINE_ID, medicine.getId());
+			ChineseMedicine medicineTemp = chineseMedicines.get(0);
+			models.add(new BackGroundMedicineVO(medicineTemp.getMedicineType().getBackGroundMedicineType(), medicineTemp.getName(), null, medicineTemp.getId(), null));
+			break;
+		    case Medicine.WEST:
+			List<WestMedicine> westMedicines = westMedicineDao.findBySql(WestMedicine.TABLE_NAME, WestMedicine.MEDICINE_ID, medicine.getId());
+			WestMedicine westMedicine = westMedicines.get(0);
+			models.add(new BackGroundMedicineVO(westMedicine.getMedicineType().getBackGroundMedicineType(), westMedicine.getName(), null, westMedicine.getId(), null));
+			break;
+		    case Medicine.ENTER_CHINESE:
+			List<EnterChineseMedicine> enterChineseMedicines = enterChineseMedicineDao.findBySql(EnterChineseMedicine.TABLE_NAME, EnterChineseMedicine.MEDICINE_ID, medicine.getId());
+			EnterChineseMedicine enterChineseMedicine = enterChineseMedicines.get(0);
+			models.add(new BackGroundMedicineVO(enterChineseMedicine.getMedicineType().getBackGroundMedicineType(), enterChineseMedicine.getName(), enterChineseMedicine.getEnterprise_name(), enterChineseMedicine.getId(), enterChineseMedicine.getUpdateTime()));
+			break;
+		    case Medicine.ENTER_WEST:
+			List<EnterWestMedicine> enterWestMedicines = enterWestMedicineDao.findBySql(EnterWestMedicine.TABLE_NAME, EnterWestMedicine.MEDICINE_ID, medicine.getId());
+			EnterWestMedicine enterWestMedicine = enterWestMedicines.get(0);
+			models.add(new BackGroundMedicineVO(enterWestMedicine.getMedicineType().getBackGroundMedicineType(), enterWestMedicine.getName(), enterWestMedicine.getEnterprise_name(), enterWestMedicine.getId(), enterWestMedicine.getUpdateTime()));
+			break;
+		    default:
+			break;
+		    }
+	    } catch (Exception e) {}
 	}
     }
 

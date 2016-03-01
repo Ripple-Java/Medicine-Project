@@ -47,6 +47,8 @@
 	font-size: 2em;
 	display: table;
 	text-align: center;
+    position:relative;
+    z-index:100;
 }
 
 .header_user em {

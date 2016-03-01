@@ -3,34 +3,21 @@ package com.rippletec.medicine.controller;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.websocket.server.PathParam;
-
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import antlr.InputBuffer;
-
-import com.rippletec.medicine.Interceptor.AuthorityInterceptor;
 import com.rippletec.medicine.exception.DaoException;
 import com.rippletec.medicine.exception.UtilException;
-import com.rippletec.medicine.model.BaseModel;
 import com.rippletec.medicine.model.Medicine;
-import com.rippletec.medicine.model.Meeting;
 import com.rippletec.medicine.utils.ErrorCode;
 import com.rippletec.medicine.utils.FileUtil;
 
@@ -55,6 +42,8 @@ public class RootController extends BaseController {
 //	Meeting meeting = meetingManager.find(id);
 //	return FileUtil.pptHtml.replace("%value%", id+"");
 //    }
+    @Resource(name = ErrorCode.CLASS_NAME)
+    public ErrorCode errorCode;
     
     @RequestMapping(value = "/share/medicine/{typeId}/{id}", method = RequestMethod.GET)
     @ResponseBody
@@ -83,6 +72,12 @@ public class RootController extends BaseController {
 	return  jsonUtil.setSuccessRes().setObject("medicine", medicine).toJson("/share/medicine/get").replaceAll("\\\\n", "<br>");
     }
     
+    
+    @RequestMapping(value = "/error", method = RequestMethod.GET,produces="application/json;charset=UTF-8")
+    @ResponseBody
+    public String root_error(){
+	return ParamError();
+    }
     
     
     

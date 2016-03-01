@@ -12,10 +12,12 @@ public interface UserFavoriteManager extends IManager<UserFavorite> {
     
     public static final String NAME = "UserFavoriteManager";
     
-    void addUserFavorite(String account,UserFavorite userFavorite) throws DaoException, ServiceException;
+    int addUserFavorite(String account,UserFavorite userFavorite) throws DaoException, ServiceException;
 
     List<UserFavorite> findByAccount(String account) throws DaoException;
 
     List<UserFavorite> getMedicineFavorites(User user) throws DaoException;
+
+    boolean isExist(Integer type, Integer objectId, User user);
 
 }

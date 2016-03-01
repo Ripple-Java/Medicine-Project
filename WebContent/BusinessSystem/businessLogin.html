@@ -7,7 +7,7 @@
 <link href="css/iconfont.css" rel="stylesheet" />
 <link href="css/common.css" rel="stylesheet" />
 <link href="modules/header/css/login_header.css" rel="stylesheet" />
-<link href="modules/content/css/login_content.css" rel="stylesheet" />
+    <link href="modules/content/css/loginAndForgetPassword_content.css" rel="stylesheet" />
 <link href="modules/content/css/register_content.css" rel="stylesheet" />
 <script src="js/angular.js"></script>
 <script src="js/jquery-2.1.0.js"></script>
@@ -18,9 +18,11 @@
 <body ng-app="doctorLogin" class="background_body">
 	<header ng-include src="'modules/header/login_header.html'"></header>
 	<div class="login_content" ng-include
-		src="'modules/content/login_content.html'"></div>
+		src="'modules/content/login_content/login_content.html'"></div>
+    <div class="forgetPassword_content" ng-include
+         src="'modules/content/login_content/forgetPassword_content.html'"></div>
 	<div class="register_content" ng-include
-		src="'modules/content/register_content.html'"></div>
+		src="'modules/content/login_content/register_content.html'"></div>
 	<footer class="login_footer"> www.yiyaohui.com 医药汇2015 powered
 		by rippletec </footer>
 </body>

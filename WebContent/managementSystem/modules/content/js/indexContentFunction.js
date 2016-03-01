@@ -33,7 +33,7 @@ function allSelect(which){//1：全选；2：取消全选
 function getCount(times){
 	var maxPage=0;
 	$.ajax({
-		url:"http://112.74.131.194:8080/MedicineProject/Web/user/getCount",
+		url:"http://localhost:8080/MedicineProject/Web/user/getCount",
 		type:"GET",
 		data:{
 			type:times
@@ -52,7 +52,7 @@ function getCount(times){
 function getCount_1(times){//type(类型：1-未审核企业用户数量， 2-所有需要审核条目总数，3-会议数量，4-企业数量，5-视频数量，6-反馈数量))
 	var maxPage=0;
 	$.ajax({
-		url:"http://112.74.131.194:8080/MedicineProject/Web/admin/getCount",
+		url:"http://localhost:8080/MedicineProject/Web/admin/getCount",
 		type:"GET",
 		data:{
 			type:times
@@ -213,7 +213,7 @@ function changeAdminPassword(){
 	if($(".changeNewPassword").val().trim()!=""&&$(".checkChangeNewPassword").val().trim()!=""&&$(".changeOldPassword").val().trim()!="")
 	if($(".changeNewPassword").val()==$(".checkChangeNewPassword").val())
 	$.ajax({
-    	url:"http://112.74.131.194:8080/MedicineProject/Web/admin/password/update", 
+    	url:"http://localhost:8080/MedicineProject/Web/admin/password/update", 
     	data:{
     		"oldPassword":$(".changeOldPassword").val(),
     		"newPassword":$(".changeNewPassword").val()

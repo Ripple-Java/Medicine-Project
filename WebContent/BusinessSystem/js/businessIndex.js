@@ -1,4 +1,4 @@
-﻿angular.module("doctor_app", []).run(function () {
+﻿angular.module("doctor_app", ["doctor_app_header"]).run(function () {
     if (document.cookie == "") { alert("用户未登录！"); location.href = "./businessLogin.html"; }
     resize();
 }).controller('my', ['$scope', function (scope) {
@@ -22,22 +22,19 @@
     };
     scope.resourceMangementPageHtml = 'modules/content/index_modules/button/resourceManagement_drugListButton.html';
     scope.resourceManagementList = 'modules/content/index_modules/list/resourceManagement_drugList.html';
-    scope.resourceManagementPageClick = function (value, pageButton, pageList) {
-        $(".resourceContent_nav li").removeClass("content_nav_onclick");
-        $(".resourceContent_nav li").addClass("bg_color");
+    scope.resourceManagementPageClick = function (value, pageButton, pageList) {//页面加载  1：药品页面 2：会议页面 3：视频页面
+        $(".resourceContent_nav li").removeClass("content_nav_onclick").addClass("bg_color");
         $(".resourceContent_nav li:nth-child(" + value + ")").addClass("content_nav_onclick").removeClass("bg_color");
         scope.resourceMangementPageHtml = pageButton;
         scope.resourceManagementList = pageList;
         if(value==1){
         	scope.searchKeyword="药品名称/分类名称";
-        	scope.resourceManagement_seach=function(){ResourceMangement_search(1);};
         }else if(value==2){
         	scope.searchKeyword="会议名称/科目名称";
-        	scope.resourceManagement_seach=function(){ResourceMangement_search(2);};
         }else if(value==3){
-        	scope.searchKeyword="视频名称/科目名称";
-        	scope.resourceManagement_seach=function(){ResourceMangement_search(3);};
+        	scope.searchKeyword="视频名称/科目名称";       	
         }
+        scope.resourceManagement_seach=function(){ResourceMangement_search(value);};
     };
     /*
     资源管理添加按钮------isAdd取值
@@ -50,6 +47,7 @@
     scope.addMeetingForm = "";
     scope.addVideoForm="";
     scope.resoure_add = function (isAdd) {
+    	var addParentUrl="modules/content/index_modules/add/";
         switch (isAdd) {
             case 0: {
                 scope.addDrugForm = "";
@@ -58,15 +56,15 @@
                 break;
             }
             case 1: { 
-            	scope.addDrugForm = 'modules/content/index_modules/add/resourceManagement_addDrugList.html'; 
+            	scope.addDrugForm =addParentUrl+ 'resourceManagement_addDrugList.html'; 
             	break; 
             }
             case 2: {
-                scope.addMeetingForm = 'modules/content/index_modules/add/resourceManagement_addMeeting.html';
+                scope.addMeetingForm =addParentUrl+ 'resourceManagement_addMeeting.html';
                 break;
             }
             case 3:{
-                scope.addVideoForm = 'modules/content/index_modules/add/resourceManagement_addVideo.html';
+                scope.addVideoForm = addParentUrl+'resourceManagement_addVideo.html';
                 break;
             }
         }
@@ -77,7 +75,7 @@ window.onresize = function () {
     $(".content_content_content").css({
         "height": window.innerHeight - 290 + "px"
     });
-}
+};
 function resize() {
     $("aside").css({
         "height": window.innerHeight - 55 + "px"
@@ -96,12 +94,5 @@ function resize() {
         $(".content_footer").css({
             "width": window.innerWidth - 280 + "px"
         });
-    }
-}
-function header_user_Click() {//header用户单击效果
-    if ($(".header_userFunction").css("display") == "block") {
-        $(".header_userFunction").css("display", "none");
-    } else {
-        $(".header_userFunction").css("display", "block");
     }
 }

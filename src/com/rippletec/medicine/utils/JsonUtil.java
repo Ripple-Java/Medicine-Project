@@ -165,7 +165,13 @@ public class JsonUtil {
     
     
     public String toJson(final String url) throws UtilException{
-	return toJson(url, jsonObjectMapTL.get());
+	try {
+	    return toJson(url, jsonObjectMapTL.get());
+	} catch (Exception e) {
+	    Logger.getLogger(getClass()).error("url: "+url+e.getMessage());
+	    return "";
+	}
+	
     }
   
     public String toJson(final String url, boolean ignored) throws UtilException{

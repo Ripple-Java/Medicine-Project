@@ -6,13 +6,14 @@ function loadingResourceManagement_drugList(pageSize, pageNum) {//加载药品�
     var drugFunction="";
     var drugType = "";
     $.ajax({
-    	url:"http://112.74.131.194:8080/MedicineProject/Web/enterprise/getMedicine",
+    	url:"http://localhost:8080/MedicineProject/Web/enterprise/getMedicine",
     	data:{
             pageSize: pageSize,
             page: pageNum
         }, 
         success:function (data,status) {
             if(data.result.trim()=="success"){
+            	if(data.BackGroundMedicineVOs!=null)
             	$.each(data.BackGroundMedicineVOs, function (times, result) {
                     checkbox = "<td><li value=\""+pageNum+"\"><input type=\"checkbox\" value=\""+result.id +"\" id=\"checkbox-" + result.id + "\" onclick=\"checkboxFunction(" + result.id + ");\" /><label for=\"checkbox-" + result.id + "\"></label></li></td>";
                     drugName = "<td>" + result.name + "</td>";
@@ -39,7 +40,7 @@ function addBusinessWestDrugButtonFunction() {//资源管理---药品列表---�
     });
     if (checkIsNull == 0) {
     	$.ajax({
-        	url:"http://112.74.131.194:8080/MedicineProject/Web/enterprise/addWestMedicine",
+        	url:"http://localhost:8080/MedicineProject/Web/enterprise/addWestMedicine",
         	data:{
         		name: $(".BusinessWestDrug_name").val(),
                 other_name: $(".BusinessWestDrug_othername").val(),
@@ -56,17 +57,7 @@ function addBusinessWestDrugButtonFunction() {//资源管理---药品列表---�
                 medicineId: $("#forth").val()
             }, 
             success:function (data,status) {
-            	maxPage=getCount(1);
-        		if(maxPage%8!=0){maxPage=parseInt(maxPage/8)+1;}
-        		else (maxPage==0)?maxPage=1:maxPage=maxPage/8;
-        		$("#Pagination").pagination(maxPage, {
-    	        num_edge_entries: 0, //边缘页数
-    	        num_display_entries: 4, //主体页数
-    	        callback: pageselectCallback,//回调函数
-    	        items_per_page:1, //每页显示1项
-    	        ellipse_text: "",
-    	        current_page:$(".drugList input").first().parent().val()-1
-    	    });	
+            	addGetpage(1);
                alert("添加药品成功！");
                $(".bg").click();
             },
@@ -100,11 +91,10 @@ function allSelect(which){//1：全选；2：取消全选
 	});
 }
 function deleteDrug(){//which default:删除但是页表下药品 ，-1：删除搜索下药品
-	var maxPage=0;
 	$.each($(".drugList :checkbox "),function(times,result){
 		if($(result).is(':checked')){
 			$.ajax({
-		    	url:"http://112.74.131.194:8080/MedicineProject/Web/enterprise/deleteMedicine",
+		    	url:"http://localhost:8080/MedicineProject/Web/enterprise/deleteMedicine",
 		    	data:{
 		            id:$(result).val(),
 		            type: 4
@@ -118,19 +108,7 @@ function deleteDrug(){//which default:删除但是页表下药品 ，-1：删除
 		        		
 		        	}
 		        	default:{
-		        		maxPage=getCount(1);
-		        		if(maxPage%8!=0){maxPage=parseInt(maxPage/8)+1;}
-		        		else (maxPage==0)?maxPage=1:maxPage=maxPage/8;
-		        		currentPage=$(result).parent().val()-1;
-		        		if(maxPage==currentPage) currentPage--;
-		        		$("#Pagination").pagination(maxPage, {
-	        	        num_edge_entries: 0, //边缘页数
-	        	        num_display_entries: 4, //主体页数
-	        	        callback: pageselectCallback,//回调函数
-	        	        items_per_page:1, //每页显示1项
-	        	        ellipse_text: "",
-	        	        current_page:currentPage
-	        	    });	
+		        		addGetpage(1);	
 	        		break;}
 		        	}		        	
 		        	else     alert("删除失败！");    
@@ -152,13 +130,14 @@ function loadingResourceManagement_meetingList(page, size) {//加载会议列表
     var Times="";
     var Function="";   
     $.ajax({
-    	url:"http://112.74.131.194:8080/MedicineProject/Web/enterprise/getMeeting",
+    	url:"http://localhost:8080/MedicineProject/Web/enterprise/getMeeting",
     	data:{
             page:page,
             pageSize: size
         }, 
         success:function (data,status) {
            if(data.result=="success"){
+        	   if(data.Meetings!=null)
             	$.each(data.Meetings, function (times, result) {
                     checkbox = "<td><li value=\""+page+"\"><input type=\"checkbox\" value=\""+result.id +"\" id=\"checkbox-" + result.id + "\" onclick=\"checkboxFunction(" + result.id + ");\" /><label for=\"checkbox-" + result.id + "\"></label></li></td>";
                     Name = "<td><a href=\""+result.pageUrl+"\">" + result.name + "</a></td>";
@@ -180,12 +159,10 @@ function loadingResourceManagement_meetingList(page, size) {//加载会议列表
 }
 
 function deleteMeeting(){//which default:删除但是页表下会议 ，-1：删除搜索下会议
-	var maxPage=0;
-	var currentPage=0;
 	$.each($(".meetingList_tbody :checkbox "),function(times,result){
 		if($(result).is(':checked')){
 			$.ajax({
-		    	url:"http://112.74.131.194:8080/MedicineProject/Web/enterprise/deleteMeeting",
+		    	url:"http://localhost:8080/MedicineProject/Web/enterprise/deleteMeeting",
 		    	data:{
 		            id:$(result).val()
 		        }, 
@@ -198,19 +175,7 @@ function deleteMeeting(){//which default:删除但是页表下会议 ，-1：删
 		        		
 		        	}
 		        	default:{
-		        		maxPage=getCount(2);
-		        		if(maxPage%8!=0){maxPage=parseInt(maxPage/8)+1;}
-		        		else (maxPage==0)?maxPage=1:maxPage=maxPage/8;
-		        		currentPage=$(result).parent().val()-1;
-		        		if(maxPage==currentPage) currentPage--;
-		        		$("#Pagination").pagination(maxPage, {
-	        	        num_edge_entries: 0, //边缘页数
-	        	        num_display_entries: 4, //主体页数
-	        	        callback: pageselectCallback,//回调函数
-	        	        items_per_page:1, //每页显示1项
-	        	        ellipse_text: "",
-	        	        current_page:currentPage
-	        	    });	
+		        		addGetpage(2);
 	        		break;}
 		        	}		        	
 		        	else     alert("删除失败！");    
@@ -232,13 +197,14 @@ function loadingResourceManagement_videoList(page, size) {//加载视频列表
     var Times="";
     var Function="";   
     $.ajax({
-    	url:"http://112.74.131.194:8080/MedicineProject/Web/enterprise/video/get",
+    	url:"http://localhost:8080/MedicineProject/Web/enterprise/video/get",
     	data:{
             page:page,
             pageSize: size
         }, 
         success:function (data,status) {
            if(data.result.trim()=="success"){
+        	   if(data.Videos!=null)
             	$.each(data.Videos, function (times, result) {
                     checkbox = "<td><li value=\""+page+"\"><input type=\"checkbox\" value=\""+result.id +"\" id=\"checkbox-" + result.id + "\" onclick=\"checkboxFunction(" + result.id + ");\" /><label for=\"checkbox-" + result.id + "\"></label></li></td>";
                     Name = "<td><a href=\""+result.pageUrl+"\">" + result.name + "</a></td>";
@@ -259,12 +225,10 @@ function loadingResourceManagement_videoList(page, size) {//加载视频列表
         });
 }
 function deleteVideo(){//which default:删除但是页表下会议 ，-1：删除搜索下会议
-	var maxPage=0;
-	var currentPage=0;
 	$.each($(".videoList_tbody :checkbox "),function(times,result){
 		if($(result).is(':checked')){
 			$.ajax({
-		    	url:"http://112.74.131.194:8080/MedicineProject/Web/enterprise/video/delete",
+		    	url:"http://localhost:8080/MedicineProject/Web/enterprise/video/delete",
 		    	data:{
 		            id:$(result).val()
 		        }, 
@@ -277,19 +241,7 @@ function deleteVideo(){//which default:删除但是页表下会议 ，-1：删�
 		        		
 		        	}
 		        	default:{
-		        		maxPage=getCount(3);
-		        		if(maxPage%8!=0){maxPage=parseInt(maxPage/8)+1;}
-		        		else (maxPage==0)?maxPage=1:maxPage=maxPage/8;
-		        		currentPage=$(result).parent().val()-1;
-		        		if(maxPage==currentPage) currentPage--;
-		        		$("#Pagination").pagination(maxPage, {
-	        	        num_edge_entries: 0, //边缘页数
-	        	        num_display_entries: 4, //主体页数
-	        	        callback: pageselectCallback,//回调函数
-	        	        items_per_page:1, //每页显示1项
-	        	        ellipse_text: "",
-	        	        current_page:currentPage
-	        	    });	
+		        		addGetpage(3);
 	        		break;}
 		        	}		        	
 		        	else     alert("删除失败！");    
@@ -314,9 +266,9 @@ function ResourceMangement_search(which){//1搜索药品；2搜索会议；3搜�
     var Type = "";
     var Subject = "";
 	switch(which){
-	case 1:url="http://112.74.131.194:8080/MedicineProject/Web/enterprise/searchMedicine";whichList_tbody=".drugList";break;
-	case 2:url="http://112.74.131.194:8080/MedicineProject/Web/enterprise/searchMeeting";whichList_tbody=".meetingList_tbody";break;
-	case 3:url="http://112.74.131.194:8080/MedicineProject/Web/enterprise/video/search";whichList_tbody=".videoList_tbody";break;
+	case 1:url="http://localhost:8080/MedicineProject/Web/enterprise/searchMedicine";whichList_tbody=".drugList";break;
+	case 2:url="http://localhost:8080/MedicineProject/Web/enterprise/searchMeeting";whichList_tbody=".meetingList_tbody";break;
+	case 3:url="http://localhost:8080/MedicineProject/Web/enterprise/video/search";whichList_tbody=".videoList_tbody";break;
 	}
 	$.ajax({
     	url:url,
@@ -327,6 +279,7 @@ function ResourceMangement_search(which){//1搜索药品；2搜索会议；3搜�
             if(data.result.trim()=="success"){
             	switch(which){
             	case 1:{
+            		if(data.nameResult!=null)
             		$.each(data.nameResult, function (times, result) {
                         checkbox = "<td><li value=\"-1\"><input type=\"checkbox\" value=\""+result.id +"\" id=\"checkbox-" + result.id + "\" onclick=\"checkboxFunction(" + result.id + ");\" /><label for=\"checkbox-" + result.id + "\"></label></li></td>";
                         Name = "<td>" + result.name + "</td>";
@@ -338,6 +291,7 @@ function ResourceMangement_search(which){//1搜索药品；2搜索会议；3搜�
             		break;
             	}
             	case 2:{
+            		if(data.nameResult!=null)
             		$.each(data.nameResult, function (times, result) {
                         checkbox = "<td><li value=\"-1\"><input type=\"checkbox\" value=\""+result.id +"\" id=\"checkbox-" + result.id + "\" onclick=\"checkboxFunction(" + result.id + ");\" /><label for=\"checkbox-" + result.id + "\"></label></li></td>";
                         Name = "<td><a href=\""+result.pageUrl+"\">" + result.name + "</a></td>";
@@ -349,6 +303,7 @@ function ResourceMangement_search(which){//1搜索药品；2搜索会议；3搜�
             		break;
             	}
             	case 3:{
+            		if(data.nameResult!=null)
             		$.each(data.nameResult, function (times, result) {
                         checkbox = "<td><li value=\"-1\"><input type=\"checkbox\" value=\""+result.id +"\" id=\"checkbox-" + result.id + "\" onclick=\"checkboxFunction(" + result.id + ");\" /><label for=\"checkbox-" + result.id + "\"></label></li></td>";
                         Name = "<td><a href=\""+result.pageUrl+"\">" + result.name + "</a></td>";
@@ -379,7 +334,7 @@ function addVideo(){//添加会议
     ($("#second").val()==null)?selectVal=$("#first").val():selectVal=$("#second").val();
     if (checkIsNull == 0) {
     	$.ajax({
-        	url:"http://112.74.131.194:8080/MedicineProject/Web/enterprise/video/add",
+        	url:"http://localhost:8080/MedicineProject/Web/enterprise/video/add",
         	data:{
         		name: $(".BusinessVideo_name").val(),
         		speaker: $(".BusinessVideo_speaker").val(),
@@ -388,19 +343,7 @@ function addVideo(){//添加会议
             }, 
             success:function (data,status) {
             	if(data.result.trim()=="success"){
-		        		maxPage=getCount(3);
-		        		if(maxPage%8!=0){maxPage=parseInt(maxPage/8)+1;}
-		        		else (maxPage==0)?maxPage=1:maxPage=maxPage/8;
-		        		currentPage=$(".videoList_tbody input").first().parent().val()-1;
-		        		if(maxPage==currentPage) currentPage--;
-		        		$("#Pagination").pagination(maxPage, {
-	        	        num_edge_entries: 0, //边缘页数
-	        	        num_display_entries: 4, //主体页数
-	        	        callback: pageselectCallback,//回调函数
-	        	        items_per_page:1, //每页显示1项
-	        	        ellipse_text: "",
-	        	        current_page:currentPage
-	        	    });		
+            		addGetpage(3);	
             		alert("添加视频成功！");
                     $(".bg").click();
             	}                   
@@ -423,7 +366,7 @@ function addMeeting(){//添加会议
     ($("#second").val()==null)?selectVal=$("#first").val():selectVal=$("#second").val();
     if (checkIsNull == 0) {
     	$.ajax({
-        	url:"http://112.74.131.194:8080/MedicineProject/Web/enterprise/addMeeting",
+        	url:"http://localhost:8080/MedicineProject/Web/enterprise/addMeeting",
         	data:{
         		name: $(".BusinessMeeting_name").val(),
         		speaker: $(".BusinessMeeting_speaker").val(),
@@ -434,19 +377,7 @@ function addMeeting(){//添加会议
             }, 
             success:function (data,status) {
             	if(data.result.trim()=="success"){
-            		maxPage=getCount(2);
-	        		if(maxPage%8!=0){maxPage=parseInt(maxPage/8)+1;}
-	        		else (maxPage==0)?maxPage=1:maxPage=maxPage/8;
-	        		currentPage=$(".meetingList_tbody input").first().parent().val()-1;
-	        		if(maxPage==currentPage) currentPage--;
-	        		$("#Pagination").pagination(maxPage, {
-        	        num_edge_entries: 0, //边缘页数
-        	        num_display_entries: 4, //主体页数
-        	        callback: pageselectCallback,//回调函数
-        	        items_per_page:1, //每页显示1项
-        	        ellipse_text: "",
-        	        current_page:currentPage
-        	    });	
+            		addGetpage(2);
             		alert("添加会议成功！");
                     $(".bg").click();
             	}                   
@@ -460,12 +391,34 @@ function addMeeting(){//添加会议
 	
 }
 
+function addGetpage(which_getCount){//1:drug 2:meeting 3:video
+	var currentPage=0;
+	var maxPage=0;
+	switch(which_getCount){
+	case 1:maxPage=getCount(1);currentPage=$(".drugList input").first().parent().val()-1;break;
+	case 2:maxPage=getCount(2);currentPage=$(".meetingList_tbody input").first().parent().val()-1;break;
+	case 3:maxPage=getCount(3);currentPage=$(".videoList_tbody input").first().parent().val()-1;break;
+	}
+	if(isNaN(currentPage)) currentPage=0;
+	if(maxPage%8!=0){maxPage=parseInt(maxPage/8)+1;}
+	else (maxPage==0)?maxPage=1:maxPage=maxPage/8;
+	if(maxPage==currentPage) currentPage--;
+	$("#Pagination").pagination(maxPage, {
+    num_edge_entries: 0, //边缘页数
+    num_display_entries: 4, //主体页数
+    callback: pageselectCallback,//回调函数
+    items_per_page:1, //每页显示1项
+    ellipse_text: "",
+    current_page:currentPage
+    });
+}
+
 function getSubject(){
 	var firstOption={};
 	var i=0;
 	var j=0;
 	$.ajax({
-    	url:"http://112.74.131.194:8080/MedicineProject/Web/user/getSubject",
+    	url:"http://localhost:8080/MedicineProject/Web/user/getSubject",
         success:function (data,status) {
             if(data.result.trim()=="success"){
             	$.each(data.first,function(times,result){
@@ -502,7 +455,7 @@ function getDrugType(){
 	var firstTimes=0;
 	var firstDefaultvalue=0;
 	$.ajax({
-    	url:"http://112.74.131.194:8080/MedicineProject/Web/user/getAllMedicineType",
+    	url:"http://localhost:8080/MedicineProject/Web/user/getAllMedicineType",
         success:function (data,status) {
             if(data.result.trim()=="success"){
             	$.each(data.first.superType, function (time1, superType) {
@@ -558,7 +511,7 @@ function getDrugType(){
 function getDrug(){
 	var option="";
 	$.ajax({
-    	url:"http://112.74.131.194:8080/MedicineProject/Web/user/medicine/name/get",
+    	url:"http://localhost:8080/MedicineProject/Web/user/medicine/name/get",
     	data:{
     		catagoryId: $("#third").val()
         }, 
@@ -585,7 +538,7 @@ function resoure_updateDrug(which){//修改企业西药_1
 	$(".content_content_function_add").click();
 	$(".updateBusinessWestDrugButtonFunction").empty().append("<button onclick=\"updateBusinessWestDrugButtonFunction();\" >保存</button>");
 	$.ajax({
-    	url:"http://112.74.131.194:8080/MedicineProject/Web/enterprise/EnterMedicine/get", 
+    	url:"http://localhost:8080/MedicineProject/Web/enterprise/EnterMedicine/get", 
     	data:{
     		id:which,
     		type:4
@@ -617,7 +570,7 @@ function updateBusinessWestDrugButtonFunction(){//修改企业西药_2
     });
     if (checkIsNull == 0) {
     	$.ajax({
-        	url:"http://112.74.131.194:8080/MedicineProject/Web/enterprise/WestMedicine/update",
+        	url:"http://localhost:8080/MedicineProject/Web/enterprise/WestMedicine/update",
         	data:{
         		name: $(".BusinessWestDrug_name").val(),
                 other_name: $(".BusinessWestDrug_othername").val(),
@@ -669,7 +622,7 @@ function resoure_updateMeeting(which){//修改会议_1
 	$(".saveID").val(which);
 	$(".content_content_function_add").click();
 	$.ajax({
-    	url:"http://112.74.131.194:8080/MedicineProject/Web/enterprise/getMeeting/detail", 
+    	url:"http://localhost:8080/MedicineProject/Web/enterprise/getMeeting/detail", 
     	data:{
     		id:which
     	},
@@ -695,7 +648,7 @@ function updateBusinessWestMeetingButtonFunction(){//修改会议_2
     ($("#second").val()==null)?selectVal=$("#first").val():selectVal=$("#second").val();
     if (checkIsNull == 0) {
     	$.ajax({
-        	url:"http://112.74.131.194:8080/MedicineProject/Web/enterprise/updateMeeting",
+        	url:"http://localhost:8080/MedicineProject/Web/enterprise/updateMeeting",
         	data:{
         		name: $(".BusinessMeeting_name").val(),
         		speaker: $(".BusinessMeeting_speaker").val(),
@@ -740,7 +693,7 @@ function resoure_updateVideo(which){//修改视频_1
 	$(".saveID").val(which);
 	$(".content_content_function_add").click();
 	$.ajax({
-    	url:"http://112.74.131.194:8080/MedicineProject/Web/enterprise/video/get/detail", 
+    	url:"http://localhost:8080/MedicineProject/Web/enterprise/video/get/detail", 
     	data:{
     		id:which
     	},
@@ -764,7 +717,7 @@ function updateBusinessWestVideoButtonFunction(){//修改视频_2
     ($("#second").val()==null)?selectVal=$("#first").val():selectVal=$("#second").val();
     if (checkIsNull == 0) {
     	$.ajax({
-        	url:"http://112.74.131.194:8080/MedicineProject/Web/enterprise/video/update",
+        	url:"http://localhost:8080/MedicineProject/Web/enterprise/video/update",
         	data:{
         		name: $(".BusinessVideo_name").val(),
         		speaker: $(".BusinessVideo_speaker").val(),

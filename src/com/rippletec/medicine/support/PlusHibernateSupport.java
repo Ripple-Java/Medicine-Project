@@ -90,26 +90,6 @@ public class PlusHibernateSupport<T> extends HibernateDaoSupport{
       }
     
     @SuppressWarnings({ "unchecked", "deprecation" })
-    public List<T> findBySql(final Class<T> enityClass, final String sql,final Object value) throws DaoException {
-	List<T> items = getHibernateTemplate().executeFind(new HibernateCallback<List<T>>() {
-
-	    @Override
-	    public List<T> doInHibernate(Session session)
-		    throws HibernateException, SQLException {
-		Query q = session.createSQLQuery(sql).addEntity(enityClass);
-		q.setParameter(0, value);
-		List<T> result = q.list();
-		return result;
-	    }
-	    
-	});
-	if(items == null || items.size() <1){
-	    throw new DaoException(ErrorCode.DB_NO_ENITY_ERROR);
-	}
-	return items;
-      }
-    
-    @SuppressWarnings({ "unchecked", "deprecation" })
     public List<T> findBySql(final Class<T> enityClass, final String sql,final Object value, final int offset, final int pageSize) throws DaoException {
 	if(offset < 0 || pageSize < 0){
 	    throw new DaoException(ErrorCode.PARAM_ERROR);
@@ -146,6 +126,31 @@ public class PlusHibernateSupport<T> extends HibernateDaoSupport{
 		}
 		List<T> result = q.list();
 		return result;
+	    }
+	    
+	});
+	if(items == null || items.size() <1){
+	    throw new DaoException(ErrorCode.DB_NO_ENITY_ERROR);
+	}
+	return items;
+      }
+    
+    @SuppressWarnings({ "unchecked", "deprecation" })
+    public List<T> findBySql(final Class<T> enityClass, final String sql, final String[] params,final Object[] values, final int offset, final int pageSize) throws DaoException {
+	List<T> items = getHibernateTemplate().executeFind(new HibernateCallback<List<T>>() {
+
+	    @Override
+	    public List<T> doInHibernate(Session session)
+		    throws HibernateException, SQLException {
+		Query q = session.createSQLQuery(sql).addEntity(enityClass);
+		for (int i = 0; i < params.length; i++) {
+		    q.setParameter(i, values[i]);
+		}
+		if(offset == 0 && pageSize == 0){
+		    return q.list();
+		}else {
+		    return q.setFirstResult(offset).setMaxResults(pageSize).list();
+		}
 	    }
 	    
 	});

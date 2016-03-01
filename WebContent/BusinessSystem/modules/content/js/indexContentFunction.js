@@ -14,7 +14,7 @@ function checkboxFunction(id) {
 function getCount(times){
 	var maxPage=0;
 	$.ajax({
-		url:"http://112.74.131.194:8080/MedicineProject/Web/enterprise/getCount",
+		url:"http://localhost:8080/MedicineProject/Web/enterprise/getCount",
 		type:"GET",
 		data:{
 			type:times

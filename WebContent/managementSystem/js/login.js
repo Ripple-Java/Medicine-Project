@@ -5,7 +5,7 @@
         if ($('.loginBox_user').val().trim() != "" && $('.loginBox_password').val().trim() != "")
             $.ajax({
                 type: "POST",
-                url: 'http://112.74.131.194:8080/MedicineProject/Web/adminuser/login',
+                url: 'http://localhost:8080/MedicineProject/Web/adminuser/login',
                 data:{
                     account: $('.loginBox_user').val(),
                     password: $('.loginBox_password').val()

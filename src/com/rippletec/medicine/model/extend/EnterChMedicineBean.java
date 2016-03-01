@@ -22,11 +22,14 @@ public class EnterChMedicineBean extends EnterChineseMedicine{
 		medicine.getContent(), medicine.getEfficacy(), medicine.getAnnouce(), medicine.getPreparations(), medicine.getManual(),
 		medicine.getStore(), medicine.getCategory(), medicine.getPrice(), medicine.getStatus(), medicine.getSortKey(), medicine.getUpdateTime());
 	this.chinese_medicineId = medicine.getChineseMedicine().getId();
+	this.other_name = medicine.getSortKey();
     }
 
 
 
     public int chinese_medicineId;
+    
+    public String other_name;
     
 
 }

@@ -52,6 +52,7 @@ import com.rippletec.medicine.model.User;
 import com.rippletec.medicine.model.UserFavorite;
 import com.rippletec.medicine.model.Video;
 import com.rippletec.medicine.model.WestMedicine;
+import com.rippletec.medicine.model.extend.EnterChMedicineBean;
 import com.rippletec.medicine.model.extend.MeetingBean;
 import com.rippletec.medicine.service.DBLoger;
 import com.rippletec.medicine.utils.ErrorCode;
@@ -106,9 +107,13 @@ public class AppController extends BaseController {
     @RequestMapping(value = "/user/addFavorite", method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
     public String user_addUserFavorite(HttpSession session,UserFavorite userFavorite) throws DaoException, ControllerException, ServiceException{
-    	String account= getAccount(session);
-    	userFavoriteManager.addUserFavorite(account, userFavorite);
-    	return jsonUtil.setSuccessRes().toJson();
+    	User user = userManager.findByAccount(getAccount(session));
+	if(userFavoriteManager.isExist(userFavorite.getType(), userFavorite.getObjectId(), user)){
+	    return jsonUtil.setFailRes(ErrorCode.FAVORITE_EXIST_ERROR).toJson();
+	}
+    	int id = 0;
+    	id = userFavoriteManager.addUserFavorite(user.getAccount(), userFavorite);
+    	return jsonUtil.setSuccessRes().setObject("id", id).toJson();
     }
     
     @RequestMapping(value = "/user/deleteFavorite", method = RequestMethod.POST,produces="application/json;charset=UTF-8")
@@ -133,8 +138,9 @@ public class AppController extends BaseController {
     @ResponseBody
     public String user_addFeedBackMass(HttpSession httpSession,FeedBackMass feedBackMass) throws DaoException, ControllerException{
     	String account = getAccount(httpSession);
-    	feedBackMassManager.addFeedBackMass(feedBackMass, account);
-    	return jsonUtil.setSuccessRes().toJson();
+    	int id = 0;
+    	id = feedBackMassManager.addFeedBackMass(feedBackMass, account);
+    	return jsonUtil.setSuccessRes().setObject("id", id).toJson();
     }
     
     @RequestMapping(value = "/res/getAllSearch", method = RequestMethod.POST,produces="application/json;charset=UTF-8")
@@ -348,7 +354,9 @@ public class AppController extends BaseController {
 	if(device != 0 && device != 1 && device!=2){
 	    return jsonUtil.setFailRes(ErrorCode.PARAM_ERROR).toJson();
 	}
-	
+	if(userManager.isLogined(httpSession)){
+	    userManager.loginOut(account, httpSession);
+	}
 	userManager.appUserLogin(account, password, device, deviceId,httpSession);
 	return jsonUtil.setSuccessRes().setObject("sessionid", httpSession.getId()).toJson();
     }
@@ -551,12 +559,12 @@ public class AppController extends BaseController {
     
     @RequestMapping(value = "/user/getMeetings", method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
-    public String user_getMeetings(int id) throws DaoException, UtilException {
+    public String user_getMeetings(int id,int currentPage, int pageSize) throws DaoException, UtilException {
 	Map<String, Object> paramMap = new HashMap<String, Object>();
 	paramMap.put(Meeting.ENTERPRISE_ID, id);
 	paramMap.put(Meeting.STATUS, Meeting.ON_PUBLISTH);
 	Map<String, String> logoCache = new HashMap<String, String>();
-	List<Meeting> meetings = meetingManager.findBySql(Meeting.TABLE_NAME, paramMap);
+	List<Meeting> meetings = meetingManager.findBySql(Meeting.TABLE_NAME, paramMap, new PageBean(currentPage, 0, pageSize));
 	List<MeetingBean> meetingBeans = new LinkedList<MeetingBean>();
 	for (Meeting meeting : meetings) {
 	    meetingBeans.add(new MeetingBean(meeting, logoCache));
@@ -593,11 +601,11 @@ public class AppController extends BaseController {
     
     @RequestMapping(value = "/user/getVideoes", method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
-    public String user_getVideoes(int id) throws DaoException, UtilException {
+    public String user_getVideoes(int id, int currentPage, int pageSize) throws DaoException, UtilException {
 	Map<String, Object> paramMap = new HashMap<String, Object>();
 	paramMap.put(Video.ENTERPRISE_ID, id);
 	paramMap.put(Video.STATUS, Meeting.ON_PUBLISTH);
-	List<Video> videos = videoManager.findBySql(Video.TABLE_NAME, paramMap);
+	List<Video> videos = videoManager.findBySql(Video.TABLE_NAME, paramMap, new PageBean(currentPage, 0, pageSize));
 	return jsonUtil.setSuccessRes().setModels(videos).toJson("/user/getVideoes"); 
     }
     
@@ -613,7 +621,7 @@ public class AppController extends BaseController {
     @RequestMapping(value = "/user/getEnterTypes", method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
     public String user_getEnterTypes( int enterpriseId, int type) throws DaoException  {
-	if(type != EnterpriseMedicineType.CHINESE && type != EnterpriseMedicineType.WEST){
+	if(type != Medicine.ENTER_CHINESE && type != Medicine.ENTER_WEST){
 	    return ParamError();
 	}
 	List<EnterpriseMedicineType> enterpriseMedicineTypes = enterpriseMedicineTypeManager.getTypes(enterpriseId, type);
@@ -632,9 +640,9 @@ public class AppController extends BaseController {
     @ResponseBody
     public String user_getEnterMedicineList( int enterpriseId, int medicineTypeId) throws UtilException, DaoException {
 	MedicineType medicineType = medicineTypeManager.find(medicineTypeId);
+	List<BaseModel> models = new ArrayList<BaseModel>();
 	if(!medicineType.getFlag()){
 	    	List<MedicineType> allTypes = medicineTypeManager.getAllChild(medicineType);
-	    	List<BaseModel> models = new ArrayList<BaseModel>();
             	Map<String, Object> paramMap = new HashMap<String, Object>();
 	    for (MedicineType allType : allTypes) {
 		paramMap.put(EnterChineseMedicine.MEDICINE_TYPE_ID,allType.getId());
@@ -647,12 +655,12 @@ public class AppController extends BaseController {
 		    } catch (DaoException e) {}
 		} else if (medicineType.getGib_type() == EnterpriseMedicineType.CHINESE) {
 		    try {
-			models.addAll(enterChineseMedicineManager.findBySql(EnterChineseMedicine.TABLE_NAME,paramMap));
+			List<EnterChineseMedicine> enterpriseMedicines = enterChineseMedicineManager.findBySql(EnterChineseMedicine.TABLE_NAME,paramMap);
+			for (EnterChineseMedicine enterChineseMedicine : enterpriseMedicines) {
+			    models.add(new EnterChMedicineBean(enterChineseMedicine));
+			}
 		    } catch (DaoException e) {}
 		}
-	    }
-	    if(StringUtil.isEmpty(models)){
-		return jsonUtil.setFailRes(ErrorCode.DB_NO_ENITY_ERROR).toJson();
 	    }
             return jsonUtil.setSuccessRes().setModels(models).toJson("/user/getEnterMedicines");
 	}
@@ -660,17 +668,19 @@ public class AppController extends BaseController {
 	paramMap.put(EnterChineseMedicine.MEDICINE_TYPE_ID,medicineTypeId);
 	paramMap.put(EnterChineseMedicine.ENTERPRISE_ID, enterpriseId);
 	paramMap.put(EnterChineseMedicine.STATUS, EnterChineseMedicine.ON_PUBLISTH);
-	List models;
 	if (medicineType.getGib_type() == EnterpriseMedicineType.WEST) {
 	    try {
-		models = enterWestMedicineManager.findBySql(EnterWestMedicine.TABLE_NAME, paramMap);
+		models.addAll(enterWestMedicineManager.findBySql(EnterWestMedicine.TABLE_NAME, paramMap));
 	    } catch (DaoException e) {
 		models = null;
 	    }
 	} 
 	else{
 	    try {
-		models = enterChineseMedicineManager.findBySql(EnterChineseMedicine.TABLE_NAME,paramMap);
+		List<EnterChineseMedicine> enterpriseMedicines = enterChineseMedicineManager.findBySql(EnterChineseMedicine.TABLE_NAME,paramMap);
+		for (EnterChineseMedicine enterChineseMedicine : enterpriseMedicines) {
+		    models.add(new EnterChMedicineBean(enterChineseMedicine));
+		}
 	    } catch (DaoException e) {
 		models = null;
 	    }

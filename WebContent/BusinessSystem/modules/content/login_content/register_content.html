@@ -1,4 +1,5 @@
 ﻿<div class="register_page1 box_shawdow border" ng-controller="register">
+    <em><a class="goback" onclick="gotoAnotherPage(0);"><img src="images/goback.png" /></a></em>
 	<div class="register_page1_header">
 		<em>企业管理 | 企业注册</em>
 	</div>
@@ -22,14 +23,14 @@
 						<em>营业执照扫描件：</em>
 					</p>
 					<p class="message">请上传营业执照清晰彩色原件扫描件或数码照，在有效期内且年检章齐全（当年成立的可无年检章），由中国大陆工商局或市场监督管理局颁发。</p>
-					<p class="message">支持.jpg .jpeg .bmp .gif格式照片，大小不超过2M。</p>
+					<p class="message">支持.jpg .jpeg .bmp .png格式照片，大小不超过2M。</p>
 					<p class="img_uploadImg">
 						<img src="images/img_uploadImg.png" />
 					</p>
 					<p class="button_uploadImg">
 						<input class="uploadImgButton border" type="button" value="上传图片" />
 						<input class="uploadImgButton border " id="file" type="file"
-							name="img" onchange="registerUploadImgButtonFunction();" />
+							name="img" onchange="registerUploadImgButtonFunction(this);" />
 					</p>
 				</li>
 			</ul>
@@ -43,6 +44,7 @@
 	</form>
 </div>
 <div class="register_page2 box_shawdow">
+    <em><a class="goback" onclick="gotoAnotherPage(4);"><img src="images/goback.png" /></a></em>
 	<div class="register_page2_header">
 		<em>企业管理 | 企业注册</em>
 	</div>
@@ -64,7 +66,7 @@
 		<div class="register_page2_footer">
 			<button class="register_page2_footer_completeButton">完成</button>
 			<input class="register_page2_footer_cancleButton" type="button"
-				value="取消" />
+				value="取消" onclick="gotoAnotherPage(0);"/>
 		</div>
 	</form>
 </div>

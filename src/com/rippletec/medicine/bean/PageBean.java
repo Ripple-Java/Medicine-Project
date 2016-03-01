@@ -39,7 +39,11 @@ public class PageBean {
     public PageBean(int currentPage, int offset,int pageSize) {
 	super();
 	this.currentPage = currentPage;
-	this.offset = offset + (currentPage-1)*pageSize;
+	if(currentPage == 0){
+	    this.offset = 0;
+	}else {
+	    this.offset = offset + (currentPage-1)*pageSize;	    
+	}
 	this.pageSize = pageSize;
 	this.nextPage = currentPage+1;
 	this.lastPage = currentPage-1;

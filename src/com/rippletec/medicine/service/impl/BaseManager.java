@@ -65,6 +65,11 @@ public abstract class BaseManager<T> implements IManager<T> {
     public List<T> findBySql(String tableName, Map<String, Object> paramMap) throws DaoException {
 	return getDao().findBySql(tableName, paramMap);
     }
+    
+    @Override
+    public List<T> findBySql(String tableName, Map<String, Object> paramMap, PageBean pageBean) throws DaoException {
+	return getDao().findBySql(tableName, paramMap, pageBean);
+    }
 
     @Override
     public List<T> findBySql(String tableName, String param, Object value) throws DaoException {

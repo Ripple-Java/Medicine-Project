@@ -7,7 +7,7 @@ function loadingfeedBackManagement_feedbackList(page, size) {//加载用户列�
     var LastLogin="";
     var Content=""; 
     $.ajax({
-    	url:"http://112.74.131.194:8080/MedicineProject/Web/admin/feedback/get",
+    	url:"http://localhost:8080/MedicineProject/Web/admin/feedback/get",
     	data:{
             page:page,
             pageSize: size
@@ -40,7 +40,7 @@ function reduceFeedback(){
 	$.each($(".feedbackList_tobody :checkbox "),function(times,result){
 		if($(result).is(':checked')){
 			$.ajax({
-		    	url:"http://112.74.131.194:8080/MedicineProject/Web/admin/deleteFeedBack",
+		    	url:"http://localhost:8080/MedicineProject/Web/admin/deleteFeedBack",
 		    	data:{
 		            id:$(result).val()
 		        }, 

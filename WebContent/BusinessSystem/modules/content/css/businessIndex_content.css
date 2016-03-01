@@ -75,6 +75,7 @@
 
 input[type=checkbox] {
 	display: none;
+    cursor:pointer;
 }
 
 td label {
@@ -189,7 +190,7 @@ td label {
 	border: 1px solid #e5e5e5;
 	width: 70px;
 }
-.content_content_function_all:hover {
+.content_content_function_all:hover,.content_content_function_notAll:hover {
 	background-color: #ffffff;
 }
 
@@ -423,6 +424,7 @@ td label {
 	background-color: #f8f8f8;
 	text-indent: 0px;
 	margin-left: 0.75em;
+    cursor:pointer;
 }
 
 .list_button li:first-child:hover {

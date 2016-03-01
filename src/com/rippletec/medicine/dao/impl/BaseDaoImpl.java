@@ -120,13 +120,21 @@ public abstract class BaseDaoImpl<T> extends PlusHibernateSupport<T> implements 
 	String[] params = paramMap.keySet().toArray(new String[]{});
 	Object[] values = paramMap.values().toArray();
 	String sql = StringUtil.getSelectSql(tableName, params);
-	return findBySql(getPersistClass(), sql, params, values);
+	return findBySql(getPersistClass(), sql, params, values, 0, 0);
+    }
+    
+    @Override
+    public List<T> findBySql(String tableName, Map<String, Object> paramMap, PageBean page) throws DaoException {
+	String[] params = paramMap.keySet().toArray(new String[]{});
+	Object[] values = paramMap.values().toArray();
+	String sql = StringUtil.getSelectSql(tableName, params);
+	return findBySql(getPersistClass(), sql, params, values, page.offset, page.pageSize);
     }
 
     @Override
     public List<T> findBySql(String tableName, String param, Object value) throws DaoException {
 	String sql = StringUtil.getSelectSql(tableName, param);
-	return findBySql(getPersistClass(),sql,value);
+	return findBySql(getPersistClass(),sql,value,0,0);
     }
 
     @Override
@@ -136,7 +144,7 @@ public abstract class BaseDaoImpl<T> extends PlusHibernateSupport<T> implements 
 	    return findByPage(page);
 	String sql = StringUtil.getSelectSql(tableName,param);
 	if(page == null)
-	    return findBySql(getPersistClass(), sql, value);
+	    return findBySql(getPersistClass(), sql, value, 0, 0);
 	return findBySql(getPersistClass(), sql, value, page.offset, page.pageSize);
     }
    

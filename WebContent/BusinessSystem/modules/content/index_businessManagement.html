@@ -22,11 +22,13 @@ getBusinessInformation();
 			<form class="uploadLogoForm" enctype="multipart/form-data">
 			<ul class="businessManagementContent_logo">
 				<li>企业LOGO</li>
-				<li class="businessManagementContent_logoImg"></li>
+				<li class="businessManagementContent_logoImg">
+				<img src="images/img_uploadImg.png" class="uploadLogo" />
+				</li>
 				<li class="businessManagementContent_logoImgSubmit">
 				<button class="businessManagementContent_logoImgSubmitButton">上传</button>
 				<input class="uploadImgButton  " id="file" type="file"
-							name="img" onchange="UploadLogoButtonFunction();" />
+							name="img" onchange="UploadLogoButtonFunction(this);" />
 				</li >
 			</ul>
 			</form>			

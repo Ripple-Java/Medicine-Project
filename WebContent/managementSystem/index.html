@@ -23,7 +23,7 @@
 <title>AdminIndex</title>
 </head>
 <body ng-app="doctor_app" ng-controller="my">
-	<header ng-include src="'modules/header/index_header.html'"></header>
+    <header ng-include src="'modules/header/index_header.html'" ng-app="doctor_app_header"></header>
 	<aside ng-include src="'modules/aside/index_aside.html'"></aside>
 	<div class="index_content">
 		<div ng-include src="pageContent"></div>

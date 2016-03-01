@@ -1,11 +1,14 @@
-﻿body {
+﻿/*common-style*/
+body {
 	overflow: hidden;
 	min-height: 450px;
 	cursor: default;
 }
-
+a,button,input[type=button],select,input[type=file]{
+    cursor:pointer;
+}
 .background_body {
-	background: url(../images/login_bg.gif) repeat;
+	background: url(../images/login_bg.png) repeat;
 	user-select: none;
 }
 

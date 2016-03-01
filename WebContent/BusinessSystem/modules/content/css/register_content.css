@@ -4,7 +4,7 @@
 	background-color: #ffffff;
 	margin: auto;
 	margin-top: 3em;
-	text-align: center;
+	
 }
 
 .register_page1_header {
@@ -13,6 +13,7 @@
 	color: #333333;
 	border-bottom: 1px #e5e5e5 dashed;
 	padding-bottom: 0.833em;
+    text-align: center;
 }
 
 .register_page1_content {
@@ -115,7 +116,7 @@
 	background-color: #ffffff;
 	margin: auto;
 	margin-top: 8em;
-	text-align: center;
+	
 	display: none;
 }
 
@@ -124,12 +125,14 @@
 	font-size: 1.3em;
 	color: #333333;
 	border-bottom: 1px #e5e5e5 dashed;
+    text-align: center;
 	padding-bottom: 0.833em;
 }
 
 .register_page2_content {
 	margin-top: 0.5em;
 	font-size: 1.2em;
+    text-align:center;
 }
 
 .register_page2_content li {
