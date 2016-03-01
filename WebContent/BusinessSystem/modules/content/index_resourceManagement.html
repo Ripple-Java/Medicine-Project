@@ -1,0 +1,42 @@
+﻿<section>
+	<header class="content_header">
+		<div>
+			<em class="iconfont content_content_icon1">&#xe605;</em> <em>首页</em>
+			<em>&gt;</em> <em class=" content_content_address">资源管理</em>
+		</div>
+	</header>
+	<div class="nav">
+		<nav class="resourceContent_nav">
+			<a>
+				<ul>
+					<li class="resourceContent_nav_drugList  content_nav_onclick"
+						ng-click="resourceManagementPageClick(1,'modules/content/index_modules/button/resourceManagement_drugListButton.html','modules/content/index_modules/list/resourceManagement_drugList.html')"><em>药品列表</em></li>
+					<li class="bg_color resourceContent_nav_meeting "
+						ng-click="resourceManagementPageClick(2,'modules/content/index_modules/button/resourceManagement_meetingListButton.html','modules/content/index_modules/list/resourceManagement_meetingList.html')"><em>会议列表</em></li>
+					<li class="resourceContent_nav_video bg_color"
+						ng-click="resourceManagementPageClick(3,'modules/content/index_modules/button/resourceManagement_videoListButton.html','modules/content/index_modules/list/resourceManagement_videoList.html')"><em>视频列表</em></li>
+					</ul>
+			</a>
+		</nav>
+		<div class="content_nav_search">
+			<input type="search" placeholder="{{searchKeyword}}"  />
+			<button ng-click="resourceManagement_seach()">
+				<em class="icon iconfont">&#xe645;</em>
+			</button>
+		</div>
+	</div>
+	<div class="content_content">
+		<div class="content_content_header" ng-include
+			src="resourceMangementPageHtml"></div>
+		<script>
+            $(".content_content_content").css({ "height": window.innerHeight - 290+ "px" });
+            $(".content_footer").css({ "width": window.innerWidth - 280 + "px" });
+        </script>
+		<div class="content_content_content" ng-include
+			src="resourceManagementList"></div>
+	</div>
+	<footer class="content_footer" ng-include
+		src="resourceMangementPageHtml"></footer>
+</section>
+
+

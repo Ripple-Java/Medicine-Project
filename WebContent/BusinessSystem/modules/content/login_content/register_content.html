@@ -1,0 +1,72 @@
+﻿<div class="register_page1 box_shawdow border" ng-controller="register">
+    <em><a class="goback" onclick="gotoAnotherPage(0);"><img src="images/goback.png" /></a></em>
+	<div class="register_page1_header">
+		<em>企业管理 | 企业注册</em>
+	</div>
+	<form class="registerImg" enctype="multipart/form-data">
+		<div class="register_page1_content">
+			<ul>
+				<li class="register_page1_content_businessName "><em>企业名称
+						(全称)：</em> <input type="text" placeholder="企业全称，仅支持中文、英文、数字，不支持特殊字符"
+					class="border" maxlength="26" required /></li>
+				<li class="register_page1_content_businessStyle "><em>企业
+						资本 类型 ：</em> <select class="border">
+						<option selected="selected" value="1">外资企业</option>
+						<option value="2">合资企业</option>
+						<option value="3">内资企业</option>
+				</select></li>
+				<li class="register_page1_content_businessRegisterNumber "><em>营业执照注册号：</em>
+					<input type="text" placeholder="仅支持数字" class="border"
+					maxlength="26" required /></li>
+				<li class="register_page1_content_business border">
+					<p class="register_page1_content_businessRegisterImg">
+						<em>营业执照扫描件：</em>
+					</p>
+					<p class="message">请上传营业执照清晰彩色原件扫描件或数码照，在有效期内且年检章齐全（当年成立的可无年检章），由中国大陆工商局或市场监督管理局颁发。</p>
+					<p class="message">支持.jpg .jpeg .bmp .png格式照片，大小不超过2M。</p>
+					<p class="img_uploadImg">
+						<img src="images/img_uploadImg.png" />
+					</p>
+					<p class="button_uploadImg">
+						<input class="uploadImgButton border" type="button" value="上传图片" />
+						<input class="uploadImgButton border " id="file" type="file"
+							name="img" onchange="registerUploadImgButtonFunction(this);" />
+					</p>
+				</li>
+			</ul>
+		</div>
+		<div class="register_page1_footer">
+			<button class="register_page1_footer_next "
+				onclick="registerNextButton();">下一步</button>
+			<input type="button" class="register_page1_footer_reset " value="重置"
+				onclick="registerResetButton();" />
+		</div>
+	</form>
+</div>
+<div class="register_page2 box_shawdow">
+    <em><a class="goback" onclick="gotoAnotherPage(4);"><img src="images/goback.png" /></a></em>
+	<div class="register_page2_header">
+		<em>企业管理 | 企业注册</em>
+	</div>
+	<form>
+		<div class="register_page2_content">
+			<ul>
+				<li><em>登 录 邮 箱 ：</em> <input type="email"
+					class="register_page2_content_loginMail border"
+					placeholder="邮箱格式：xxx@xxx.xxx" maxlength="24" required /></li>
+				<li><em>登 录 密 码 ：</em> <input type="password"
+					class="register_page2_content_loginPassword border"
+					placeholder="支持英文、数字以及特殊文字符" maxlength="24" required /></li>
+				<li><em>重 复 密 码 ：</em> <input type="password"
+					placeholder="请重复输入登录密码"
+					class="register_page2_content_repeatPassword border" maxlength="24"
+					required /></li>
+			</ul>
+		</div>
+		<div class="register_page2_footer">
+			<button class="register_page2_footer_completeButton">完成</button>
+			<input class="register_page2_footer_cancleButton" type="button"
+				value="取消" onclick="gotoAnotherPage(0);"/>
+		</div>
+	</form>
+</div>

@@ -4,24 +4,97 @@
 	xmlns:p="http://www.springframework.org/schema/p"
 	xmlns:mvc="http://www.springframework.org/schema/mvc" 
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans  
       http://www.springframework.org/schema/beans/spring-beans-3.2.xsd  
       http://www.springframework.org/schema/context  
       http://www.springframework.org/schema/context/spring-context-3.2.xsd  
       http://www.springframework.org/schema/mvc  
-      http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd">
+      http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+      http://www.springframework.org/schema/aop
+	  http://www.springframework.org/schema/aop/spring-aop-3.2.xsd">
 
 	<!-- 注解扫描包 -->
-	<context:component-scan base-package="com.rippletec.medicine.controller" />
-
-	<!-- 开启MVC注解,表示SpringMVC支持注解功能 做了很多事情，不包括添加自己定义的拦截器 -->
-	<mvc:annotation-driven />
+	<context:component-scan base-package="com.rippletec.medicine.controller"/>
+	<!-- 引入属性文件 -->
+	<context:property-placeholder location="classpath:config.properties" />
 	
-	<!-- 静态资源映射 (可选)-->
+
+	<!-- 以下 validator ConversionService 在使用 mvc:annotation-driven 会 自动注册 -->
+	<bean id="validator"
+		class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+		<property name="providerClass" value="org.hibernate.validator.HibernateValidator" />
+		<!-- 如果不加默认到 使用classpath下的 ValidationMessages.properties -->
+		<property name="validationMessageSource" ref="messageSource" />
+	</bean>
+	<!-- ①注册ConversionService -->  
+	<bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean"/>  
+
+	<!-- 通过ConfigurableWebBindingInitializer注册validator： -->
+	<bean id="webBindingInitializer"
+		class="org.springframework.web.bind.support.ConfigurableWebBindingInitializer">
+		<property name="conversionService" ref="conversionService" />
+		<property name="validator" ref="validator" />
+	</bean>
+
+	<bean id="messageSource"
+		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="basename" value="classpath:messages" />
+		<property name="fileEncodings" value="utf-8" />
+		<property name="cacheSeconds" value="120" />
+	</bean>
+
+	<mvc:annotation-driven>
+		<mvc:message-converters register-defaults="true"> 
+	        <bean class="com.rippletec.medicine.support.UTF8StringHttpMessageConverter"/> 
+	    </mvc:message-converters> 
+	</mvc:annotation-driven>
+
+	<!-- SpringMVC上传文件时，需要配置MultipartResolver处理器 -->
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="defaultEncoding" value="utf-8" />
+		<property name="maxUploadSize" value="10485760000" />
+		<property name="maxInMemorySize" value="40960" />
+	</bean>
+
+	<!-- 静态资源映射 (可选) -->
 	<mvc:resources mapping="/images/**" location="/images/" />
 	<mvc:resources mapping="/css/**" location="/css/" />
 	<mvc:resources mapping="/js/**" location="/js/" />
 	<mvc:resources mapping="/html/**" location="/html/" />
+	<mvc:resources mapping="/BusinessSystem/**" location="/BusinessSystem/" />
+	<mvc:resources mapping="/managementSystem/**" location="/managementSystem/" />
+	<mvc:resources mapping="/pptshow/**" location="/pptshow/" />
+	<mvc:resources mapping="/SharePage/**" location="/SharePage/" />
+	<mvc:resources mapping="/portrait/**" location="/portrait/" />
+	<mvc:resources mapping="/enterprise/**" location="/enterprise/" />
+	<mvc:resources mapping="/video/**" location="/video/" />
+	<mvc:resources mapping="/download/**" location="/download/" />
 	
+	
+	<mvc:interceptors>
+		<mvc:interceptor>
+		<mvc:mapping path="/App/user/**"/>
+		<bean class="com.rippletec.medicine.Interceptor.AuthorityInterceptor">
+			<property name="type" value="0"></property>
+		</bean>
+		</mvc:interceptor>
+		
+		<mvc:interceptor>
+		<mvc:mapping path="/Web/enterprise/**"/>
+		<bean class="com.rippletec.medicine.Interceptor.AuthorityInterceptor">
+			<property name="type" value="3"></property>
+		</bean>
+		</mvc:interceptor>
+		
+		<mvc:interceptor>
+		<mvc:mapping path="/Web/admin/**"/>
+		<bean class="com.rippletec.medicine.Interceptor.AuthorityInterceptor">
+			<property name="type" value="4"></property>
+		</bean>
+		</mvc:interceptor>
+	</mvc:interceptors>
+
 
 </beans>

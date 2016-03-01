@@ -1,0 +1,94 @@
+<script>
+$(document).ready(function(){getDrugType();getCommonChinaDrugMessage(1);});
+</script>
+<div class="bg"  onclick="updateDrug(-1);"></div>
+<div class="updateDrug">
+<div class="updateCommonChinaDrug">
+		<form>
+			<ul>
+				<li><label>通用中药添加</label></li>
+                <li class="drugType_select">
+                    <p><label>药品分类：</label></p>
+                    <p class="drugTypeAllSelect updateCommonChinaDrugType "><select id="first" size="1"></select> - <select id="second"></select> - <select id="third"></select> - <select id="forth"></select></p>
+                </li>
+				<li>
+					<p>
+						<label>药品名称：</label>
+					</p>
+					<p>
+						<input type="text" placeholder="请输入药品名称"  required
+							class="CommonChinaDrug_name" />
+					</p>
+				</li>
+				<li>
+					<p>
+						<label>药品成分：</label>
+					</p>
+					<p>
+						<textarea placeholder="请输入药品成分" required
+							class="CommonChinaDrug_content" ></textarea>
+					</p>
+				</li>
+				<li>
+					<p>
+						<label>功效主治：</label>
+					</p>
+					<p>
+						<textarea placeholder="请输入功效主治"  required
+							class="CommonChinaDrug_efficacy" ></textarea>
+					</p>
+				</li>
+				<li>
+					<p>
+						<label>用药监护：</label>
+					</p>
+					<p>
+						<textarea placeholder="请输入用药监护"  required
+							class="CommonChinaDrug_annouce" ></textarea>
+					</p>
+				</li>
+				<li>
+					<p>
+						<label>制剂规格：</label>
+					</p>
+					<p>
+						<input type="text" placeholder="请输入制剂规格" required
+							class="CommonChinaDrug_preparations" />
+					</p>
+				</li>
+				<li>
+					<p>
+						<label>用法用量：</label>
+					</p>
+					<p>
+						<textarea placeholder="请输入用法用量" required
+							class="CommonChinaDrug_manual" ></textarea>
+					</p>
+				</li>
+				<li>
+					<p>
+						<label>贮法：</label>
+					</p>
+					<p>
+						<textarea placeholder="请输入贮法"  required
+							class="CommonChinaDrug_store" ></textarea>
+					</p>
+				</li>
+				<li>
+					<p>
+						<label>管理分类：</label>
+					</p>
+					<p>
+						<input type="text" placeholder="请输入管理分类"  required
+							class="CommonChinaDrug_category" />
+					</p>
+				</li>
+				
+				<li><input type="button" value="取消" onclick="updateDrug(-1);" />
+					<input type="button" value="保存" onclick="updateCommonChinaDrug();"/></li>
+			</ul>
+		</form>
+	</div>
+</div>
+
+	

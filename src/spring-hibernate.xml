@@ -14,13 +14,27 @@ http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
 ">
 
 	<!-- 数据库连接c3p0配置 -->
-	<!-- 数据库名称为 ripp_medicine 用户名root 密码123456 请自行修改 -->
 	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
 		destroy-method="close" 
 		p:driverClass="${jdbc.driverClassName}"
 		p:jdbcUrl="${jdbc.url}" 
 		p:user="${jdbc.username}" 
-		p:password="${jdbc.password}" />
+		p:password="${jdbc.password}"
+		p:maxPoolSize="${c3p0.maxPoolSize}"
+		p:minPoolSize="${c3p0.minPoolSize}">
+		<property name="initialPoolSize" value="${c3p0.initialPoolSize}" />
+		<property name="maxIdleTime" value="${c3p0.maxIdleTime}"/>
+		<property name="acquireIncrement" value="${c3p0.acquireIncrement}"/>
+		<property name="acquireRetryAttempts" value="${c3p0.acquireRetryAttempts}"/>
+		<property name="acquireRetryDelay" value="${c3p0.acquireRetryDelay}"/>
+		<property name="testConnectionOnCheckin" value="${c3p0.testConnectionOnCheckin}"/>
+		<property name="automaticTestTable" value="${c3p0.automaticTestTable}"/>
+		<property name="idleConnectionTestPeriod" value="${c3p0.idleConnectionTestPeriod}"/>
+		<property name="checkoutTimeout" value="${c3p0.checkoutTimeout}"/>
+		<property name="maxStatements" value="${c3p0.maxStatements}"/>
+		<property name="maxStatementsPerConnection" value="${c3p0.maxStatementsPerConnection}"/>
+		</bean>
+		
 
 	<!-- session工厂 -->
 	<bean id="sessionFactory"
@@ -51,8 +65,9 @@ http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
 		<!-- 配置详细事务语义 -->
 		<tx:attributes>
 			<!-- get开头的方法设置为read-only -->
-			<tx:method name="get*" read-only="true" />
-			<tx:method name="find*" read-only="true" />
+			<tx:method name="save*" propagation="REQUIRED" />
+			<tx:method name="get*" propagation="REQUIRED" />
+			<tx:method name="find*" propagation="REQUIRED" read-only="true" />
 			<tx:method name="*" />
 		</tx:attributes>
 	</tx:advice>

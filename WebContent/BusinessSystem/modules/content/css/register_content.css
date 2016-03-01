@@ -1,0 +1,171 @@
+﻿.register_page1 {
+	width: 45em;
+	height: 35em;
+	background-color: #ffffff;
+	margin: auto;
+	margin-top: 3em;
+	
+}
+
+.register_page1_header {
+	margin-top: 1.0417em;
+	font-size: 1.3em;
+	color: #333333;
+	border-bottom: 1px #e5e5e5 dashed;
+	padding-bottom: 0.833em;
+    text-align: center;
+}
+
+.register_page1_content {
+	font-size: 1.2em;
+	text-align: left;
+	width: 35em;
+	margin: auto;
+}
+
+.register_page1_content input {
+	width: 32.5em;
+	text-indent: 0.5em;
+	height: 2em;
+}
+
+.register_page1_content select {
+	width: 32.7em;
+	text-indent: 0.5em;
+	height: 2em;
+	margin-left: 0.1em;
+}
+
+.register_page1_content_businessName,.register_page1_content_businessStyle
+	{
+	margin-top: 1.0417em;
+	margin-left: 0.5em;
+}
+
+.register_page1_content_businessRegisterNumber,.register_page1_content_businessRegisterImg
+	{
+	margin-top: 0.5em;
+	margin-left: 0.5em;
+}
+
+.register_page1_content_business {
+	border: 1px #e5e5e5 dashed;
+	margin-top: 0.5em;
+}
+
+.register_page1_content_business .message {
+	margin-left: 0.5em;
+	font-size: 0.9em;
+	color: #50a7ea;
+}
+
+.register_page1_content_business .img_uploadImg,.button_uploadImg {
+	text-align: center;
+}
+
+.button_uploadImg {
+	position: relative;
+}
+
+.register_page1_content_business .img_uploadImg img {
+	height: 7em;
+}
+
+.register_page1_content_business .uploadImgButton {
+	background-color: #f5f5f5;
+	color: #808080;
+	width: 9em;
+	margin: auto;
+	margin-bottom: 1em;
+}
+
+.register_page1_content_business .uploadImgButton[type="file"] {
+	position: absolute;
+	opacity: 0;
+	left: 16.45em;
+}
+
+.register_page1_footer {
+	font-size: 1.2em;
+	margin: auto;
+	margin-top: 1em;
+	width: 25em;
+}
+
+.register_page1_footer_next {
+	background-color: #52a6e9;
+	color: #ffffff;
+	width: 11em;
+	float: left;
+	border-radius: 5px;
+	border: none;
+}
+
+.register_page1_footer_reset {
+	background-color: #e5e5e5;
+	color: #a0a0a0;
+	width: 11em;
+	float: right;
+	border-radius: 5px;
+	border: none;
+}
+/*page2*/
+.register_page2 {
+	width: 45em;
+	height: 20em;
+	background-color: #ffffff;
+	margin: auto;
+	margin-top: 8em;
+	
+	display: none;
+}
+
+.register_page2_header {
+	padding-top: 1.0417em;
+	font-size: 1.3em;
+	color: #333333;
+	border-bottom: 1px #e5e5e5 dashed;
+    text-align: center;
+	padding-bottom: 0.833em;
+}
+
+.register_page2_content {
+	margin-top: 0.5em;
+	font-size: 1.2em;
+    text-align:center;
+}
+
+.register_page2_content li {
+	margin-bottom: 0.8em;
+}
+
+.register_page2_content input {
+	width: 25em;
+	height: 2em;
+	text-indent: 0.4em;
+}
+
+.register_page2_footer {
+	font-size: 1.2em;
+	width: 23em;
+	margin: auto;
+	margin-top: 2em;
+}
+
+.register_page2_footer_completeButton {
+	background-color: #a6e43e;
+	color: #ffffff;
+	border-radius: 5px;
+	border: none;
+	width: 11em;
+	float: left;
+}
+
+.register_page2_footer_cancleButton {
+	background-color: #eaeaea;
+	color: #a0a0a0;
+	border-radius: 5px;
+	border: none;
+	width: 11em;
+	float: right;
+}

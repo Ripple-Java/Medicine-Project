@@ -1,0 +1,37 @@
+﻿<script type="text/javascript">
+$(function(){
+	var initPagination = function() {
+		var maxPage=getCount_1(1);
+		if(maxPage%8!=0){maxPage=parseInt(maxPage/8)+1;}
+		else (maxPage==0)?maxPage=1:maxPage=maxPage/8;
+		$("#Pagination").pagination(maxPage, {
+	        num_edge_entries: 0, //边缘页数
+	        num_display_entries: 4, //主体页数
+	        callback: pageselectCallback,//回调函数
+	        items_per_page:1, //每页显示1项
+	        ellipse_text: "",
+	        prev_show_always:"<"
+	    });
+	 }();	 
+});
+</script>
+<div class="content_content_function">
+	<button class="content_content_function_all">
+		<em>全选</em>
+	</button>
+	<button class="content_content_function_add" onclick="passBusinessRegisterCheck();">
+		<em class="icon iconfont">&#xe627;</em><em>通过</em>
+	</button>
+	<button class="content_content_function_delete" onclick="unpassBusinessRegisterCheck();">
+		<em class="icon iconfont">&#xe626;</em><em>否决</em>
+	</button>
+</div>
+<div class="content_content_pageNum">
+		<a>
+		<ul class="businessChecRrequestListPage">
+		    <li class="firstPage"  onclick="firstPageClick(7);">&lt;&lt;</li>
+            <li  id="Pagination" class="pagination page"></li>
+			<li class="endPage" onclick="endPageClick(7);" >&gt;&gt;</li>
+		</ul>
+	</a>
+</div>

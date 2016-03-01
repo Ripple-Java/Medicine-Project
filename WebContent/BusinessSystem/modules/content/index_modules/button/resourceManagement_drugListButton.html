@@ -1,0 +1,44 @@
+﻿<script type="text/javascript">
+firstPageClick(1);
+</script>
+<div class="content_content_function">
+	<button class="content_content_function_all" onclick="allSelect(1);">
+		<em>全选</em>
+	</button>
+	<button class="content_content_function_notAll" onclick="allSelect(2);">
+		<em>不全选</em>
+	</button>
+    <button class="content_content_function_add" ng-click="resoure_add(1);">
+        <em class="icon iconfont">&#xe634;</em><em>添加</em>
+    </button>
+	<button class="content_content_function_delete" onclick="deleteDrug();">
+		<em class="icon iconfont">&#xe61f;</em><em>删除</em>
+	</button>
+</div>
+<div class="content_content_pageNum">
+	<a>
+		<ul class="drugListPage">
+		    <li class="firstPage" onclick="firstPageClick(1);">&lt;&lt;</li>
+            <li  id="Pagination" class="pagination page"></li>
+			<li  class="endPage" onclick="endPageClick(1);" >&gt;&gt;</li>
+		</ul>
+	</a>
+</div>
+<script type="text/javascript">
+$(function(){
+	var initPagination = function() {
+		var maxPage=getCount(1);
+		if(maxPage%8!=0){maxPage=parseInt(maxPage/8)+1;}
+		else (maxPage==0)?maxPage=1:maxPage=maxPage/8;
+		$("#Pagination").pagination(maxPage, {
+	        num_edge_entries: 0, //边缘页数
+	        num_display_entries: 4, //主体页数
+	        callback: pageselectCallback,//回调函数
+	        items_per_page:1, //每页显示1项
+	        ellipse_text: ""
+	    });		
+	 }();	 
+	 
+	 
+});
+</script>

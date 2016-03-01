@@ -1,0 +1,51 @@
+﻿<div class="content_content_function">
+	<button class="content_content_function_all" onclick="allSelect(1);">
+		<em>全选</em>
+	</button>
+	<button class="content_content_function_notAll" onclick="allSelect(2);">
+		<em>不全选</em>
+	</button>
+	<button class="content_content_function_add" ng-click="addDrug(1);">
+		<em class=" iconfont">&#xe634;</em><em>添加</em>
+	</button>
+	<button class="content_content_function_delete" onclick="deleteDrug();">
+		<em class="iconfont">&#xe61f;</em><em>删除</em>
+	</button>
+	<em class="cut_off_rule"></em>
+	<div class="content_content_function"> 
+	<select onchange="resourceManagement_drugListSelect();" class="resourceManagement_drugListSelect">
+	    <option value="5" selected="selected">药品类型</option>
+		<option value="1" >中药</option>
+		<option value="2">西药</option>
+		<option value="3">企业中药</option>
+		<option value="4">企业西药</option>
+	</select> 
+	</div>
+</div>
+<div class="content_content_pageNum">
+	<a>
+		<ul class="drugListPage">
+		    <li class="firstPage" onclick="firstPageClick(1);">&lt;&lt;</li>
+            <li  id="Pagination" class="pagination page"></li>
+			<li  class="endPage" onclick="endPageClick(1);" >&gt;&gt;</li>
+		</ul>
+	</a>
+</div>
+<script type="text/javascript">
+$(function(){
+	var initPagination = function() {
+		var maxPage=getCount(21)+getCount(22)+getCount(23)+getCount(24);
+		if(maxPage%8!=0){maxPage=parseInt(maxPage/8)+1;}
+		else (maxPage==0)?maxPage=1:maxPage=maxPage/8;
+		$("#Pagination").pagination(maxPage, {
+	        num_edge_entries: 0, //边缘页数
+	        num_display_entries: 4, //主体页数
+	        callback: pageselectCallback,//回调函数
+	        items_per_page:1, //每页显示1项
+	        ellipse_text: ""
+	    });		
+	 }();	 
+	 
+	 
+});
+</script>

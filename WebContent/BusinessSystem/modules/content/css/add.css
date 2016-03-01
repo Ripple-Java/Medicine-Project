@@ -1,0 +1,153 @@
+﻿.bg {
+	opacity: 0.4;
+	background-color: #e5e5e5;
+	width: 100%;
+	height: 100%;
+	top: 0px;
+	left: 0px;
+	position: absolute;
+	filter: Alpha(opacity = 50);
+	z-index: 99;
+}
+
+.add_drug_Westaside {
+	width: 2.5em;
+	position: absolute;
+	top: 1em;
+	z-index: 101;
+	left:19.209em;
+}
+
+.add_drug_Westaside ul li {
+	height: 7em;
+	padding-top: 1em;
+	padding-left: 0.8em;
+	margin-top: 0.8em;
+	border: 1px solid #e5e5e5;
+	border-right: none;
+}
+
+.add_drug_Westaside_hadActive {
+	background-color: #ffffff;
+}
+
+.addDrug {
+	width: 70em;
+	background-color: #ffffff;
+	z-index: 100;
+	position: absolute;
+	top: 0px;
+	height: 100%;
+	overflow-y: scroll;
+	margin:auto;
+}
+
+.addDrug ul li:first-child {
+	margin-top: 1em;
+	font-size: 1.3em;
+	font-weight: bold;
+	text-indent: 0.8em;
+	margin-bottom: 0.7em;
+	padding-bottom: 0.3em;
+	border-bottom: 1px dashed #e5e5e5;
+}
+
+.addDrug ul li:last-child {
+	text-align: center;
+	margin-bottom: 1em;
+	margin-top: 2em;
+}
+
+.addDrug li {
+	text-indent: 1em;
+	margin-top: 0.3em;
+}
+
+.addDrug li input[type="text"] ,.addDrug li textarea{
+	font-size: 1.2em;
+	border-radius: 5px;
+	border: 1px solid #e5e5e5;
+	margin-top: 0.3em;
+	padding-left: 0.5em;
+	width: 95%;
+}
+
+.addDrug .drugType_select select,.addMeeting .BusinessMeeting_subject select,.addVideo .BusinessVideo_subject select{
+	font-size: 1.2em;
+	border-radius: 5px;
+	border: 1px solid #e5e5e5;
+	margin-top: 0.3em;
+	padding-left: 0.5em;
+}
+
+#second{
+	width:27%;
+}
+#first{
+	width: 10%;
+}
+#third{
+	width:20%;
+}
+#forth{
+	width:34.5%;
+}
+
+.addDrug li input[type="button"],div li button {
+	width: 8em;
+	border-radius: 5px;
+	border: 1px solid #e5e5e5;
+    height:2em;
+}
+
+/*------addMeeting-------*/
+.addMeeting,.addVideo{
+    width: 25em;
+	background-color: #ffffff;
+	z-index: 100;
+	position: absolute;
+	top: 0px;
+	height: 100%;
+	overflow-y: scroll;
+    overflow-x:hidden;
+	right:0px;
+}
+
+.addMeeting ul li:first-child ,.addVideo ul li:first-child{
+	margin-top: 1em;
+	font-size: 1.3em;
+	font-weight: bold;
+	text-indent: 0.8em;
+	margin-bottom: 0.7em;
+	padding-bottom: 0.3em;
+	border-bottom: 1px dashed #e5e5e5;
+}
+
+.addMeeting ul li:last-child ,.addVideo ul li:last-child{
+	text-align: center;
+	margin-bottom: 1em;
+	margin-top: 2em;
+}
+
+.addMeeting li ,.addVideo li{
+	text-indent: 1em;
+	margin-top: 0.3em;
+}
+
+.addMeeting li input[type="text"] ,.addMeeting li textarea,.addMeeting li input[type="date"],.addVideo li input[type="text"] {
+	font-size: 1.2em;
+	border-radius: 5px;
+	border: 1px solid #e5e5e5;
+	margin-top: 0.3em;
+	padding-left: 0.5em;
+	width: 90%;
+}
+.addMeeting li textarea{
+	height:15em;
+}
+.addMeeting li input[type="button"],.addVideo li input[type="button"] {
+	width: 8em;
+	border-radius: 5px;
+	border: 1px solid #e5e5e5;
+    height:2em;
+}

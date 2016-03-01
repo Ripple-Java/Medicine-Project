@@ -1,0 +1,42 @@
+﻿<script type="text/javascript">
+$(function(){
+	var initPagination = function() {
+		$("#Pagination").pagination(100, {
+	        num_edge_entries: 0, //边缘页数
+	        num_display_entries: 4, //主体页数
+	        callback: pageselectCallback,//回调函数
+	        items_per_page:1, //每页显示1项
+	        ellipse_text: "",
+	        prev_show_always:"<"
+	    });
+	 }();	 
+	 function pageselectCallback(page_index, jq){
+			$(".pagination a").removeClass("content_content_pageNum_hadSelect");
+			$(".current").addClass("content_content_pageNum_hadSelect");
+			$("span.next").removeClass("content_content_pageNum_hadSelect");
+			$("span.prev").removeClass("content_content_pageNum_hadSelect");
+		    return false;
+		}
+});
+</script>
+<div class="content_content_function">
+	<button class="content_content_function_all">
+		<em>全选</em>
+	</button>
+	<button class="content_content_function_freeze">
+		<em class="icon iconfont">&#xe647;</em><em>冻结</em>
+	</button>
+	<em class="cut_off_rule"></em>
+	<button class="content_content_function_select">
+		<em>筛选</em>
+	</button>
+</div>
+<div class="content_content_pageNum">
+	<a>
+		<ul>
+			<li >&lt;&lt;</li>
+            <li  id="Pagination" class="pagination page"></li>
+			<li >&gt;&gt;</li>
+		</ul>
+	</a>
+</div>
